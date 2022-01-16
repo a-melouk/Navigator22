@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.14/leaflet.draw.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.14/leaflet.draw.js"></script>
+</head>
+<!-- https://router.hereapi.com/v8/routes?transportMode=pedestrian&return=summary&origin=35.209029131097836,-0.6163117086223125&destination=35.21332,-0.61591&apiKey=J8v-uWi97tEmwpOFAur9WpkdtXY_ZvuoyfQ78Zqhh9A
+
+
+    35.209029131097836,-0.6163117086223125
+                        35.21332,-0.61591
+35.20649,-0.61903
+35.22736,-0.62714 -->
+
+<body>
+  <div id="map" style="height: 900px; width: 90%; margin-left: 10px; margin-right: 10px; background-color: white"></div>
+  <!--     <button
+      id="A03"
+      type="button"
+      onclick="addBusRoute('A03');addBusStationsByNumero('A03_');
+    addBusRoute('A03 bis'); addBusStationsByNumero('A03bis_')"
+      style="background-color: red; color: black"
+    >
+      Ligne A03
+    </button>
+    <button id="A03 bis" type="button" onclick="addBusRoute('A03 bis'); addBusStationsByNumero('A03bis_')" style="background-color: red; color: black">Ligne A03 bis</button>
+    <button id="A11" type="button" onclick="addBusRoute('A11'); addBusStationsByNumero('A11_')" style="background-color: black; color: white">Ligne A11</button>
+    <button id="A16" type="button" onclick="addBusRoute('A16') ; addBusStationsByNumero('A16_')" style="background-color: blue; color: white">Ligne A16</button>
+    <button id="A17" type="button" onclick="addBusRoute('A17'); addBusStationsByNumero('A17_')" style="background-color: green; color: white">Ligne A17</button>
+    <button id="A22" type="button" onclick="addBusRoute('A22'); addBusStationsByNumero('A22_')" style="background-color: rgb(6, 170, 108); color: white">Ligne A22</button>
+    <button id="A25" type="button" onclick="addBusRoute('A25'); addBusStationsByNumero('A25_')" style="background-color: rgb(255, 0, 255)">Ligne A25</button>
+    <button id="A27" type="button" onclick="addBusRoute('A27'); addBusStationsByNumero('A27_')" style="background-color: rgb(0, 255, 255)">Ligne A27</button>
+
+    <button id="tramway" type="button" onclick="addSubway(); " style="background-color: #fd7f2c">Tramway</button>
+    <button id="stationsSubway" type="button" onclick="addSubwayStations(); " style="background-color: #fd7f2c">Add subway stations</button>
+    <button id="stations" type="button" onclick="addBusStations(); " style="background-color: #076ab0; color: white">Add bus stations</button>
+    <button id="clearAllTheMap" type="button" onclick="clearAllTheMap()" style="background-color: white; color: black">Reset the map</button>
+    <button id="clearTheRoutes" type="button" onclick="clearTheMapRoutes()" style="background-color: white; color: black">Remove the routes</button>
+    <button id="clearTheMarkers" type="button" onclick="clearTheMapMarkers()" style="background-color: white; color: black">Remove the markers</button> -->
+  <script>
+    /*       function clearAllTheMap() {
+      chemin.clearLayers()
+      markers.clearLayers()
+    }
+
+    function clearTheMapRoutes() {
+      chemin.clearLayers()
+    }
+
+    function clearTheMapMarkers() {
+      markers.clearLayers()
+    } */
+
+    let chemin = L.layerGroup()
+    let markers = L.layerGroup()
+    let sequence = 1
+    let id = 0
+    let map = L.map('map', {
+      center: [35.20118653849822, -0.6343081902114373],
+      // center: [35.217417796971496, -0.6221218677165964],
+      zoom: 14,
+      maxZoom: 19,
+    })
+
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      subdomains: ['a', 'b', 'c'],
+    }).addTo(map)
+
+    let lat, lon
+    let featureGroup = L.featureGroup().addTo(map)
+
+    let drawControl = new L.Control.Draw({
+      position: 'topright',
+      draw: {
+        polygon: false,
+        rectangle: false,
+        circle: false,
+        circlemarker: false,
+      },
+      edit: {
+        featureGroup: featureGroup,
+      },
+    }).addTo(map)
+
+    map.on('draw:created', function (e) {
+      featureGroup.addLayer(e.layer)
+    })
+
+    function getLatLngs(layer) {
+      let lng,
+        lat,
+        chemin = []
+      if (layer instanceof L.Polyline) {
+        let latlngs = layer.getLatLngs()
+        let type = prompt('Saisir le type du polyline', 'Correspondance')
+        console.log('Test56 ' + latlngs)
+
+        for (let i = 0; i < latlngs.length; i++) {
+          let latlngs1 = latlngs[i]
+          chemin.push('{"latitude": ' + latlngs[i].lat + ',' + '"longitude": ' + latlngs[i].lng + ',' + '"ID": ' + (sequence + 1) + ',' + '"type": "' + type + '"' + '}')
+          sequence += 1
+          if (i === 0) {
+            lng = latlngs[i].lng
+            lat = latlngs[i].lat
+          }
+        }
+        const data = '[' + chemin.join(',') + ']'
+        const optionsPost = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: data,
+        }
+        const response = fetch('/lines', optionsPost)
+        console.log(data)
+        return '[' + chemin.join(',') + ']'
+      } else if (layer instanceof L.Marker) {
+        let nomFr = prompt('Saisir le nom de la station en Français', '')
+        let type = prompt('Saisir le type de la station', 'bus')
+
+        if (nomFr != null && type != null) {
+          layer.bindTooltip(nomFr + ' ' + type, {
+            permanent: true,
+            direction: 'right',
+          })
+          if (type === 'tramway') {
+            let numero = prompt('Saisir le numero de la station', '')
+            const data =
+              '{"latitude": ' +
+              layer.getLatLng().lat +
+              ', ' +
+              '"longitude" :' +
+              layer.getLatLng().lng +
+              ', ' +
+              '"nomFr": "' +
+              nomFr +
+              '"' +
+              ', ' +
+              '"type": "' +
+              type +
+              '"' +
+              ', ' +
+              '"numero": "' +
+              numero +
+              '"' +
+              '}'
+            console.log(data)
+            id = id + 1
+            const optionsPost = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: data,
+            }
+            const response = fetch('/stations_sba', optionsPost)
+            return '{"latitude": ' + layer.getLatLng().lat + ', ' + '"longitude" :' + layer.getLatLng().lng + '}'
+          } else if (type === 'bus') {
+            let nomligne = prompt('Saisir le numéro de la ligne', 'A27')
+            const data =
+              '{"latitude": ' +
+              layer.getLatLng().lat +
+              ', ' +
+              '"longitude" :' +
+              layer.getLatLng().lng +
+              ', ' +
+              '"nomFr": "' +
+              nomFr +
+              '"' +
+              ', ' +
+              '"type": "' +
+              type +
+              '"' +
+              ', ' +
+              '"numero": "' +
+              nomligne +
+              '"' +
+              '}'
+            const optionsPost = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: data,
+            }
+            const response = fetch('/stations_sba', optionsPost)
+            return '{"latitude": ' + layer.getLatLng().lat + ', ' + '"longitude" :' + layer.getLatLng().lng + '}'
+          }
+        }
+
+        return '{"latitude": ' + layer.getLatLng().lat + ', ' + '"longitude" :' + layer.getLatLng().lng + '}'
+      }
+    }
+    map.on('draw:created', function (e) {
+      let layer = e.layer
+      getLatLngs(layer)
+    })
+
+    async function addSubwayStations() {
+      const response = await fetch('/stations_sba/tramway')
+      const data = await response.json()
+      let subway_station = L.icon({
+        iconUrl: 'pin_subway.png',
+        iconSize: [35, 35], // size of the icon
+        iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+      })
+
+      for (item of data) {
+        let station = L.marker([item.latitude, item.longitude], { icon: subway_station })
+          .bindPopup('<b>' + item.nomFr + '</b>')
+          .addTo(markers)
+        markers.addTo(map)
+      }
+    }
+
+    async function addBusStations() {
+      const response = await fetch('/stations_sba/bus')
+      const data = await response.json()
+      let bus_stop_icon = L.icon({
+        iconUrl: 'pin_bus.png',
+
+        iconSize: [35, 35], // size of the icon
+        iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+      })
+
+      for (item of data) {
+        let station = L.marker([item.latitude, item.longitude], { icon: bus_stop_icon })
+          .bindPopup('<b>' + item.nomFr + '</b>' + '<br>' + ' <b> ' + item.numero + '</b>')
+          .addTo(markers)
+        markers.addTo(map)
+      }
+    }
+
+    async function addBusStationsByNumero(numero) {
+      console.log('add stations by bus number')
+      const response = await fetch('/stations_sba/bus/' + numero)
+      const data = await response.json()
+      if (numero === 'A03_') {
+        let bus_stop_icon = L.icon({
+          iconUrl: 'pin_bus_3.png',
+          iconSize: [35, 35], // size of the icon
+          iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
+          popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+        })
+      } else if (numero === 'A03bis_') {
+        let bus_stop_icon = L.icon({
+          iconUrl: 'pin_bus_3.png',
+          iconSize: [35, 35], // size of the icon
+          iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
+          popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+        })
+      } else if (numero === 'A11_') {
+        let bus_stop_icon = L.icon({
+          iconUrl: 'pin_bus_11.png',
+          iconSize: [35, 35], // size of the icon
+          iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
+          popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+        })
+      } else if (numero === 'A16_') {
+        let bus_stop_icon = L.icon({
+          iconUrl: 'pin_bus_16.png',
+          iconSize: [35, 35], // size of the icon
+          iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
+          popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+        })
+      } else if (numero === 'A17_') {
+        let bus_stop_icon = L.icon({
+          iconUrl: 'pin_bus_17.png',
+          iconSize: [35, 35], // size of the icon
+          iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
+          popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+        })
+      } else if (numero === 'A22_') {
+        let bus_stop_icon = L.icon({
+          iconUrl: 'pin_bus_22.png',
+          iconSize: [35, 35], // size of the icon
+          iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
+          popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+        })
+      } else if (numero === 'A25_') {
+        let bus_stop_icon = L.icon({
+          iconUrl: 'pin_bus_25.png',
+          iconSize: [35, 35], // size of the icon
+          iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
+          popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+        })
+      } else if (numero === 'A27_') {
+        let bus_stop_icon = L.icon({
+          iconUrl: 'pin_bus_27.png',
+          iconSize: [35, 35], // size of the icon
+          iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
+          popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
+        })
+      }
+
+      for (item of data) {
+        let station = L.marker([item.latitude, item.longitude], { icon: bus_stop_icon })
+          .bindPopup('<b>' + item.nomFr + '</b>' + '<br>' + ' <b> ' + item.numero + '</b>')
+          .addTo(markers)
+        markers.addTo(map)
+      }
+    }
+
+    async function addBusRoute(numero) {
+      const response = await fetch('/bus/' + numero)
+      const data = await response.json()
+      for (let i = 0; i < data.length; i += 1) {
+        if (i + 1 == data.length) {
+        } else {
+          let pointA = new L.LatLng(data[i].latitude, data[i].longitude)
+          let pointB = new L.LatLng(data[i + 1].latitude, data[i + 1].longitude)
+          let pointList = [pointA, pointB]
+          // console.log("|" + pointList + "|")
+          if (numero === 'A03') {
+            let firstpolyline = new L.Polyline(pointList, {
+              color: 'red',
+              weight: 5,
+              opacity: 0.8,
+              dashArray: '2,5',
+              smoothFactor: 1,
+            })
+            firstpolyline.addTo(chemin)
+          } else if (numero === 'A03 bis') {
+            let firstpolyline = new L.Polyline(pointList, {
+              color: 'red',
+              weight: 5,
+              opacity: 0.8,
+              dashArray: '2,5',
+              smoothFactor: 1,
+            })
+            firstpolyline.addTo(chemin)
+          } else if (numero === 'A11') {
+            let firstpolyline = new L.Polyline(pointList, {
+              color: 'black',
+              weight: 5,
+              opacity: 0.8,
+              dashArray: '2,5',
+              smoothFactor: 1,
+            })
+            firstpolyline.addTo(chemin)
+          } else if (numero === 'A16') {
+            let firstpolyline = new L.Polyline(pointList, {
+              color: 'blue',
+              weight: 5,
+              opacity: 0.8,
+              dashArray: '2,5',
+              smoothFactor: 1,
+            })
+            firstpolyline.addTo(chemin)
+          } else if (numero === 'A17') {
+            let firstpolyline = new L.Polyline(pointList, {
+              color: 'green',
+              weight: 5,
+              opacity: 0.8,
+              dashArray: '1,5',
+              smoothFactor: 1,
+            })
+            firstpolyline.addTo(chemin)
+          } else if (numero === 'A25') {
+            let firstpolyline = new L.Polyline(pointList, {
+              color: 'rgb(255,0,255)',
+              weight: 5,
+              opacity: 0.8,
+              dashArray: '2,5',
+              smoothFactor: 1,
+            })
+            firstpolyline.addTo(chemin)
+          } else if (numero === 'A27') {
+            let firstpolyline = new L.Polyline(pointList, {
+              color: 'rgb(0,255,255)',
+              weight: 5,
+              opacity: 0.8,
+              dashArray: '2,5',
+              smoothFactor: 1,
+            })
+            firstpolyline.addTo(chemin)
+          } else if (numero === 'A22') {
+            let firstpolyline = new L.Polyline(pointList, {
+              color: 'rgb(6, 170, 108)',
+              weight: 5,
+              opacity: 0.8,
+              dashArray: '2,5',
+              smoothFactor: 1,
+            })
+            firstpolyline.addTo(chemin)
+          }
+        }
+        chemin.addTo(map)
+        // console.log("last :"+i);
+      }
+    }
+
+    async function addSubway() {
+      const response = await fetch('/subway')
+      const data = await response.json()
+      for (let i = 0; i < data.length; i += 1) {
+        if (i + 1 == data.length) {
+        } else {
+          let pointA = new L.LatLng(data[i].latitude, data[i].longitude)
+          let pointB = new L.LatLng(data[i + 1].latitude, data[i + 1].longitude)
+          let pointList = [pointA, pointB]
+          // console.log("|" + pointList + "|")
+          let firstpolyline = new L.Polyline(pointList, {
+            color: '#FD7F2C',
+            weight: 5,
+            opacity: 1,
+
+            smoothFactor: 1,
+          })
+          firstpolyline.addTo(chemin)
+        }
+        // console.log("last :"+i);
+      }
+      chemin.addTo(map)
+    }
+
+    addCorrespondance()
+    async function addCorrespondance() {
+      const response = await fetch('/correspondance')
+      const data = await response.json()
+      for (let i = 0; i < data.length; i += 1) {
+        if (i + 1 == data.length) {
+        } else {
+          let pointA = new L.LatLng(data[i].latitude, data[i].longitude)
+          let pointB = new L.LatLng(data[i + 1].latitude, data[i + 1].longitude)
+          let pointList = [pointA, pointB]
+          // console.log("|" + pointList + "|")
+          let firstpolyline = new L.Polyline(pointList, {
+            color: 'orange',
+            weight: 5,
+            opacity: 1,
+            dashArray: '2,5',
+            smoothFactor: 1,
+          })
+          firstpolyline.addTo(chemin)
+        }
+        // console.log("last :"+i);
+      }
+      chemin.addTo(map)
+    }
+  </script>
+</body>
+
+</html>

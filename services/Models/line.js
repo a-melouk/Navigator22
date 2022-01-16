@@ -1,67 +1,39 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const coords = new Schema({
-  latitude: {
-    type: Number,
-    required: true,
-  },
-  longitude: {
-    type: Number,
-    required: true,
-  },
-})
+const coordinates = {
+  latitude: 0.0,
+  longitude: 0.0,
+}
 
-const pointSchema = new Schema({
-  coordinates: {
-    type: Object,
-  },
-  order: {
-    type: Number,
-  },
-})
+const point = {
+  coordinates: coordinates,
+  order: 0,
+}
 
-const stationSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  order: {
-    type: Number,
-    required: true,
-  },
-  coordinates: {
-    type: coords,
-    required: true,
-  },
-})
+const station = {
+  name: '',
+  order: 0,
+  coordinates: coordinates,
+}
 
-const routeSchema = new Schema({
-  from: {
-    type: stationSchema,
-    required: true,
-  },
-  to: {
-    type: stationSchema,
-    required: true,
-  },
-  path: {
-    type: [pointSchema],
-    required: true,
-  },
-})
+const segment = {
+  from: station,
+  to: station,
+  path: [point],
+}
 
 const lineSchema = new Schema({
   name: {
     type: String,
     required: true,
   },
-  route: routeSchema,
+  type: {
+    type: String,
+    required: true,
+  },
+  route: [segment],
 })
 
-const Coords = mongoose.model('Coords', coords)
-const Point = mongoose.model('Point', pointSchema)
-const Station = mongoose.model('Station', stationSchema)
-const Route = mongoose.model('Route', routeSchema)
 const Line = mongoose.model('Line', lineSchema)
 module.exports = Line
