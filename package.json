@@ -1,0 +1,29 @@
+{
+  "name": "navigator22",
+  "version": "1.0.0",
+  "description": "Routing app for the city of Sidi Bel-Abbès",
+  "main": "services/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node services/index.js"
+  },
+  "keywords": [
+    "routing",
+    "webapp",
+    "javascript",
+    "rest",
+    "api",
+    "mongodb",
+    "transport"
+  ],
+  "author": "MELOUK Abdel-Ilah",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "body-parser": "^1.19.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "mongodb": "^4.3.0",
+    "mongoose": "^6.1.6"
+  }
+}

@@ -1,0 +1,6 @@
+1- Ajout d'une ligne
+
+        Ajout des stations
+        Ajout du tracé entre chaque deux stations
+Lorsqu'on ajoute une station entre deux stations existantes, on donne la possibilité de modifier le tracé de telle sorte que :
+Si on a A----B et on ajoute C entre A et B, ça sera A----C----B 

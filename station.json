@@ -1,0 +1,58 @@
+{
+  "id": 54666,
+  "nom": "ligne 16",
+  "route": [
+    {
+      "from": {
+        "id": 45242,
+        "nom": "Sidi Djilai",
+        "order": 1,
+        "coordinates": {
+          "latitude": 35.04654,
+          "longitude": -0.615245
+        }
+      },
+      "to": {
+        "id": 4545452,
+        "nom": "Wiam",
+        "order": 2,
+        "coordinates": {
+          "latitude": 35.44654,
+          "longitude": -0.715245
+        }
+      },
+      "path": [
+        {
+          "latitude": 35.45454155,
+          "longitude": -0.624445,
+          "order": 1
+        },
+        {
+          "latitude": 35.46454155,
+          "longitude": -0.724445,
+          "order": 2
+        },
+        {
+          "latitude": 35.45454155,
+          "longitude": -0.624445,
+          "order": 3
+        },
+        {
+          "latitude": 35.46454155,
+          "longitude": -0.724445,
+          "order": 4
+        },
+        {
+          "latitude": 35.45454155,
+          "longitude": -0.624445,
+          "order": 5
+        },
+        {
+          "latitude": 35.46454155,
+          "longitude": -0.724445,
+          "order": 6
+        }
+      ]
+    }
+  ]
+}

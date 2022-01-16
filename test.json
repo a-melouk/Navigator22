@@ -1,0 +1,33 @@
+{
+  "name": "Ligne A03",
+  "route": [
+    {
+      "from": {
+        "name": "Station A",
+        "order": 1,
+        "coordinates": {
+          "latitude": 35.024545,
+          "longitude": -0.6146
+        }
+      },
+      "to": {
+        "name": "Station B",
+        "order": 2,
+        "coordinates": {
+          "latitude": 35.14545,
+          "longitude": -0.7146
+        }
+      },
+      "path": [
+        {
+          "latitude": 35.024545,
+          "longitude": -0.62452454
+        },
+        {
+          "latitude": 35.024545,
+          "longitude": -0.62452454
+        }
+      ]
+    }
+  ]
+}
