@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  background-image: radial-gradient(circle farthest-corner at 6.6% 12%, rgba(64, 0, 126, 1) 20%, rgba(0, 255, 160, 1) 100%);
+  background-size: auto;
+  background-position: 0% 0%;
+  background-repeat: repeat;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+#map {
+  grid-column: 1;
+  height: 100vh;
+}
+
+.right {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, 50%);
+  border: 4px solid black;
+}
+
+.Lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 4px solid black;
+  padding: 10px;
+}
+
+.clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 100px;
+}
+
+.clear-all {
+  min-width: 130px;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 5px;
+  border: none;
+  background: #ef233c;
+  box-shadow: 0 5px #d90429;
+}
+.clear-all:hover {
+  box-shadow: 0 3px #d90429;
+  top: 1px;
+}
+.clear-all:active {
+  box-shadow: 0 0 #d90429;
+  top: 5px;
+}
+
+.lines {
+  min-width: 130px;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 5px;
+  border: none;
+  background: #3d348b;
+  box-shadow: 0 5px #2c0b8e;
+  margin: 10px;
+}
+.lines:hover {
+  box-shadow: 0 3px #2c0b8e;
+  top: 1px;
+}
+.lines:active {
+  box-shadow: 0 0 #2c0b8e;
+  top: 5px;
+}

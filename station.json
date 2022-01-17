@@ -1,56 +1,93 @@
 {
-  "id": 54666,
-  "nom": "ligne 16",
+  "name": "Ligne A04",
+  "type": "tramway",
   "route": [
     {
       "from": {
-        "id": 45242,
-        "nom": "Sidi Djilai",
+        "name": "Station Z",
         "order": 1,
         "coordinates": {
-          "latitude": 35.04654,
-          "longitude": -0.615245
+          "latitude": 35.2224545,
+          "longitude": -0.56146
         }
       },
       "to": {
-        "id": 4545452,
-        "nom": "Wiam",
+        "name": "Station B",
         "order": 2,
         "coordinates": {
-          "latitude": 35.44654,
-          "longitude": -0.715245
+          "latitude": 35.999994545,
+          "longitude": -0.47146
         }
       },
       "path": [
         {
-          "latitude": 35.45454155,
-          "longitude": -0.624445,
+          "coordinates": {
+            "latitude": 35.024545,
+            "longitude": -0.62452454
+          },
           "order": 1
         },
         {
-          "latitude": 35.46454155,
-          "longitude": -0.724445,
+          "coordinates": {
+            "latitude": 35.124545,
+            "longitude": -0.72452454
+          },
           "order": 2
         },
         {
-          "latitude": 35.45454155,
-          "longitude": -0.624445,
+          "coordinates": {
+            "latitude": 35.124545,
+            "longitude": -0.72452454
+          },
           "order": 3
         },
         {
-          "latitude": 35.46454155,
-          "longitude": -0.724445,
+          "coordinates": {
+            "latitude": 35.124545,
+            "longitude": -0.72452454
+          },
           "order": 4
         },
         {
-          "latitude": 35.45454155,
-          "longitude": -0.624445,
+          "coordinates": {
+            "latitude": 35.124545,
+            "longitude": -0.72452454
+          },
           "order": 5
+        }
+      ]
+    },
+    {
+      "from": {
+        "name": "Station B",
+        "order": 2,
+        "coordinates": {
+          "latitude": 35.024545,
+          "longitude": -0.6146
+        }
+      },
+      "to": {
+        "name": "Station C",
+        "order": 3,
+        "coordinates": {
+          "latitude": 35.14545,
+          "longitude": -0.7146
+        }
+      },
+      "path": [
+        {
+          "coordinates": {
+            "latitude": 35.024545,
+            "longitude": -0.62452454
+          },
+          "order": 1
         },
         {
-          "latitude": 35.46454155,
-          "longitude": -0.724445,
-          "order": 6
+          "coordinates": {
+            "latitude": 35.124545,
+            "longitude": -0.72452454
+          },
+          "order": 2
         }
       ]
     }

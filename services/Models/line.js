@@ -35,5 +35,14 @@ const lineSchema = new Schema({
   route: [segment],
 })
 
+const polylineSchema = new Schema({
+  name: {
+    type: String,
+    default: 'A16',
+  },
+  path: [coordinates],
+})
+
 const Line = mongoose.model('Line', lineSchema)
-module.exports = Line
+const Polyline = mongoose.model('Polyline', polylineSchema)
+module.exports = { Line, Polyline }
