@@ -8,6 +8,7 @@ const Models = require('./Models/line')
 
 const Line = Models.Line
 const Polyline = Models.Polyline
+const Station = Models.Station
 
 //express app
 const app = express()
@@ -59,9 +60,37 @@ app.post('/polyline', (request, response) => {
     })
 })
 
-app.get('/polyline/:numero', (request, response) => {
-  let params = request.params.numero
+app.post('/station', (request, response) => {
+  const station = new Station(request.body)
+  station
+    .save()
+    .then((data) => {
+      response.json({
+        status: 'success',
+        donnee: data,
+      })
+    })
+    .catch((err) => {
+      response.json({
+        reponse: err,
+      })
+      console.log(err)
+    })
+})
+
+app.get('/polyline/:name', (request, response) => {
+  let params = request.params.name
   Polyline.find({ name: params })
+    .then((data) => response.json(data))
+    .catch((err) => {
+      console.log(err)
+      response.json(err)
+    })
+})
+
+app.get('/lines/:name', (request, response) => {
+  let params = request.params.name
+  Line.find({ name: params })
     .then((data) => response.json(data))
     .catch((err) => {
       console.log(err)

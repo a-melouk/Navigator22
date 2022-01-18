@@ -2,10 +2,10 @@
   "name": "navigator22",
   "version": "1.0.0",
   "description": "Routing app for the city of Sidi Bel-Abbès",
-  "main": "services/index.js",
+  "main": "backend/services/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node services/index.js"
+    "start": "node backend/services/index.js"
   },
   "keywords": [
     "routing",
@@ -25,5 +25,9 @@
     "express": "^4.17.2",
     "mongodb": "^4.3.0",
     "mongoose": "^6.1.6"
+  },
+  "devDependencies": {
+    "leaflet": "^1.7.1",
+    "leaflet-draw": "^1.0.4"
   }
 }

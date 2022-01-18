@@ -23,13 +23,14 @@
       <div id="map"></div>
       <div class="right">
         <div class="Lines">
-          <button class="lines" onclick="addPolyline('A03')">Bus 03</button>
-          <button class="lines" onclick="addPolyline('A11')">Bus 11</button>
-          <button class="lines" onclick="addPolyline('A16')">Bus 16</button>
-          <button class="lines" onclick="addPolyline('A17')">Bus 17</button>
-          <button class="lines" onclick="addPolyline('A22')">Bus 22</button>
-          <button class="lines" onclick="addPolyline('A25')">Bus 25</button>
-          <button class="lines" onclick="addPolyline('A27')">Bus 27</button>
+          <button class="lines" onclick="addLine('tramway')">Tramway</button>
+          <button class="lines" onclick="addLine('A03')">Bus 03</button>
+          <button class="lines" onclick="addLine('A11')">Bus 11</button>
+          <button class="lines" onclick="addLine('A16')">Bus 16</button>
+          <button class="lines" onclick="addLine('A17')">Bus 17</button>
+          <button class="lines" onclick="addLine('A22')">Bus 22</button>
+          <button class="lines" onclick="addLine('A25')">Bus 25</button>
+          <button class="lines" onclick="addLine('A27')">Bus 27</button>
         </div>
         <div class="clear">
           <button class="clear-all" onclick="clearMap()">Clear the map</button>
@@ -40,7 +41,7 @@
 
     <script>
       const baseURI = 'http://192.168.1.13:4000/'
-      let line = L.layerGroup()
+      let line = L.featureGroup()
       let order = 1
       let map = L.map('map', {
         center: [35.20118653849822, -0.6343081902114373],
@@ -52,7 +53,6 @@
         subdomains: ['a', 'b', 'c'],
       }).addTo(map)
 
-      let featureGroup = L.featureGroup()
       let drawControl = new L.Control.Draw({
         position: 'topright',
         draw: {
@@ -62,15 +62,17 @@
           circlemarker: false,
         },
         edit: {
-          featureGroup: featureGroup,
+          featureGroup: line,
         },
       })
+      drawControl.addTo(map)
 
       clearMap = () => {
         line.clearLayers()
       }
 
       async function addPolyline(number) {
+        line.clearLayers()
         const response = await fetch(baseURI + 'polyline/' + number)
         let data = await response.json()
         data = data[0].path
@@ -81,20 +83,58 @@
           pathArray.push([data[i].latitude, data[i].longitude])
         }
         let poly = L.polyline(pathArray, { color: 'red' }).addTo(line)
-        line.addTo(map)
         map.fitBounds(poly.getBounds())
       }
 
+      async function addStations(station) {
+        let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude]).bindPopup('<b>' + station.name + '</b>')
+        marker.addTo(line)
+      }
+
+      // async function addLine(number) {
+      //   line.clearLayers()
+      //   addPolyline(number)
+      //   addStations(number)
+      //   line.addTo(map)
+      // }
       map.on('draw:created', function (e) {
         let layer = e.layer
         console.log(getLatLngs(layer))
         layer.addTo(map)
       })
 
+      map.on('draw:edited', function (e) {
+        let layers = e.layers
+
+        layers.eachLayer(function (layer) {
+          if (layer instanceof L.Polyline) {
+            console.log(layer._latlngs)
+          }
+        })
+      })
+
       let getLatLngs = (layer) => {
         if (layer instanceof L.Polyline) return layer.getLatLngs()
         if (layer instanceof L.Marker) return layer.getLatLng()
       }
+
+      async function addLine(number) {
+        const response = await fetch(baseURI + 'lines/' + number)
+        let data = await response.json()
+        data = data[0].route
+        let stations = []
+        let segment = []
+        data.forEach((item) => {
+          stations.push(item.from)
+          stations.push(item.to)
+        })
+        console.log(stations)
+
+        stations = stations.filter((v, i, a) => a.findIndex((t) => t.coordinates.latitude === v.coordinates.latitude && t.coordinates.longitude === v.coordinates.longitude) === i)
+        console.log(stations)
+      }
+
+      addLine('tramway')
     </script>
   </body>
 </html>

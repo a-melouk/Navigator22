@@ -20,7 +20,26 @@ const station = {
 const segment = {
   from: station,
   to: station,
-  path: [point],
+  path: [coordinates],
+}
+
+const stationSchema = {
+  name: {
+    type: String,
+    required: true,
+  },
+  coordinates: {
+    type: coordinates,
+    required: true,
+  },
+  line: {
+    type: String,
+    required: true,
+  },
+  order: {
+    type: Number,
+    required: true,
+  },
 }
 
 const lineSchema = new Schema({
@@ -45,4 +64,5 @@ const polylineSchema = new Schema({
 
 const Line = mongoose.model('Line', lineSchema)
 const Polyline = mongoose.model('Polyline', polylineSchema)
-module.exports = { Line, Polyline }
+const Station = mongoose.model('Station', stationSchema)
+module.exports = { Line, Polyline, Station }
