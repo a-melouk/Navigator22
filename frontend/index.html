@@ -95,15 +95,15 @@
       function addStation(station) {
         let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { title: station.name })
           .bindPopup('<b>' + station.name + '</b>')
-          .addTo(markers)
-        marker.addTo(line)
+          .addTo(line)
+        // marker.addTo(line)
       }
 
       function addPolyline(segment) {
         let pathArray = []
         for (let i = 0; i < segment.length; i++) pathArray.push([segment[i].latitude, segment[i].longitude])
-        let poly = L.polyline(pathArray, { color: 'red' }).addTo(polylines)
-        polylines.addTo(line)
+        let poly = L.polyline(pathArray, { color: 'red' }).addTo(line)
+        // polylines.addTo(line)
         // map.fitBounds(poly.getBounds())
       }
 
@@ -126,6 +126,13 @@
         })
       })
 
+      function addStationsPolyline(stations, segments) {
+        line.clearLayers()
+        stations.forEach((item) => addStation(item))
+        segment.forEach((item) => addPolyline(item))
+        line.addTo(map)
+      }
+
       let stations = []
       let segment = []
       async function addLine(number) {
@@ -140,12 +147,7 @@
         })
 
         stations = stations.filter((v, i, a) => a.findIndex((t) => t.coordinates.latitude === v.coordinates.latitude && t.coordinates.longitude === v.coordinates.longitude) === i)
-        markers.clearLayers()
-        polylines.clearLayers()
-        line.clearLayers()
-        stations.forEach((item) => addStation(item))
-        segment.forEach((item) => addPolyline(item))
-        line.addTo(map)
+        addStationsPolyline(stations, segment)
         populateList('from', stations)
         populateList('to', stations)
       }
@@ -158,12 +160,15 @@
           list.appendChild(option)
         }
       }
-
+      let from, to
       document.getElementById('from').addEventListener('change', (event) => {
-        console.log(event.target.value)
+        from = event.target.value
+        console.log('from', from)
       })
-
-      //Create and append the options
+      document.getElementById('to').addEventListener('change', (event) => {
+        to = event.target.value
+        console.log('to', to)
+      })
     </script>
   </body>
 </html>
