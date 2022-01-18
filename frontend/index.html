@@ -14,12 +14,26 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.14/leaflet.draw.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.14/leaflet.draw.js"></script>
-    <link href="style.css" rel="stylesheet" />
+    <link href="style1.css" rel="stylesheet" />
+    <link href="style2.css" rel="stylesheet" />
   </head>
 
   <body>
     <div class="container">
-      <div class="left"></div>
+      <div class="top" id="top">
+        <div class="stations-list" style="min-width: 200px">
+          <label for="from">Departure</label>
+          <select name="from" id="from">
+            <option value=""></option>
+          </select>
+
+          <label for="to">Arrival</label>
+          <select name="to" id="to">
+            <option value=""></option>
+          </select>
+          <button id="getline" style="margin-left: 10px">Get route</button>
+        </div>
+      </div>
       <div id="map"></div>
       <div class="right">
         <div class="Lines">
@@ -41,7 +55,9 @@
 
     <script>
       const baseURI = 'http://192.168.1.13:4000/'
-      let line = L.featureGroup()
+      let markers = L.featureGroup() //Contains markers of the transport line stations
+      let polylines = L.featureGroup() //Contains the polyline of a transport line
+      let line = L.featureGroup() //Contains markers and polyline
       let order = 1
       let map = L.map('map', {
         center: [35.20118653849822, -0.6343081902114373],
@@ -71,32 +87,26 @@
         line.clearLayers()
       }
 
-      async function addPolyline(number) {
-        line.clearLayers()
-        const response = await fetch(baseURI + 'polyline/' + number)
-        let data = await response.json()
-        data = data[0].path
-        let pathArray = []
-
-        let path = L.layerGroup()
-        for (let i = 0; i < data.length; i++) {
-          pathArray.push([data[i].latitude, data[i].longitude])
-        }
-        let poly = L.polyline(pathArray, { color: 'red' }).addTo(line)
-        map.fitBounds(poly.getBounds())
+      let getLatLngs = (layer) => {
+        if (layer instanceof L.Polyline) return layer.getLatLngs()
+        if (layer instanceof L.Marker) return layer.getLatLng()
       }
 
-      async function addStations(station) {
-        let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude]).bindPopup('<b>' + station.name + '</b>')
+      function addStation(station) {
+        let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { title: station.name })
+          .bindPopup('<b>' + station.name + '</b>')
+          .addTo(markers)
         marker.addTo(line)
       }
 
-      // async function addLine(number) {
-      //   line.clearLayers()
-      //   addPolyline(number)
-      //   addStations(number)
-      //   line.addTo(map)
-      // }
+      function addPolyline(segment) {
+        let pathArray = []
+        for (let i = 0; i < segment.length; i++) pathArray.push([segment[i].latitude, segment[i].longitude])
+        let poly = L.polyline(pathArray, { color: 'red' }).addTo(polylines)
+        polylines.addTo(line)
+        // map.fitBounds(poly.getBounds())
+      }
+
       map.on('draw:created', function (e) {
         let layer = e.layer
         console.log(getLatLngs(layer))
@@ -109,32 +119,51 @@
         layers.eachLayer(function (layer) {
           if (layer instanceof L.Polyline) {
             console.log(layer._latlngs)
+          } else if (layer instanceof L.Marker) {
+            console.log(layer.options.title)
+            console.log(layer._latlng)
           }
         })
       })
 
-      let getLatLngs = (layer) => {
-        if (layer instanceof L.Polyline) return layer.getLatLngs()
-        if (layer instanceof L.Marker) return layer.getLatLng()
-      }
-
+      let stations = []
+      let segment = []
       async function addLine(number) {
         const response = await fetch(baseURI + 'lines/' + number)
         let data = await response.json()
         data = data[0].route
-        let stations = []
-        let segment = []
+
         data.forEach((item) => {
           stations.push(item.from)
           stations.push(item.to)
+          segment.push(item.path)
         })
-        console.log(stations)
 
         stations = stations.filter((v, i, a) => a.findIndex((t) => t.coordinates.latitude === v.coordinates.latitude && t.coordinates.longitude === v.coordinates.longitude) === i)
-        console.log(stations)
+        markers.clearLayers()
+        polylines.clearLayers()
+        line.clearLayers()
+        stations.forEach((item) => addStation(item))
+        segment.forEach((item) => addPolyline(item))
+        line.addTo(map)
+        populateList('from', stations)
+        populateList('to', stations)
+      }
+      addLine('tramway')
+
+      let populateList = (id, array) => {
+        let list = document.getElementById(id)
+        for (let i = 0; i < array.length; i++) {
+          let option = new Option(array[i].name, JSON.stringify(array[i]))
+          list.appendChild(option)
+        }
       }
 
-      addLine('tramway')
+      document.getElementById('from').addEventListener('change', (event) => {
+        console.log(event.target.value)
+      })
+
+      //Create and append the options
     </script>
   </body>
 </html>
