@@ -93,6 +93,8 @@
       }
 
       function addStation(station) {
+        // console.log(station)
+        // console.log(station.coordinates)
         let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { title: station.name })
           .bindPopup('<b>' + station.name + '</b>')
           .addTo(line)
@@ -170,7 +172,6 @@
         populateList('from', stations)
         populateList('to', stations)
       }
-      addLine('tramway')
 
       let populateList = (id, array) => {
         let list = document.getElementById(id)
@@ -179,14 +180,33 @@
           list.appendChild(option)
         }
       }
+      addLine('tramway')
+
       let from, to
-      document.getElementById('from').addEventListener('change', (event) => {
+      let fromElement, toElement
+      fromElement = document.getElementById('from')
+      fromElement.addEventListener('change', (event) => {
         from = event.target.value
-        console.log('from', from)
       })
-      document.getElementById('to').addEventListener('change', (event) => {
+      toElement = document.getElementById('to').addEventListener('change', (event) => {
         to = event.target.value
-        console.log('to', to)
+      })
+
+      async function getSegment(from, to) {
+        console.log(from)
+        from = JSON.parse(from)
+        to = JSON.parse(to)
+        // console.log('to', to.name)
+        const response = await fetch(baseURI + 'lines/' + from.name + '/' + to.name)
+        let data = await response.json()
+        // console.log(data)
+        addStation(data.from)
+        addStation(data.to)
+        addPolyline(data.path)
+      }
+
+      document.getElementById('getline').addEventListener('click', (event) => {
+        getSegment(from, to)
       })
     </script>
   </body>

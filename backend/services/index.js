@@ -98,11 +98,18 @@ app.get('/lines/:name', (request, response) => {
     })
 })
 
-app.get('/line/:from', (request, response) => {
+app.get('/lines/:from/:to', (request, response) => {
   let from = request.params.from
-  // let to = request.params.to
-  Line.find({ 'route.from.name': from }, { route: { $elemMatch: { 'from.name': from } } })
-    .then((data) => response.json(data))
+  let to = request.params.to
+  Line.find({ 'route.from.name': from, 'route.to.name': to }, { route: { $elemMatch: { 'from.name': from, 'to.name': to } } })
+    .then((data) => {
+      let donnee = data[0].route[0]
+      response.json({
+        from: donnee.from,
+        to: donnee.to,
+        path: donnee.path,
+      })
+    })
     .catch((err) => {
       console.log(err)
       response.json(err)
