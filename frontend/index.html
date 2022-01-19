@@ -103,8 +103,12 @@
         let pathArray = []
         for (let i = 0; i < segment.length; i++) pathArray.push([segment[i].latitude, segment[i].longitude])
         let poly = L.polyline(pathArray, { color: 'red' }).addTo(line)
-        // polylines.addTo(line)
-        // map.fitBounds(poly.getBounds())
+      }
+
+      function addPolylineWithTitle(segment, title) {
+        let pathArray = []
+        for (let i = 0; i < segment.length; i++) pathArray.push([segment[i].latitude, segment[i].longitude])
+        let poly = L.polyline(pathArray, { color: 'red', title: title }).addTo(line)
       }
 
       map.on('draw:created', function (e) {
@@ -126,28 +130,43 @@
         })
       })
 
-      function addStationsPolyline(stations, segments) {
-        line.clearLayers()
-        stations.forEach((item) => addStation(item))
-        segment.forEach((item) => addPolyline(item))
+      function addPart(morceau) {
+        let from = morceau.from
+        let to = morceau.to
+        let path = morceau.path
+        console.log(from)
+        addStation(from)
+        addStation(to)
+        addPolylineWithTitle(path, from.name + '_' + to.name)
         line.addTo(map)
+        console.log(line._layers)
       }
 
       let stations = []
-      let segment = []
+      let segments = []
       async function addLine(number) {
+        //fetching the data
         const response = await fetch(baseURI + 'lines/' + number)
         let data = await response.json()
         data = data[0].route
-
         data.forEach((item) => {
-          stations.push(item.from)
-          stations.push(item.to)
-          segment.push(item.path)
+          let part = {}
+          part.from = item.from
+          part.to = item.to
+          part.path = item.path
+          part.id = item._id
+          stations.push(item.from, item.to)
+          segments.push(item.path)
+          // console.log(part)
+          // addPart(part)
         })
-
         stations = stations.filter((v, i, a) => a.findIndex((t) => t.coordinates.latitude === v.coordinates.latitude && t.coordinates.longitude === v.coordinates.longitude) === i)
-        addStationsPolyline(stations, segment)
+
+        //Adding overlays
+        clearMap()
+        stations.forEach((item) => addStation(item))
+        segments.forEach((item) => addPolyline(item))
+        line.addTo(map)
         populateList('from', stations)
         populateList('to', stations)
       }

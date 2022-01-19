@@ -97,3 +97,14 @@ app.get('/lines/:name', (request, response) => {
       response.json(err)
     })
 })
+
+app.get('/line/:from', (request, response) => {
+  let from = request.params.from
+  // let to = request.params.to
+  Line.find({ 'route.from.name': from }, { route: { $elemMatch: { 'from.name': from } } })
+    .then((data) => response.json(data))
+    .catch((err) => {
+      console.log(err)
+      response.json(err)
+    })
+})
