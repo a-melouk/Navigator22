@@ -42,52 +42,7 @@ app.post('/lines', (request, response) => {
     })
 })
 
-app.post('/polyline', (request, response) => {
-  const polyline = new Polyline(request.body)
-  polyline
-    .save()
-    .then((data) => {
-      response.json({
-        status: 'success',
-        donnee: data,
-      })
-    })
-    .catch((err) => {
-      response.json({
-        reponse: err,
-      })
-      console.log(err)
-    })
-})
-
-app.post('/station', (request, response) => {
-  const station = new Station(request.body)
-  station
-    .save()
-    .then((data) => {
-      response.json({
-        status: 'success',
-        donnee: data,
-      })
-    })
-    .catch((err) => {
-      response.json({
-        reponse: err,
-      })
-      console.log(err)
-    })
-})
-
-app.get('/polyline/:name', (request, response) => {
-  let params = request.params.name
-  Polyline.find({ name: params })
-    .then((data) => response.json(data))
-    .catch((err) => {
-      console.log(err)
-      response.json(err)
-    })
-})
-
+//Get a line by name
 app.get('/lines/:name', (request, response) => {
   let params = request.params.name
   Line.find({ name: params })
@@ -98,6 +53,7 @@ app.get('/lines/:name', (request, response) => {
     })
 })
 
+//Get a part between two stations (Two stations a segment between them)
 app.get('/lines/:from/:to', (request, response) => {
   let from = request.params.from
   let to = request.params.to
@@ -109,6 +65,24 @@ app.get('/lines/:from/:to', (request, response) => {
         to: donnee.to,
         path: donnee.path,
       })
+    })
+    .catch((err) => {
+      console.log(err)
+      response.json(err)
+    })
+})
+
+//Get all the stations
+app.get('/stations', (request, response) => {
+  let stations = []
+  Line.find({})
+    .then((data) => {
+      let donnee = data[0].route
+      donnee.forEach((item) => {
+        stations.push(item.from, item.to)
+      })
+      stations = stations.filter((v, i, a) => a.findIndex((t) => t.coordinates.latitude === v.coordinates.latitude && t.coordinates.longitude === v.coordinates.longitude) === i)
+      response.json(stations)
     })
     .catch((err) => {
       console.log(err)
