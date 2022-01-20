@@ -1,4 +1,4 @@
-const baseURI = 'http://192.168.1.7:4000/'
+const baseURI = 'http://localhost:4000/'
 let markers = L.featureGroup() //Contains markers of the transport line stations
 let polylines = L.featureGroup() //Contains the polyline of a transport line
 let line = L.featureGroup() //Contains markers and polyline
@@ -23,7 +23,7 @@ let drawControl = new L.Control.Draw({
     circlemarker: false,
   },
   edit: {
-    featureGroup: line,
+    featureGroup: segment,
   },
 })
 drawControl.addTo(map)
@@ -35,24 +35,35 @@ let getLatLngs = (layer) => {
 
 clearMap = () => {
   line.clearLayers()
+  segment.clearLayers()
 }
 
-function addStation(station) {
-  let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { title: station.name })
-    .bindPopup('<b>' + station.name + '</b>')
-    .addTo(line)
+function addStation(station, layer) {
+  let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { item: station }).bindPopup('<b>' + station.name + '</b>')
+  if (layer === 'segment') marker.addTo(segment)
+  else if (layer === 'line') marker.addTo(line)
 }
 
-function addPolyline(segment, color) {
+/* function addPolyline(segment, color, layer) {
   let pathArray = []
   for (let i = 0; i < segment.length; i++) pathArray.push([segment[i].latitude, segment[i].longitude])
   let poly = L.polyline(pathArray, { color: color }).addTo(line)
+} */
+
+function addPolyline(seg, color, layer) {
+  let pathArray = []
+  for (let i = 0; i < seg.length; i++) pathArray.push([seg[i].latitude, seg[i].longitude])
+  let poly = L.polyline(pathArray, { color: color, item: seg })
+  if (layer === 'segment') poly.addTo(segment)
+  else if (layer === 'line') poly.addTo(line)
 }
 
-function addPolylineWithTitle(segment, title) {
-  let pathArray = []
-  for (let i = 0; i < segment.length; i++) pathArray.push([segment[i].latitude, segment[i].longitude])
-  let poly = L.polyline(pathArray, { color: 'red', title: title }).addTo(line)
+function addSegment(seg) {
+  clearMap()
+  addStation(seg.from, 'segment')
+  addStation(seg.to, 'segment')
+  addPolyline(seg.path, 'black', 'segment')
+  segment.addTo(map)
 }
 
 map.on('draw:created', function (e) {
@@ -63,12 +74,18 @@ map.on('draw:created', function (e) {
 
 map.on('draw:edited', function (e) {
   let layers = e.layers
+  let temp = {}
 
   layers.eachLayer(function (layer) {
     if (layer instanceof L.Polyline) {
-      console.log(layer._latlngs)
+      console.log(layer.options.item, layer._latlngs)
     } else if (layer instanceof L.Marker) {
-      console.log(layer._latlng)
+      console.log(layer.options.title, layer._latlng)
     }
   })
+  let tempLayers = segment.getLayers()
+  temp.from = tempLayers[0].options.item
+  temp.to = tempLayers[1].options.item
+  temp.path = tempLayers[2].options.item
+  console.log(temp)
 })

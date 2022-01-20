@@ -3,7 +3,7 @@ async function addLine(number) {
   let segments = []
 
   //fetching the data
-  const response = await fetch(baseURI + 'lines/' + number)
+  const response = await fetch(baseURI + 'lines?name=' + number)
   let data = await response.json()
   data = data[0].route
   data.forEach((item) => {
@@ -15,8 +15,8 @@ async function addLine(number) {
 
   //Adding overlays
   clearMap()
-  stations.forEach((item) => addStation(item))
-  segments.forEach((item) => addPolyline(item, 'red'))
+  stations.forEach((item) => addStation(item, 'line'))
+  segments.forEach((item) => addPolyline(item, 'red', 'line'))
   line.addTo(map)
 }
 
@@ -29,7 +29,7 @@ let populate = () => {
     })
 }
 
-async function populateList(data, id) {
+function populateList(data, id) {
   let list = document.getElementById(id)
   data.forEach((item) => {
     let option = new Option(item.name, JSON.stringify(item))
@@ -38,13 +38,9 @@ async function populateList(data, id) {
 }
 
 async function getSegment(from, to) {
-  line.clearLayers()
   from = JSON.parse(from)
   to = JSON.parse(to)
-  const response = await fetch(baseURI + 'lines/from/' + from.name + '/to/' + to.name)
+  const response = await fetch(baseURI + 'lines/segment?from=' + from.name + '&to=' + to.name)
   let data = await response.json()
-  addStation(data.from)
-  addStation(data.to)
-  addPolyline(data.path, 'blue')
-  line.addTo(map)
+  addSegment(data)
 }

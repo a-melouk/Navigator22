@@ -43,9 +43,9 @@ app.post('/lines', (request, response) => {
 })
 
 //Get a line by name
-app.get('/lines/:name', (request, response) => {
-  let params = request.params.name
-  Line.find({ name: params })
+app.get('/lines', (request, response) => {
+  let name = request.query.name
+  Line.find({ name: name })
     .then((data) => response.json(data))
     .catch((err) => {
       console.log(err)
@@ -54,9 +54,9 @@ app.get('/lines/:name', (request, response) => {
 })
 
 //Get a part between two stations (Two stations a segment between them)
-app.get('/lines/from/:from/to/:to', (request, response) => {
-  let from = request.params.from
-  let to = request.params.to
+app.get('/lines/segment', (request, response) => {
+  let from = request.query.from
+  let to = request.query.to
   Line.find({ 'route.from.name': from, 'route.to.name': to }, { route: { $elemMatch: { 'from.name': from, 'to.name': to } } })
     .then((data) => {
       let donnee = data[0].route[0]

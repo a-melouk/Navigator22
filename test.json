@@ -1,54 +1,80 @@
-[
-  {
-      "latitude": 35.21141340270742,
-      "longitude": -0.6279624635704529
+{
+  "from": {
+    "coordinates": {
+      "latitude": 35.209029131097836,
+      "longitude": -0.6163117086223125
+    },
+    "name": "Les Cascades",
+    "order": 0
   },
-  {
-      "latitude": 35.21096042086303,
-      "longitude": -0.6280588267614996
+  "to": {
+    "coordinates": {
+      "latitude": 35.21332,
+      "longitude": -0.61591
+    },
+    "name": "Gare routière Est, Ghalmi",
+    "order": 1
   },
-  {
-      "latitude": 35.21023880066029,
-      "longitude": -0.6275260846970167
-  },
-  {
-      "latitude": 35.20931840984816,
-      "longitude": -0.6269081109152497
-  },
-  {
-      "latitude": 35.20883753036719,
-      "longitude": -0.6267104128344237
-  },
-  {
-      "latitude": 35.20867473198382,
-      "longitude": -0.6266920299008284
-  },
-  {
-      "latitude": 35.20849690560616,
-      "longitude": -0.6265909242569513
-  },
-  {
-      "latitude": 35.20818069935976,
-      "longitude": -0.6266843428908998
-  },
-  {
-      "latitude": 35.2076810283753,
-      "longitude": -0.6266996509223223
-  },
-  {
-      "latitude": 35.20676683542264,
-      "longitude": -0.6268191393361856
-  },
-  {
-      "latitude": 35.20648568767688,
-      "longitude": -0.6267883137917285
-  },
-  {
-      "latitude": 35.20622269786272,
-      "longitude": -0.6266749529678806
-  },
-  {
-      "latitude": 35.20599727740149,
-      "longitude": -0.626524826440471
-  }
-]
+  "path": [
+    {
+      "latitude": 35.20903402145808,
+      "longitude": -0.6162695658834939,
+      "_id": "61e8a7eacfa40aec3f763c9f"
+    },
+    {
+      "latitude": 35.209689713431835,
+      "longitude": -0.6165126288834811,
+      "_id": "61e8a7eacfa40aec3f763ca0"
+    },
+    {
+      "latitude": 35.20997072280991,
+      "longitude": -0.616584119002126,
+      "_id": "61e8a7eacfa40aec3f763ca1"
+    },
+    {
+      "latitude": 35.21027514871728,
+      "longitude": -0.6165984166331652,
+      "_id": "61e8a7eacfa40aec3f763ca2"
+    },
+    {
+      "latitude": 35.21090741389125,
+      "longitude": -0.616584119002126,
+      "_id": "61e8a7eacfa40aec3f763ca3"
+    },
+    {
+      "latitude": 35.21172700965564,
+      "longitude": -0.6165984166331652,
+      "_id": "61e8a7eacfa40aec3f763ca4"
+    },
+    {
+      "latitude": 35.212113387604184,
+      "longitude": -0.6165269271690168,
+      "_id": "61e8a7eacfa40aec3f763ca5"
+    },
+    {
+      "latitude": 35.21240609703638,
+      "longitude": -0.6163982465262553,
+      "_id": "61e8a7eacfa40aec3f763ca6"
+    },
+    {
+      "latitude": 35.212597361819356,
+      "longitude": -0.6162953543193006,
+      "_id": "61e8a7eacfa40aec3f763ca7"
+    },
+    {
+      "latitude": 35.21281981977937,
+      "longitude": -0.6161094821706682,
+      "_id": "61e8a7eacfa40aec3f763ca8"
+    },
+    {
+      "latitude": 35.21304813117067,
+      "longitude": -0.6159164608792779,
+      "_id": "61e8a7eacfa40aec3f763ca9"
+    },
+    {
+      "latitude": 35.21327058776147,
+      "longitude": -0.6157234399151458,
+      "_id": "61e8a7eacfa40aec3f763caa"
+    }
+  ]
+}
