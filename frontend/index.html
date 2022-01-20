@@ -16,8 +16,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.14/leaflet.draw.js"></script>
     <link href="style1.css" rel="stylesheet" />
     <link href="style2.css" rel="stylesheet" />
+    <link href="./content.html" rel="import" />
   </head>
-
   <body>
     <div class="container">
       <div class="top" id="top">
@@ -49,139 +49,15 @@
         <div class="clear">
           <button class="clear-all" onclick="clearMap()">Clear the map</button>
         </div>
-        <!-- <button class="add-line" onclick="addLine()">Add a line</button> -->
       </div>
     </div>
+    <script src="./layers.js" type="text/javascript"></script>
+    <script src="./methods.js" type="text/javascript"></script>
 
     <script>
-      const baseURI = 'http://192.168.1.13:4000/'
-      let markers = L.featureGroup() //Contains markers of the transport line stations
-      let polylines = L.featureGroup() //Contains the polyline of a transport line
-      let line = L.featureGroup() //Contains markers and polyline
-      let order = 1
-      let map = L.map('map', {
-        center: [35.20118653849822, -0.6343081902114373],
-        zoom: 15,
-        maxZoom: 19,
-      })
+      populate()
 
-      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        subdomains: ['a', 'b', 'c'],
-      }).addTo(map)
-
-      let drawControl = new L.Control.Draw({
-        position: 'topright',
-        draw: {
-          polygon: false,
-          rectangle: false,
-          circle: false,
-          circlemarker: false,
-        },
-        edit: {
-          featureGroup: line,
-        },
-      })
-      drawControl.addTo(map)
-
-      clearMap = () => {
-        line.clearLayers()
-      }
-
-      let getLatLngs = (layer) => {
-        if (layer instanceof L.Polyline) return layer.getLatLngs()
-        if (layer instanceof L.Marker) return layer.getLatLng()
-      }
-
-      function addStation(station) {
-        // console.log(station)
-        // console.log(station.coordinates)
-        let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { title: station.name })
-          .bindPopup('<b>' + station.name + '</b>')
-          .addTo(line)
-        // marker.addTo(line)
-      }
-
-      function addPolyline(segment) {
-        let pathArray = []
-        for (let i = 0; i < segment.length; i++) pathArray.push([segment[i].latitude, segment[i].longitude])
-        let poly = L.polyline(pathArray, { color: 'red' }).addTo(line)
-      }
-
-      function addPolylineWithTitle(segment, title) {
-        let pathArray = []
-        for (let i = 0; i < segment.length; i++) pathArray.push([segment[i].latitude, segment[i].longitude])
-        let poly = L.polyline(pathArray, { color: 'red', title: title }).addTo(line)
-      }
-
-      map.on('draw:created', function (e) {
-        let layer = e.layer
-        console.log(getLatLngs(layer))
-        layer.addTo(map)
-      })
-
-      map.on('draw:edited', function (e) {
-        let layers = e.layers
-
-        layers.eachLayer(function (layer) {
-          if (layer instanceof L.Polyline) {
-            console.log(layer._latlngs)
-          } else if (layer instanceof L.Marker) {
-            console.log(layer.options.title)
-            console.log(layer._latlng)
-          }
-        })
-      })
-
-      function addPart(morceau) {
-        let from = morceau.from
-        let to = morceau.to
-        let path = morceau.path
-        console.log(from)
-        addStation(from)
-        addStation(to)
-        addPolylineWithTitle(path, from.name + '_' + to.name)
-        line.addTo(map)
-        console.log(line._layers)
-      }
-
-      let stations = []
-      let segments = []
-      async function addLine(number) {
-        //fetching the data
-        const response = await fetch(baseURI + 'lines/' + number)
-        let data = await response.json()
-        data = data[0].route
-        data.forEach((item) => {
-          let part = {}
-          part.from = item.from
-          part.to = item.to
-          part.path = item.path
-          part.id = item._id
-          stations.push(item.from, item.to)
-          segments.push(item.path)
-          // console.log(part)
-          // addPart(part)
-        })
-        stations = stations.filter((v, i, a) => a.findIndex((t) => t.coordinates.latitude === v.coordinates.latitude && t.coordinates.longitude === v.coordinates.longitude) === i)
-
-        //Adding overlays
-        clearMap()
-        stations.forEach((item) => addStation(item))
-        segments.forEach((item) => addPolyline(item))
-        line.addTo(map)
-        populateList('from', stations)
-        populateList('to', stations)
-      }
-
-      let populateList = (id, array) => {
-        let list = document.getElementById(id)
-        for (let i = 0; i < array.length; i++) {
-          let option = new Option(array[i].name, JSON.stringify(array[i]))
-          list.appendChild(option)
-        }
-      }
-      addLine('tramway')
-
+      //Select options
       let from, to
       let fromElement, toElement
       fromElement = document.getElementById('from')
@@ -191,19 +67,6 @@
       toElement = document.getElementById('to').addEventListener('change', (event) => {
         to = event.target.value
       })
-
-      async function getSegment(from, to) {
-        console.log(from)
-        from = JSON.parse(from)
-        to = JSON.parse(to)
-        // console.log('to', to.name)
-        const response = await fetch(baseURI + 'lines/' + from.name + '/' + to.name)
-        let data = await response.json()
-        // console.log(data)
-        addStation(data.from)
-        addStation(data.to)
-        addPolyline(data.path)
-      }
 
       document.getElementById('getline').addEventListener('click', (event) => {
         getSegment(from, to)

@@ -20,8 +20,8 @@ app.use(
 )
 const dbURI = 'mongodb://127.0.0.1/navigator'
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-  console.log('Running on 4000')
   app.listen(4000)
+  console.log('Running on 4000')
 })
 
 app.post('/lines', (request, response) => {
@@ -54,7 +54,7 @@ app.get('/lines/:name', (request, response) => {
 })
 
 //Get a part between two stations (Two stations a segment between them)
-app.get('/lines/:from/:to', (request, response) => {
+app.get('/lines/from/:from/to/:to', (request, response) => {
   let from = request.params.from
   let to = request.params.to
   Line.find({ 'route.from.name': from, 'route.to.name': to }, { route: { $elemMatch: { 'from.name': from, 'to.name': to } } })
@@ -64,6 +64,7 @@ app.get('/lines/:from/:to', (request, response) => {
         from: donnee.from,
         to: donnee.to,
         path: donnee.path,
+        id: donnee._id,
       })
     })
     .catch((err) => {
@@ -71,6 +72,8 @@ app.get('/lines/:from/:to', (request, response) => {
       response.json(err)
     })
 })
+
+// db.lines.find({ 'route.from.name': 'Wiam', 'route.to.name': 'Daira' }, { route: { $elemMatch: { 'from.name': 'Wiam', 'to.name': 'Daira'} } }).pretty()
 
 //Get all the stations
 app.get('/stations', (request, response) => {
@@ -81,7 +84,7 @@ app.get('/stations', (request, response) => {
       donnee.forEach((item) => {
         stations.push(item.from, item.to)
       })
-      stations = stations.filter((v, i, a) => a.findIndex((t) => t.coordinates.latitude === v.coordinates.latitude && t.coordinates.longitude === v.coordinates.longitude) === i)
+      stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
       response.json(stations)
     })
     .catch((err) => {
@@ -89,3 +92,33 @@ app.get('/stations', (request, response) => {
       response.json(err)
     })
 })
+
+app.patch('/lines/:from', (request, response) => {
+  let from = request.params.from
+  let body = request.body
+  Line.updateOne({ 'route.from.name': from }, { $set: { 'route.$': body } })
+    .then((data) => response.json(data))
+    .catch((err) => response.json(err))
+})
+/* 
+app.patch('lines/:id', (request, response) => {
+  let id = request.params.id
+  let body = request.body
+  console.log(body)
+  Line.findByIdAndUpdate(
+    { 'route._id': ObjectId(id) },
+    { route: { $elemMatch: { _id: ObjectId(id) } } },
+    {
+      $set: { path: body },
+    }
+  )
+          .then((data) => response.json(data))
+    .catch((err) => response.json(err))
+}) */
+
+/*
+
+db.lines.find({ "route._id": ObjectId("61e89506430fd641ba131aa3") },{ route: { $elemMatch: { '_id': ObjectId("61e89506430fd641ba131aa3") } } }).pretty()
+db.lines.find({ "route.from.name": "Wiam" }).pretty()
+
+*/
