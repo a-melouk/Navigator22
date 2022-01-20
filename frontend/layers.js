@@ -10,9 +10,9 @@ let map = L.map('map', {
   maxZoom: 19,
 })
 
-L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+const tile = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   subdomains: ['a', 'b', 'c'],
-}).addTo(map)
+})
 
 let drawControl = new L.Control.Draw({
   position: 'topright',
@@ -26,14 +26,24 @@ let drawControl = new L.Control.Draw({
     featureGroup: segment,
   },
 })
-drawControl.addTo(map)
 
 let getLatLngs = (layer) => {
   if (layer instanceof L.Polyline) return layer.getLatLngs()
   if (layer instanceof L.Marker) return layer.getLatLng()
 }
 
+function init() {
+  tile.addTo(map)
+}
+
+init()
+
 clearMap = () => {
+  map.eachLayer((layer) => {
+    if (!layer instanceof L.TileLayer) map.removeLayer(layer)
+    map.contr
+    map.removeControl(drawControl)
+  })
   line.clearLayers()
   segment.clearLayers()
 }
@@ -44,26 +54,12 @@ function addStation(station, layer) {
   else if (layer === 'line') marker.addTo(line)
 }
 
-/* function addPolyline(segment, color, layer) {
-  let pathArray = []
-  for (let i = 0; i < segment.length; i++) pathArray.push([segment[i].latitude, segment[i].longitude])
-  let poly = L.polyline(pathArray, { color: color }).addTo(line)
-} */
-
 function addPolyline(seg, color, layer) {
   let pathArray = []
   for (let i = 0; i < seg.length; i++) pathArray.push([seg[i].latitude, seg[i].longitude])
   let poly = L.polyline(pathArray, { color: color, item: seg })
   if (layer === 'segment') poly.addTo(segment)
   else if (layer === 'line') poly.addTo(line)
-}
-
-function addSegment(seg) {
-  clearMap()
-  addStation(seg.from, 'segment')
-  addStation(seg.to, 'segment')
-  addPolyline(seg.path, 'black', 'segment')
-  segment.addTo(map)
 }
 
 map.on('draw:created', function (e) {

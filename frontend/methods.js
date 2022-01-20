@@ -1,3 +1,20 @@
+let populate = () => {
+  fetch(baseURI + 'stations')
+    .then((response) => response.json())
+    .then((data) => {
+      populateList(data, 'from')
+      populateList(data, 'to')
+    })
+}
+
+function populateList(data, id) {
+  let list = document.getElementById(id)
+  data.forEach((item) => {
+    let option = new Option(item.name, JSON.stringify(item))
+    list.appendChild(option)
+  })
+}
+
 async function addLine(number) {
   let stations = []
   let segments = []
@@ -18,22 +35,17 @@ async function addLine(number) {
   stations.forEach((item) => addStation(item, 'line'))
   segments.forEach((item) => addPolyline(item, 'red', 'line'))
   line.addTo(map)
-}
-
-let populate = () => {
-  fetch(baseURI + 'stations')
-    .then((response) => response.json())
-    .then((data) => {
-      populateList(data, 'from')
-      populateList(data, 'to')
-    })
-}
-
-function populateList(data, id) {
-  let list = document.getElementById(id)
-  data.forEach((item) => {
-    let option = new Option(item.name, JSON.stringify(item))
-    list.appendChild(option)
+  drawControl = new L.Control.Draw({
+    position: 'topright',
+    draw: {
+      polygon: false,
+      rectangle: false,
+      circle: false,
+      circlemarker: false,
+    },
+    edit: {
+      featureGroup: segment,
+    },
   })
 }
 
@@ -43,4 +55,13 @@ async function getSegment(from, to) {
   const response = await fetch(baseURI + 'lines/segment?from=' + from.name + '&to=' + to.name)
   let data = await response.json()
   addSegment(data)
+}
+
+function addSegment(seg) {
+  clearMap()
+  addStation(seg.from, 'segment')
+  addStation(seg.to, 'segment')
+  addPolyline(seg.path, 'black', 'segment')
+  segment.addTo(map)
+  drawControl.addTo(map)
 }

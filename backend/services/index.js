@@ -100,21 +100,6 @@ app.patch('/lines/:from', (request, response) => {
     .then((data) => response.json(data))
     .catch((err) => response.json(err))
 })
-/* 
-app.patch('lines/:id', (request, response) => {
-  let id = request.params.id
-  let body = request.body
-  console.log(body)
-  Line.findByIdAndUpdate(
-    { 'route._id': ObjectId(id) },
-    { route: { $elemMatch: { _id: ObjectId(id) } } },
-    {
-      $set: { path: body },
-    }
-  )
-          .then((data) => response.json(data))
-    .catch((err) => response.json(err))
-}) */
 
 /*
 
