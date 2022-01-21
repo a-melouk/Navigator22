@@ -13,15 +13,30 @@ const Station = Models.Station
 //express app
 const app = express()
 app.use(bodyParser.json())
-app.use(
-  cors({
-    origin: 'http://127.0.0.1:5500',
-  })
-)
+app.use(cors())
 const dbURI = 'mongodb://127.0.0.1/navigator'
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
   app.listen(4000)
   console.log('Running on 4000')
+})
+
+app.post('/stations', (request, response) => {
+  const station = new Station(request.body)
+  console.log(station)
+  station
+    .save()
+    .then((data) => {
+      response.json({
+        status: 'success',
+        donnee: data,
+      })
+    })
+    .catch((err) => {
+      response.json({
+        reponse: err,
+      })
+      console.log(err)
+    })
 })
 
 app.post('/lines', (request, response) => {

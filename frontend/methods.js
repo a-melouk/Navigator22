@@ -15,26 +15,48 @@ function populateList(data, id) {
   })
 }
 
+function addPart(part) {
+  let from = part.from
+  let to = part.to
+  let path = part.path
+  addStation(from, 'part')
+  addStation(to, 'part')
+  addPolyline(path, 'red', 'part')
+  partLayer.addTo(map)
+}
+
 async function addLine(number) {
   let stations = []
   let segments = []
+  clearMap()
 
   //fetching the data
   const response = await fetch(baseURI + 'lines?name=' + number)
   let data = await response.json()
   data = data[0].route
   data.forEach((item) => {
-    stations.push(item.from, item.to)
-    segments.push(item.path)
+    let temp = {}
+    temp.from = item.from
+    temp.to = item.to
+    temp.path = item.path
+    addPart(temp)
+    temp = {}
   })
-  //filter duplicate stations
-  stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
+
+  /*
+      data.forEach((item) => {
+        stations.push(item.from, item.to)
+        segments.push(item.path)
+      })
+      //filter duplicate stations
+      stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
+  */
 
   //Adding overlays
-  clearMap()
-  stations.forEach((item) => addStation(item, 'line'))
-  segments.forEach((item) => addPolyline(item, 'red', 'line'))
-  line.addTo(map)
+
+  // stations.forEach((item) => addStation(item, 'line'))
+  // segments.forEach((item) => addPolyline(item, 'red', 'line'))
+  linelayer.addTo(map)
   drawControl = new L.Control.Draw({
     position: 'topright',
     draw: {
@@ -44,9 +66,11 @@ async function addLine(number) {
       circlemarker: false,
     },
     edit: {
-      featureGroup: segment,
+      featureGroup: partLayer,
     },
   })
+  drawControl.addTo(map)
+  // console.log(line.toGeoJSON())
 }
 
 async function getSegment(from, to) {
@@ -62,6 +86,19 @@ function addSegment(seg) {
   addStation(seg.from, 'segment')
   addStation(seg.to, 'segment')
   addPolyline(seg.path, 'black', 'segment')
-  segment.addTo(map)
+  segmentLayer.addTo(map)
+  console.log(segmentLayer.toGeoJSON())
+  drawControl = new L.Control.Draw({
+    position: 'topright',
+    draw: {
+      polygon: false,
+      rectangle: false,
+      circle: false,
+      circlemarker: false,
+    },
+    edit: {
+      featureGroup: segmentLayer,
+    },
+  })
   drawControl.addTo(map)
 }

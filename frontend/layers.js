@@ -1,9 +1,12 @@
+import * as api from '../backend/services/api'
+let L = require('leaflet')
+console.log('salam')
 const baseURI = 'http://localhost:4000/'
-let markers = L.featureGroup() //Contains markers of the transport line stations
-let polylines = L.featureGroup() //Contains the polyline of a transport line
-let line = L.featureGroup() //Contains markers and polyline
-let segment = L.featureGroup() //Contains markers and polyline
-let order = 1
+
+let linelayer = L.featureGroup() //Contains markers and polyline
+let segmentLayer = L.featureGroup() //Contains markers and polyline
+let partLayer = L.featureGroup() //Contains markers and polyline
+
 let map = L.map('map', {
   center: [35.20118653849822, -0.6343081902114373],
   zoom: 15,
@@ -22,18 +25,21 @@ let drawControl = new L.Control.Draw({
     circle: false,
     circlemarker: false,
   },
-  edit: {
-    featureGroup: segment,
-  },
 })
 
 let getLatLngs = (layer) => {
-  if (layer instanceof L.Polyline) return layer.getLatLngs()
-  if (layer instanceof L.Marker) return layer.getLatLng()
+  if (layer instanceof L.Polyline) {
+    return layer.getLatLngs()
+  }
+  if (layer instanceof L.Marker) {
+    return layer.getLatLng()
+  }
 }
 
 function init() {
   tile.addTo(map)
+  drawControl.addTo(map)
+  console.log('salam')
 }
 
 init()
@@ -41,31 +47,42 @@ init()
 clearMap = () => {
   map.eachLayer((layer) => {
     if (!layer instanceof L.TileLayer) map.removeLayer(layer)
-    map.contr
     map.removeControl(drawControl)
   })
-  line.clearLayers()
-  segment.clearLayers()
+  linelayer.clearLayers()
+  segmentLayer.clearLayers()
 }
 
 function addStation(station, layer) {
   let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { item: station }).bindPopup('<b>' + station.name + '</b>')
-  if (layer === 'segment') marker.addTo(segment)
-  else if (layer === 'line') marker.addTo(line)
+  if (layer === 'segment') marker.addTo(segmentLayer)
+  else if (layer === 'line') marker.addTo(linelayer)
+  else if (layer === 'part') marker.addTo(partLayer)
 }
 
 function addPolyline(seg, color, layer) {
   let pathArray = []
   for (let i = 0; i < seg.length; i++) pathArray.push([seg[i].latitude, seg[i].longitude])
   let poly = L.polyline(pathArray, { color: color, item: seg })
-  if (layer === 'segment') poly.addTo(segment)
-  else if (layer === 'line') poly.addTo(line)
+  if (layer === 'segment') poly.addTo(segmentLayer)
+  else if (layer === 'line') poly.addTo(linelayer)
+  else if (layer === 'part') poly.addTo(partLayer)
 }
 
 map.on('draw:created', function (e) {
   let layer = e.layer
-  console.log(getLatLngs(layer))
   layer.addTo(map)
+  let station = {}
+  if (layer instanceof L.Marker) {
+    station.coordinates = {
+      latitude: layer.getLatLng().lat,
+      longitude: layer.getLatLng().lng,
+    }
+    station.name = prompt('Name of the station', '')
+    station.line = prompt('Line ?', 'tramway')
+    // api.postStation(station)
+    station = {}
+  }
 })
 
 map.on('draw:edited', function (e) {
@@ -79,9 +96,23 @@ map.on('draw:edited', function (e) {
       console.log(layer.options.title, layer._latlng)
     }
   })
-  let tempLayers = segment.getLayers()
-  temp.from = tempLayers[0].options.item
-  temp.to = tempLayers[1].options.item
-  temp.path = tempLayers[2].options.item
-  console.log(temp)
+  if (segmentLayer.getLayers().length > 0) {
+    let tempLayers = segmentLayer.getLayers()
+    temp.from = tempLayers[0].options.item
+    temp.to = tempLayers[1].options.item
+    temp.path = tempLayers[2].options.item
+    console.log(temp)
+  } else if (partLayer.getLayers().length > 0) {
+    let tempLayers = partLayer.getLayers()
+    console.log(tempLayers)
+    let result = []
+    for (let i = 0; i < tempLayers.length; i = i + 3) {
+      temp.from = tempLayers[i].options.item
+      temp.to = tempLayers[i + 1].options.item
+      temp.path = tempLayers[i + 2].options.item
+      result.push(temp)
+      temp = {}
+    }
+    console.log(result)
+  }
 })

@@ -1,80 +1,68 @@
-{
-  "from": {
-    "coordinates": {
-      "latitude": 35.209029131097836,
-      "longitude": -0.6163117086223125
+[
+  {
+    "depart": {
+      "name": "Les Cascades",
+      "coordinates": {
+        "latitude": 35.209029131097836,
+        "longitude": -0.6163117086223125
+      }
     },
-    "name": "Les Cascades",
-    "order": 0
-  },
-  "to": {
-    "coordinates": {
-      "latitude": 35.21332,
-      "longitude": -0.61591
-    },
-    "name": "Gare routière Est, Ghalmi",
-    "order": 1
-  },
-  "path": [
-    {
-      "latitude": 35.20903402145808,
-      "longitude": -0.6162695658834939,
-      "_id": "61e8a7eacfa40aec3f763c9f"
-    },
-    {
-      "latitude": 35.209689713431835,
-      "longitude": -0.6165126288834811,
-      "_id": "61e8a7eacfa40aec3f763ca0"
-    },
-    {
-      "latitude": 35.20997072280991,
-      "longitude": -0.616584119002126,
-      "_id": "61e8a7eacfa40aec3f763ca1"
-    },
-    {
-      "latitude": 35.21027514871728,
-      "longitude": -0.6165984166331652,
-      "_id": "61e8a7eacfa40aec3f763ca2"
-    },
-    {
-      "latitude": 35.21090741389125,
-      "longitude": -0.616584119002126,
-      "_id": "61e8a7eacfa40aec3f763ca3"
-    },
-    {
-      "latitude": 35.21172700965564,
-      "longitude": -0.6165984166331652,
-      "_id": "61e8a7eacfa40aec3f763ca4"
-    },
-    {
-      "latitude": 35.212113387604184,
-      "longitude": -0.6165269271690168,
-      "_id": "61e8a7eacfa40aec3f763ca5"
-    },
-    {
-      "latitude": 35.21240609703638,
-      "longitude": -0.6163982465262553,
-      "_id": "61e8a7eacfa40aec3f763ca6"
-    },
-    {
-      "latitude": 35.212597361819356,
-      "longitude": -0.6162953543193006,
-      "_id": "61e8a7eacfa40aec3f763ca7"
-    },
-    {
-      "latitude": 35.21281981977937,
-      "longitude": -0.6161094821706682,
-      "_id": "61e8a7eacfa40aec3f763ca8"
-    },
-    {
-      "latitude": 35.21304813117067,
-      "longitude": -0.6159164608792779,
-      "_id": "61e8a7eacfa40aec3f763ca9"
-    },
-    {
-      "latitude": 35.21327058776147,
-      "longitude": -0.6157234399151458,
-      "_id": "61e8a7eacfa40aec3f763caa"
+    "path": [
+      {
+        "latitude": 35.20903402145808,
+        "longitude": -0.6162695658834939
+      },
+      {
+        "latitude": 35.209689713431835,
+        "longitude": -0.6165126288834811
+      },
+      {
+        "latitude": 35.20997072280991,
+        "longitude": -0.616584119002126
+      },
+      {
+        "latitude": 35.21027514871728,
+        "longitude": -0.6165984166331652
+      },
+      {
+        "latitude": 35.21090741389125,
+        "longitude": -0.616584119002126
+      },
+      {
+        "latitude": 35.21172700965564,
+        "longitude": -0.6165984166331652
+      },
+      {
+        "latitude": 35.212113387604184,
+        "longitude": -0.6165269271690168
+      },
+      {
+        "latitude": 35.21240609703638,
+        "longitude": -0.6163982465262553
+      },
+      {
+        "latitude": 35.212597361819356,
+        "longitude": -0.6162953543193006
+      },
+      {
+        "latitude": 35.21281981977937,
+        "longitude": -0.6161094821706682
+      },
+      {
+        "latitude": 35.21304813117067,
+        "longitude": -0.6159164608792779
+      },
+      {
+        "latitude": 35.21327058776147,
+        "longitude": -0.6157234399151458
+      }
+    ],
+    "arrival": {
+      "name": "Gare routière Est, Ghalmi",
+      "coordinates": {
+        "latitude": 35.21327058776147,
+        "longitude": -0.6157234399151458
+      }
     }
-  ]
-}
+  }
+]
