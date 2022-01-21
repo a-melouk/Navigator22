@@ -1,8 +1,4 @@
-import * as api from '../backend/services/api'
-let L = require('leaflet')
-console.log('salam')
 const baseURI = 'http://localhost:4000/'
-
 let linelayer = L.featureGroup() //Contains markers and polyline
 let segmentLayer = L.featureGroup() //Contains markers and polyline
 let partLayer = L.featureGroup() //Contains markers and polyline
@@ -10,7 +6,7 @@ let partLayer = L.featureGroup() //Contains markers and polyline
 let map = L.map('map', {
   center: [35.20118653849822, -0.6343081902114373],
   zoom: 15,
-  maxZoom: 19,
+  maxZoom: 18,
 })
 
 const tile = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -39,7 +35,7 @@ let getLatLngs = (layer) => {
 function init() {
   tile.addTo(map)
   drawControl.addTo(map)
-  console.log('salam')
+  console.log('Map initialized')
 }
 
 init()
@@ -69,6 +65,16 @@ function addPolyline(seg, color, layer) {
   else if (layer === 'part') poly.addTo(partLayer)
 }
 
+const toTitleCase = (string) => {
+  return string
+    .toLowerCase()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
+let result = toTitleCase('maRy hAd a lIttLe LaMb')
+
 map.on('draw:created', function (e) {
   let layer = e.layer
   layer.addTo(map)
@@ -78,9 +84,19 @@ map.on('draw:created', function (e) {
       latitude: layer.getLatLng().lat,
       longitude: layer.getLatLng().lng,
     }
-    station.name = prompt('Name of the station', '')
+    station.name = toTitleCase(prompt('Name of the station', ''))
     station.line = prompt('Line ?', 'tramway')
-    // api.postStation(station)
+
+    const response = fetch(baseURI + 'stations', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(station),
+    })
+      .then((data) => data.json())
+      .catch((err) => console.log(err))
     station = {}
   }
 })

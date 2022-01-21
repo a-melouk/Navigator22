@@ -27,7 +27,6 @@ app.post('/stations', (request, response) => {
     .save()
     .then((data) => {
       response.json({
-        status: 'success',
         donnee: data,
       })
     })
@@ -54,6 +53,18 @@ app.post('/lines', (request, response) => {
         reponse: err,
       })
       console.log(err)
+    })
+})
+
+//Get all the stations
+app.get('/stations', (request, response) => {
+  Station.find({})
+    .then((data) => {
+      response.json(data)
+    })
+    .catch((err) => {
+      console.log(err)
+      response.json(err)
     })
 })
 
@@ -88,26 +99,6 @@ app.get('/lines/segment', (request, response) => {
     })
 })
 
-// db.lines.find({ 'route.from.name': 'Wiam', 'route.to.name': 'Daira' }, { route: { $elemMatch: { 'from.name': 'Wiam', 'to.name': 'Daira'} } }).pretty()
-
-//Get all the stations
-app.get('/stations', (request, response) => {
-  let stations = []
-  Line.find({})
-    .then((data) => {
-      let donnee = data[0].route
-      donnee.forEach((item) => {
-        stations.push(item.from, item.to)
-      })
-      stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
-      response.json(stations)
-    })
-    .catch((err) => {
-      console.log(err)
-      response.json(err)
-    })
-})
-
 app.patch('/lines/:from', (request, response) => {
   let from = request.params.from
   let body = request.body
@@ -120,5 +111,5 @@ app.patch('/lines/:from', (request, response) => {
 
 db.lines.find({ "route._id": ObjectId("61e89506430fd641ba131aa3") },{ route: { $elemMatch: { '_id': ObjectId("61e89506430fd641ba131aa3") } } }).pretty()
 db.lines.find({ "route.from.name": "Wiam" }).pretty()
-
+// stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
 */
