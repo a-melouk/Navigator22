@@ -30,6 +30,8 @@ function populateList(data, id) {
     })
   } else {
     list.replaceChildren()
+    let option = new Option('', '')
+    list.appendChild(option)
     data.forEach((item) => {
       let option = new Option(item.name, JSON.stringify(item))
       list.appendChild(option)

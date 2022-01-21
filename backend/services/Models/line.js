@@ -7,14 +7,8 @@ const coordinates = {
   _id: false,
 }
 
-const point = {
-  coordinates: coordinates,
-  order: 0,
-}
-
 const station = {
   name: '',
-  order: 0,
   coordinates: coordinates,
 }
 
@@ -22,6 +16,7 @@ const segment = {
   from: station,
   to: station,
   path: [coordinates],
+  order: Number,
 }
 
 const stationSchema = {

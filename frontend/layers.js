@@ -2,6 +2,7 @@ const baseURI = 'http://localhost:4000/'
 let linelayer = L.featureGroup() //Contains markers and polyline
 let segmentLayer = L.featureGroup() //Contains markers and polyline
 let partLayer = L.featureGroup() //Contains markers and polyline
+let markersLayer = L.featureGroup() //Contains markers and polyline
 
 let map = L.map('map', {
   center: [35.20118653849822, -0.6343081902114373],
@@ -54,6 +55,7 @@ function addStation(station, layer) {
   if (layer === 'segment') marker.addTo(segmentLayer)
   else if (layer === 'line') marker.addTo(linelayer)
   else if (layer === 'part') marker.addTo(partLayer)
+  else if (layer === 'markers') marker.addTo(markersLayer)
 }
 
 function addPolyline(seg, color, layer) {
@@ -73,7 +75,8 @@ const toTitleCase = (string) => {
     .join(' ')
 }
 
-let result = toTitleCase('maRy hAd a lIttLe LaMb')
+let lastValue = 1
+let route = []
 
 map.on('draw:created', function (e) {
   let layer = e.layer
@@ -109,6 +112,8 @@ map.on('draw:created', function (e) {
       path.push(point)
       point = {}
     })
+
+    let order = Number(prompt('Order', String(lastValue)))
     let fromOptionValue = JSON.parse(document.getElementById('from').value)
     let toOptionValue = JSON.parse(document.getElementById('to').value)
     point.latitude = fromOptionValue.coordinates.latitude
@@ -129,7 +134,10 @@ map.on('draw:created', function (e) {
     segment.from = from
     segment.to = to
     segment.path = path
+    segment.order = order
     console.log(segment)
+    route.push(segment)
+    lastValue++
 
     // const optionsPost = {
     //   method: 'POST',
@@ -147,6 +155,21 @@ map.on('draw:created', function (e) {
     to = {}
     path = []
   }
+})
+
+let addline = document.getElementById('addline')
+addline.addEventListener('click', (event) => {
+  let line = {}
+  line.name = lineElement.value
+  if (lineElement.value === 'tramway') {
+    line.type = 'tramway'
+  } else {
+    line.type = 'bus'
+  }
+  line.route = route
+  console.log(line)
+  line = {}
+  route = []
 })
 
 map.on('draw:edited', function (e) {
