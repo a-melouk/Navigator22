@@ -20,19 +20,17 @@
   </head>
   <body>
     <div class="container">
-      <div class="top" id="top">
-        <div class="stations-list" style="min-width: 200px">
-          <label for="from">Departure</label>
-          <select name="from" id="from">
-            <option value=""></option>
-          </select>
+      <div class="stations-list" style="min-width: 200px">
+        <label for="line">Line</label>
+        <select name="line" id="line"></select>
 
-          <label for="to">Arrival</label>
-          <select name="to" id="to">
-            <option value=""></option>
-          </select>
-          <button id="getline" style="margin-left: 10px">Get route</button>
-        </div>
+        <label for="from">From</label>
+        <select name="from" id="from"></select>
+
+        <label for="to">To</label>
+        <select name="to" id="to"></select>
+        <button class="get line" id="getline" style="margin-left: 10px">Get route</button>
+        <button class="add line" id="addline" style="margin-left: 10px">Add line</button>
       </div>
       <div id="map"></div>
       <div class="right">
@@ -58,8 +56,14 @@
       populate()
 
       //Select options
-      let from, to
-      let fromElement, toElement
+      let line, from, to
+      let lineElement, fromElement, toElement
+
+      lineElement = document.getElementById('line')
+      lineElement.addEventListener('change', (event) => {
+        getStationsByLine(event.target.value)
+      })
+
       fromElement = document.getElementById('from')
       fromElement.addEventListener('change', (event) => {
         from = event.target.value
@@ -68,7 +72,13 @@
         to = event.target.value
       })
 
-      document.getElementById('getline').addEventListener('click', (event) => {
+      let getline = document.getElementById('getline')
+      getline.addEventListener('click', (event) => {
+        getSegment(from, to)
+      })
+
+      let addline = document.getElementById('addline')
+      addline.addEventListener('click', (event) => {
         getSegment(from, to)
       })
     </script>

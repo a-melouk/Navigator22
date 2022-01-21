@@ -22,60 +22,75 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true }).the
 
 app.post('/stations', (request, response) => {
   const station = new Station(request.body)
-  console.log(station)
+  console.log('Attempt to add a new station', station)
   station
     .save()
     .then((data) => {
-      response.json({
-        donnee: data,
-      })
+      response.json(data)
+      console.log('Station added successfully')
     })
     .catch((err) => {
-      response.json({
-        reponse: err,
-      })
-      console.log(err)
+      response.json(err)
+      console.log('Failed adding the station')
     })
 })
 
 app.post('/lines', (request, response) => {
   const line = new Line(request.body)
+  console.log('Attempt to add a new line', line)
   line
     .save()
     .then((data) => {
-      response.json({
-        status: 'success',
-        donnee: data,
-      })
+      response.json(data)
+      console.log('Line added successfully')
     })
     .catch((err) => {
-      response.json({
-        reponse: err,
-      })
-      console.log(err)
+      response.json(err)
+      console.log('Failed adding the line')
     })
 })
 
 //Get all the stations
 app.get('/stations', (request, response) => {
+  console.log('Attempt to get all the stations')
   Station.find({})
     .then((data) => {
       response.json(data)
+      console.log('All stations retreived successfully')
     })
     .catch((err) => {
-      console.log(err)
       response.json(err)
+      console.log('Failed to retrieve all the stations')
+    })
+})
+
+//Get the stations of a line
+app.get('/stations/:line', (request, response) => {
+  let line = request.params.line
+  console.log('Attempt to get stations of ' + line)
+  Station.find({ line: line })
+    .then((data) => {
+      response.json(data)
+      console.log('All stations retreived successfully')
+    })
+    .catch((err) => {
+      response.json(err)
+      console.log('Failed to retrieve all the stations')
     })
 })
 
 //Get a line by name
 app.get('/lines', (request, response) => {
   let name = request.query.name
+  console.log('Attempt to get a the line: ' + name)
   Line.find({ name: name })
-    .then((data) => response.json(data))
+    .then((data) => {
+      response.json(data)
+      console.log('Line retreived successfully')
+    })
     .catch((err) => {
-      console.log(err)
       response.json(err)
+      console.log('Failed to retrieve the line')
     })
 })
 
@@ -83,6 +98,7 @@ app.get('/lines', (request, response) => {
 app.get('/lines/segment', (request, response) => {
   let from = request.query.from
   let to = request.query.to
+  console.log('Attempt to retrieve the segment :' + from + ' to ' + to)
   Line.find({ 'route.from.name': from, 'route.to.name': to }, { route: { $elemMatch: { 'from.name': from, 'to.name': to } } })
     .then((data) => {
       let donnee = data[0].route[0]
@@ -92,19 +108,27 @@ app.get('/lines/segment', (request, response) => {
         path: donnee.path,
         id: donnee._id,
       })
+      console.log('Segment retreived successfully')
     })
     .catch((err) => {
-      console.log(err)
       response.json(err)
+      console.log('Failed to retrieve a segment')
     })
 })
 
 app.patch('/lines/:from', (request, response) => {
+  console.log('Attempt to patch a segment')
   let from = request.params.from
   let body = request.body
   Line.updateOne({ 'route.from.name': from }, { $set: { 'route.$': body } })
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+    .then((data) => {
+      response.json(data)
+      console.log('Patched successfully')
+    })
+    .catch((err) => {
+      response.json(err)
+      console.log('Failed to patch a segment')
+    })
 })
 
 /*

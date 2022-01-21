@@ -3,7 +3,8 @@
   min-width: 500px;
   height: 10vh;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
+  grid-area: 1 / 1 / 2 / 3;
 }
 
 label {
@@ -20,12 +21,13 @@ label[for='to'] {
 select {
   min-width: 200px;
   min-height: 50px;
-  text-align: center;
+  text-align: justify;
   color: black;
   font-size: 20px;
+  text-align: center;
 }
 
-#getline {
+.line {
   min-width: 130px;
   min-height: 50px;
   height: 40px;
@@ -38,11 +40,23 @@ select {
   position: relative;
   display: inline-block;
   outline: none;
-  border: 2px solid #043d17;
-  background: #043d17;
   border-radius: 20px;
 }
-#getline:hover {
+
+.get {
+  border: 2px solid #043d17;
+  background: #043d17;
+}
+.get:hover {
   background: #fff;
-  color: #043d17
+  color: #043d17;
+}
+
+.add {
+  border: 2px solid #02047e;
+  background: #02047e;
+}
+.add:hover {
+  background: #fff;
+  color: #02047e;
 }

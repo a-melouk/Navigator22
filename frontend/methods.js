@@ -1,5 +1,22 @@
 let populate = () => {
+  let allStations
   fetch(baseURI + 'stations')
+    .then((response) => response.json())
+    .then((data) => {
+      allStations = data
+    })
+    .then(() => {
+      let lines = []
+      allStations.forEach((item) => {
+        lines.push(item.line)
+      })
+      lines = [...new Set(lines)]
+      populateList(lines, 'line')
+    })
+}
+
+function getStationsByLine(line) {
+  fetch(baseURI + 'stations/' + line)
     .then((response) => response.json())
     .then((data) => {
       populateList(data, 'from')
@@ -9,10 +26,19 @@ let populate = () => {
 
 function populateList(data, id) {
   let list = document.getElementById(id)
-  data.forEach((item) => {
-    let option = new Option(item.name, JSON.stringify(item))
-    list.appendChild(option)
-  })
+
+  if (id === 'line') {
+    data.forEach((item) => {
+      let option = new Option(item, item)
+      list.appendChild(option)
+    })
+  } else {
+    list.replaceChildren()
+    data.forEach((item) => {
+      let option = new Option(item.name, JSON.stringify(item))
+      list.appendChild(option)
+    })
+  }
 }
 
 function addPart(part) {
@@ -74,6 +100,7 @@ async function addLine(number) {
 }
 
 async function getSegment(from, to) {
+  console.log('salam')
   from = JSON.parse(from)
   to = JSON.parse(to)
   const response = await fetch(baseURI + 'lines/segment?from=' + from.name + '&to=' + to.name)
