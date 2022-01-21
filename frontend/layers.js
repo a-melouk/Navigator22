@@ -98,6 +98,54 @@ map.on('draw:created', function (e) {
       .then((data) => data.json())
       .catch((err) => console.log(err))
     station = {}
+  } else if (layer instanceof L.Polyline) {
+    let polyline = layer.getLatLngs()
+    let path = []
+    console.log(polyline)
+    let point = {}
+    polyline.forEach((item) => {
+      point.latitude = item.lat
+      point.longitude = item.lng
+      path.push(point)
+      point = {}
+    })
+    let fromOptionValue = JSON.parse(document.getElementById('from').value)
+    let toOptionValue = JSON.parse(document.getElementById('to').value)
+    point.latitude = fromOptionValue.coordinates.latitude
+    point.longitude = fromOptionValue.coordinates.longitude
+    path.unshift(point)
+    point = {}
+    point.latitude = toOptionValue.coordinates.latitude
+    point.longitude = toOptionValue.coordinates.longitude
+    path.push(point)
+
+    let segment = {}
+    let from = {}
+    let to = {}
+
+    from = fromOptionValue
+    to = toOptionValue
+
+    segment.from = from
+    segment.to = to
+    segment.path = path
+    console.log(segment)
+
+    // const optionsPost = {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: segment,
+    // }
+    // const response = fetch('/lines', optionsPost)
+    console.log(segment)
+
+    point = {}
+    segment = {}
+    from = {}
+    to = {}
+    path = []
   }
 })
 

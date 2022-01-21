@@ -136,4 +136,5 @@ app.patch('/lines/:from', (request, response) => {
 db.lines.find({ "route._id": ObjectId("61e89506430fd641ba131aa3") },{ route: { $elemMatch: { '_id': ObjectId("61e89506430fd641ba131aa3") } } }).pretty()
 db.lines.find({ "route.from.name": "Wiam" }).pretty()
 // stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
+"_id": "+[a-zA-Z0-9]+"
 */

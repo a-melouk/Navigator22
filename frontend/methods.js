@@ -1,13 +1,9 @@
 let populate = () => {
-  let allStations
   fetch(baseURI + 'stations')
     .then((response) => response.json())
     .then((data) => {
-      allStations = data
-    })
-    .then(() => {
       let lines = []
-      allStations.forEach((item) => {
+      data.forEach((item) => {
         lines.push(item.line)
       })
       lines = [...new Set(lines)]

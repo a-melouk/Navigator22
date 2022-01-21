@@ -4,6 +4,7 @@ const Schema = mongoose.Schema
 const coordinates = {
   latitude: 0.0,
   longitude: 0.0,
+  _id: false,
 }
 
 const point = {
@@ -62,6 +63,6 @@ const polylineSchema = new Schema({
 })
 
 const Line = mongoose.model('Line', lineSchema)
-const Polyline = mongoose.model('Polyline', polylineSchema)
+// const Polyline = mongoose.model('Polyline', polylineSchema)
 const Station = mongoose.model('Station', stationSchema)
 module.exports = { Line, Station }
