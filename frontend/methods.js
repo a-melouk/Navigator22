@@ -35,6 +35,8 @@ function populateList(data, id) {
   } else {
     list.replaceChildren()
     let option = new Option('', '')
+    option.disabled = true
+    option.selected = true
     list.appendChild(option)
     data.forEach((item) => {
       let option = new Option(item.name, JSON.stringify(item))
@@ -59,7 +61,7 @@ async function addLine(number) {
   linelayer.addTo(map)
 }
 
-async function getSegment(from, to) {
+/* async function getSegment(from, to) {
   console.log('salam')
   from = JSON.parse(from)
   to = JSON.parse(to)
@@ -88,4 +90,4 @@ function addSegment(seg) {
     },
   })
   drawControl.addTo(map)
-}
+} */

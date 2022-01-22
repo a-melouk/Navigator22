@@ -8,6 +8,7 @@ let map = L.map('map', {
   center: [35.20118653849822, -0.6343081902114373],
   zoom: 15,
   maxZoom: 18,
+  minZoom: 13,
 })
 
 const tile = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -66,6 +67,7 @@ function addPolyline(seg, color, layer) {
 }
 
 function addSegment(segment, color, layer) {
+  console.log('Segment from ' + segment.from.name + ' to ' + segment.to.name)
   addStation(segment.from, layer)
   addStation(segment.to, layer)
   addPolyline(segment.path, color, layer)
@@ -93,17 +95,19 @@ map.on('draw:created', function (e) {
     }
     station.name = toTitleCase(prompt('Name of the station', ''))
     station.line = prompt('Line ?', 'tramway')
-
-    const response = fetch(baseURI + 'stations', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(station),
-    })
-      .then((data) => data.json())
-      .catch((err) => console.log(err))
+    let confirm = prompt('Confirm adding the station', 'No')
+    if (confirm.toLowerCase() === 'yes') {
+      const response = fetch(baseURI + 'stations', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(station),
+      })
+        .then((data) => data.json())
+        .catch((err) => console.log(err))
+    }
     station = {}
   } else if (layer instanceof L.Polyline) {
     let polyline = layer.getLatLngs()
@@ -167,7 +171,7 @@ map.on('draw:created', function (e) {
 })
 
 let addline = document.getElementById('addline')
-addline.disabled = true
+// addline.disabled = true
 addline.addEventListener('click', (event) => {
   let line = {}
   line.name = lineElement.value
@@ -178,25 +182,27 @@ addline.addEventListener('click', (event) => {
   }
   line.route = route
   console.log(line)
-
-  const response = fetch(baseURI + 'lines', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(line),
-  })
-    .then((data) => {
-      data.json()
-      line = {}
-      route = []
+  let confirm = prompt('Confirm adding the station', 'No')
+  if (confirm.toLowerCase() === 'yes') {
+    const response = fetch(baseURI + 'lines', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(line),
     })
-    .catch((err) => {
-      console.log(err)
-      line = {}
-      route = []
-    })
+      .then((data) => {
+        data.json()
+        line = {}
+        route = []
+      })
+      .catch((err) => {
+        console.log(err)
+        line = {}
+        route = []
+      })
+  }
 })
 
 map.on('draw:edited', function (e) {
