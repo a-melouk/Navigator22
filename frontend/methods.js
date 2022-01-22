@@ -15,6 +15,10 @@ function getStationsByLine(line) {
   fetch(baseURI + 'stations/' + line)
     .then((response) => response.json())
     .then((data) => {
+      if (line === 'Ligne 03') {
+        let temp = [...data].reverse()
+        data = temp
+      }
       populateList(data, 'from')
       populateList(data, 'to')
     })
@@ -38,16 +42,6 @@ function populateList(data, id) {
     })
   }
 }
-
-/* function addPart(part) {
-  let from = part.from
-  let to = part.to
-  let path = part.path
-  addStation(from, 'part')
-  addStation(to, 'part')
-  addPolyline(path, 'red', 'part')
-  partLayer.addTo(map)
-} */
 
 async function addLine(number) {
   clearMap()
