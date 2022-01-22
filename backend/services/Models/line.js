@@ -10,6 +10,7 @@ const coordinates = {
 const station = {
   name: '',
   coordinates: coordinates,
+  id: String,
 }
 
 const segment = {
@@ -47,14 +48,6 @@ const lineSchema = new Schema({
     required: true,
   },
   route: [segment],
-})
-
-const polylineSchema = new Schema({
-  name: {
-    type: String,
-    default: 'A16',
-  },
-  path: [coordinates],
 })
 
 const Line = mongoose.model('Line', lineSchema)

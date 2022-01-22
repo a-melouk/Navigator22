@@ -39,7 +39,7 @@ function populateList(data, id) {
   }
 }
 
-function addPart(part) {
+/* function addPart(part) {
   let from = part.from
   let to = part.to
   let path = part.path
@@ -47,54 +47,22 @@ function addPart(part) {
   addStation(to, 'part')
   addPolyline(path, 'red', 'part')
   partLayer.addTo(map)
-}
+} */
 
 async function addLine(number) {
-  let stations = []
-  let segments = []
   clearMap()
 
   //fetching the data
   const response = await fetch(baseURI + 'lines?name=' + number)
   let data = await response.json()
+  console.log(data)
   data = data[0].route
   data.forEach((item) => {
-    let temp = {}
-    temp.from = item.from
-    temp.to = item.to
-    temp.path = item.path
-    addPart(temp)
-    temp = {}
+    addStation(item.from, 'line')
+    addStation(item.to, 'line')
+    addPolyline(item.path, 'black', 'line')
   })
-
-  /*
-      data.forEach((item) => {
-        stations.push(item.from, item.to)
-        segments.push(item.path)
-      })
-      //filter duplicate stations
-      stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
-  */
-
-  //Adding overlays
-
-  // stations.forEach((item) => addStation(item, 'line'))
-  // segments.forEach((item) => addPolyline(item, 'red', 'line'))
   linelayer.addTo(map)
-  drawControl = new L.Control.Draw({
-    position: 'topright',
-    draw: {
-      polygon: false,
-      rectangle: false,
-      circle: false,
-      circlemarker: false,
-    },
-    edit: {
-      featureGroup: partLayer,
-    },
-  })
-  drawControl.addTo(map)
-  // console.log(line.toGeoJSON())
 }
 
 async function getSegment(from, to) {

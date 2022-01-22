@@ -35,20 +35,20 @@
         <select name="to" id="to">
           <option disabled selected value>-- select an option --</option>
         </select>
-        <button class="get line" id="getline" style="margin-left: 10px">Get route</button>
+        <button class="get line" id="getsegment" style="margin-left: 10px">Get segment</button>
         <button class="add line" id="addline" style="margin-left: 10px">Add line</button>
       </div>
       <div id="map"></div>
       <div class="right">
         <div class="Lines">
           <button class="lines" onclick="addLine('tramway')">Tramway</button>
-          <button class="lines" onclick="addLine('A03')">Bus 03</button>
-          <button class="lines" onclick="addLine('A11')">Bus 11</button>
-          <button class="lines" onclick="addLine('A16')">Bus 16</button>
-          <button class="lines" onclick="addLine('A17')">Bus 17</button>
-          <button class="lines" onclick="addLine('A22')">Bus 22</button>
-          <button class="lines" onclick="addLine('A25')">Bus 25</button>
-          <button class="lines" onclick="addLine('A27')">Bus 27</button>
+          <button class="lines" onclick="addLine('Ligne 03'); addLine('Ligne 03 bis')">Bus 03</button>
+          <button class="lines" onclick="addLine('Ligne 11')">Bus 11</button>
+          <button class="lines" onclick="addLine('Ligne 16')">Bus 16</button>
+          <button class="lines" onclick="addLine('Ligne 17')">Bus 17</button>
+          <button class="lines" onclick="addLine('Ligne 22')">Bus 22</button>
+          <button class="lines" onclick="addLine('Ligne 25')">Bus 25</button>
+          <button class="lines" onclick="addLine('Ligne 27')">Bus 27</button>
         </div>
         <div class="clear">
           <button class="clear-all" onclick="clearMap()">Clear the map</button>
@@ -67,24 +67,31 @@
 
       lineElement = document.getElementById('line')
       lineElement.addEventListener('change', (event) => {
+        line = event.target.value
         getStationsByLine(event.target.value)
       })
 
       fromElement = document.getElementById('from')
       fromElement.addEventListener('change', (event) => {
         from = event.target.value
-        addStation(JSON.parse(from), 'markers')
-        markersLayer.addTo(map)
+        /* addStation(JSON.parse(from), 'markers')
+        markersLayer.addTo(map) */
       })
       toElement = document.getElementById('to').addEventListener('change', (event) => {
         to = event.target.value
-        addStation(JSON.parse(to), 'markers')
-        markersLayer.addTo(map)
+        /* addStation(JSON.parse(to), 'markers')
+        markersLayer.addTo(map) */
       })
 
-      let getline = document.getElementById('getline')
-      getline.addEventListener('click', (event) => {
-        getSegment(from, to)
+      let getsegment = document.getElementById('getsegment')
+      getsegment.addEventListener('click', (event) => {
+        const response = fetch(baseURI + 'lines/' + line + '?from=' + JSON.parse(from).name + '&to=' + JSON.parse(to).name)
+          .then((data) => data.json())
+          .catch((err) => console.log(err))
+          .then((data) => {
+            addSegment(data, 'blue', 'segment')
+            segmentLayer.addTo(map)
+          })
       })
 
       /* let addline = document.getElementById('addline')

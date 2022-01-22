@@ -1,0 +1,906 @@
+[
+  {
+    "name": "Les Cascades",
+    "coordinates": {
+      "latitude": 35.2090288449031,
+      "longitude": -0.6162761045903499
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Ghalmi Gare Routiere Est",
+    "coordinates": {
+      "latitude": 35.213290750898075,
+      "longitude": -0.6157363610014067
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Les Freres Adnane",
+    "coordinates": {
+      "latitude": 35.21685026365005,
+      "longitude": -0.614792356932652
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Benhamouda",
+    "coordinates": {
+      "latitude": 35.21742979317343,
+      "longitude": -0.6211030701212295
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Environnement",
+    "coordinates": {
+      "latitude": 35.216100966557406,
+      "longitude": -0.6244219586929579
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Fac De Droit",
+    "coordinates": {
+      "latitude": 35.2153999577358,
+      "longitude": -0.6327522438439592
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Centre Niaama",
+    "coordinates": {
+      "latitude": 35.216892704182975,
+      "longitude": -0.6385410856459918
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Campus",
+    "coordinates": {
+      "latitude": 35.2217849141649,
+      "longitude": -0.6374615978135889
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Gare Ferroviaire",
+    "coordinates": {
+      "latitude": 35.22757089283532,
+      "longitude": -0.6269312322084898
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Sogral Gare Routiere Nord",
+    "coordinates": {
+      "latitude": 35.223122428099124,
+      "longitude": -0.6294780359418951
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Aadl Benhamouda",
+    "coordinates": {
+      "latitude": 35.21838542324588,
+      "longitude": -0.6275549751160338
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Sidi Djilali",
+    "coordinates": {
+      "latitude": 35.21593266689885,
+      "longitude": -0.6235354924791837
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Wiam",
+    "coordinates": {
+      "latitude": 35.21139575053136,
+      "longitude": -0.6279517410857127
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Daira",
+    "coordinates": {
+      "latitude": 35.20599563339173,
+      "longitude": -0.6264553483885793
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Houari Boumediene",
+    "coordinates": {
+      "latitude": 35.199707508045655,
+      "longitude": -0.6247324573423696
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Radio",
+    "coordinates": {
+      "latitude": 35.196336690135624,
+      "longitude": -0.6208348470157233
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Maternite",
+    "coordinates": {
+      "latitude": 35.192512193067564,
+      "longitude": -0.6191846523019074
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Salle Adda Boudjelal",
+    "coordinates": {
+      "latitude": 35.19178731566188,
+      "longitude": -0.6251918615911524
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Amir Abdelkader",
+    "coordinates": {
+      "latitude": 35.191193963584645,
+      "longitude": -0.6301478096394386
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "4 Horloges",
+    "coordinates": {
+      "latitude": 35.19068829582779,
+      "longitude": -0.6345370050367151
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Jardin Public",
+    "coordinates": {
+      "latitude": 35.18830313800839,
+      "longitude": -0.6438875125527656
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Gare Routiere Sud",
+    "coordinates": {
+      "latitude": 35.18525728286601,
+      "longitude": -0.6505937752460134
+    },
+    "line": "tramway"
+  },
+  {
+    "name": "Rocher Terminus",
+    "coordinates": {
+      "latitude": 35.21983481578884,
+      "longitude": -0.6085910046433507
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Lycee Miloua Maachou",
+    "coordinates": {
+      "latitude": 35.21759660484635,
+      "longitude": -0.60683348970215
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Freres Adnane 2",
+    "coordinates": {
+      "latitude": 35.21605524559706,
+      "longitude": -0.6083192003657257
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Freres Adnane 1",
+    "coordinates": {
+      "latitude": 35.21655345057359,
+      "longitude": -0.6127423658086785
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Ghalmi Gare Routiere Est",
+    "coordinates": {
+      "latitude": 35.213320614491884,
+      "longitude": -0.615850644531446
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "La Poste Cpr, Les Cascades",
+    "coordinates": {
+      "latitude": 35.20899136308052,
+      "longitude": -0.6164138206990067
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Cite Universitaire 2000",
+    "coordinates": {
+      "latitude": 35.20607482193069,
+      "longitude": -0.6149192166067176
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Protection Civile Cpr",
+    "coordinates": {
+      "latitude": 35.20437981737697,
+      "longitude": -0.613623018462639
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Campo",
+    "coordinates": {
+      "latitude": 35.20153329934229,
+      "longitude": -0.611770795481148
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Lycee Dar Abid",
+    "coordinates": {
+      "latitude": 35.1997563669038,
+      "longitude": -0.6149460345038605
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Marche Ofla",
+    "coordinates": {
+      "latitude": 35.19862676722962,
+      "longitude": -0.6185002995880696
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Aissat Idir 2",
+    "coordinates": {
+      "latitude": 35.19644058904951,
+      "longitude": -0.6219294149220757
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Casoran",
+    "coordinates": {
+      "latitude": 35.19528317641918,
+      "longitude": -0.6236296699288225
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "Aissat Idir 1",
+    "coordinates": {
+      "latitude": 35.19221437666775,
+      "longitude": -0.6280498187252427
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "La Coupole, 8 Mai 1945",
+    "coordinates": {
+      "latitude": 35.193379139693675,
+      "longitude": -0.6330486747542375
+    },
+    "line": "Ligne 03"
+  },
+  {
+    "name": "La Coupole, 8 Mai 1945",
+    "coordinates": {
+      "latitude": 35.19341861613014,
+      "longitude": -0.6330826868935825
+    },
+    "line": "Ligne 03 bis"
+  },
+  {
+    "name": "La Douane",
+    "coordinates": {
+      "latitude": 35.19609736095551,
+      "longitude": -0.6350618480307202
+    },
+    "line": "Ligne 03 bis"
+  },
+  {
+    "name": "Bibliotheque Qabbati",
+    "coordinates": {
+      "latitude": 35.19840922350098,
+      "longitude": -0.6354498135003906
+    },
+    "line": "Ligne 03 bis"
+  },
+  {
+    "name": "La Fac Centrale",
+    "coordinates": {
+      "latitude": 35.20141749333849,
+      "longitude": -0.6391042617380528
+    },
+    "line": "Ligne 03 bis"
+  },
+  {
+    "name": "Kiosque Militaire",
+    "coordinates": {
+      "latitude": 35.20204876354083,
+      "longitude": -0.6428605554172752
+    },
+    "line": "Ligne 03 bis"
+  },
+  {
+    "name": "Batiments Kaddouri",
+    "coordinates": {
+      "latitude": 35.203743816748364,
+      "longitude": -0.6453617711824801
+    },
+    "line": "Ligne 03 bis"
+  },
+  {
+    "name": "Mosquee Ouhoud",
+    "coordinates": {
+      "latitude": 35.20778549932578,
+      "longitude": -0.6477432007768824
+    },
+    "line": "Ligne 03 bis"
+  },
+  {
+    "name": "Cite Aadl 1",
+    "coordinates": {
+      "latitude": 35.20973028635674,
+      "longitude": -0.6485799191679953
+    },
+    "line": "Ligne 03 bis"
+  },
+  {
+    "name": "Cite Adda Boudjelal",
+    "coordinates": {
+      "latitude": 35.211525994740356,
+      "longitude": -0.6532158400374845
+    },
+    "line": "Ligne 03 bis"
+  },
+  {
+    "name": "Amir Abdelkader",
+    "coordinates": {
+      "latitude": 35.19919613398453,
+      "longitude": -0.6309869159136627
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Prado",
+    "coordinates": {
+      "latitude": 35.189271891603916,
+      "longitude": -0.6339030945059677
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Brandt",
+    "coordinates": {
+      "latitude": 35.18721846135507,
+      "longitude": -0.6397368808480498
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Cem Belkhouja",
+    "coordinates": {
+      "latitude": 35.18427341543728,
+      "longitude": -0.64281021202526
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Fac De Medecine",
+    "coordinates": {
+      "latitude": 35.1800303157964,
+      "longitude": -0.6443424076642645
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Cite Universitaire 1500",
+    "coordinates": {
+      "latitude": 35.178328921100345,
+      "longitude": -0.6463072658137882
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Direction Des Services Agricoles",
+    "coordinates": {
+      "latitude": 35.178621259581774,
+      "longitude": -0.6497077751725856
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Sakia El Hamra",
+    "coordinates": {
+      "latitude": 35.183760396806974,
+      "longitude": -0.6515653614061391
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Itma",
+    "coordinates": {
+      "latitude": 35.18062667278615,
+      "longitude": -0.6615058618410896
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Laiterie Ziane",
+    "coordinates": {
+      "latitude": 35.167389338468226,
+      "longitude": -0.6870096527235848
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Insfp Chaouti, Sidi Lahcene",
+    "coordinates": {
+      "latitude": 35.16952659533911,
+      "longitude": -0.6911556996231849
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Sidi Lahcene 1",
+    "coordinates": {
+      "latitude": 35.16549324346695,
+      "longitude": -0.6930651339003568
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Sidi Lahcene 2",
+    "coordinates": {
+      "latitude": 35.16383247920948,
+      "longitude": -0.6938750340669488
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "Sidi Lahcene Terminus",
+    "coordinates": {
+      "latitude": 35.160120490302674,
+      "longitude": -0.6962975838913722
+    },
+    "line": "Ligne 11"
+  },
+  {
+    "name": "La Coupole, 8 Mai 1945",
+    "coordinates": {
+      "latitude": 35.193384912404724,
+      "longitude": -0.6330359832275679
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Petit Vichy",
+    "coordinates": {
+      "latitude": 35.19147334758033,
+      "longitude": -0.6285734851415926
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Maternite",
+    "coordinates": {
+      "latitude": 35.192433520205014,
+      "longitude": -0.6201043932212126
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "La Poste Sidi Yacine, La Briemer",
+    "coordinates": {
+      "latitude": 35.19293479280442,
+      "longitude": -0.615734864063593
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Cnas",
+    "coordinates": {
+      "latitude": 35.19329138145039,
+      "longitude": -0.6125667760436305
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Stade Soricor",
+    "coordinates": {
+      "latitude": 35.19566906762518,
+      "longitude": -0.6124465757885612
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Soricor Cite Militaire",
+    "coordinates": {
+      "latitude": 35.19648889919111,
+      "longitude": -0.6124733936857042
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "L'abattoire",
+    "coordinates": {
+      "latitude": 35.19966585111096,
+      "longitude": -0.6146635215165763
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Lycee Inal",
+    "coordinates": {
+      "latitude": 35.20068291706724,
+      "longitude": -0.6121748206609202
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Protection Civile Cpr",
+    "coordinates": {
+      "latitude": 35.2044062049518,
+      "longitude": -0.6136712580125138
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Cite Universitaire 2000",
+    "coordinates": {
+      "latitude": 35.20603107156348,
+      "longitude": -0.6147976096928588
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "La Poste Cpr, Les Cascades",
+    "coordinates": {
+      "latitude": 35.20953932809461,
+      "longitude": -0.6165675909048353
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Ghalmi Gare Routiere Est",
+    "coordinates": {
+      "latitude": 35.213313347308194,
+      "longitude": -0.6158703255789179
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Cite 600 Ecobat Rocher",
+    "coordinates": {
+      "latitude": 35.2152609238114,
+      "longitude": -0.6142058282048458
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Les Impots Rocher",
+    "coordinates": {
+      "latitude": 35.21682567218658,
+      "longitude": -0.6152839076703255
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "Benhamouda",
+    "coordinates": {
+      "latitude": 35.217417375579146,
+      "longitude": -0.6220777750577723
+    },
+    "line": "Ligne 16"
+  },
+  {
+    "name": "La Coupole, Didouche Mourad",
+    "coordinates": {
+      "latitude": 35.19302931675733,
+      "longitude": -0.6324747722260772
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "La Douane",
+    "coordinates": {
+      "latitude": 35.19610995330036,
+      "longitude": -0.6350528661813359
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "Bibliotheque Qabbati",
+    "coordinates": {
+      "latitude": 35.19844958072417,
+      "longitude": -0.6354497710591801
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "La Fac Centrale",
+    "coordinates": {
+      "latitude": 35.20249116705253,
+      "longitude": -0.6385486372399618
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "Ibn Rochd",
+    "coordinates": {
+      "latitude": 35.203490662726765,
+      "longitude": -0.6387059691215048
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "Enie",
+    "coordinates": {
+      "latitude": 35.20545454822001,
+      "longitude": -0.6389956024107369
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "Maison De Retraite",
+    "coordinates": {
+      "latitude": 35.207183137207274,
+      "longitude": -0.6392548419740729
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "Sheraton",
+    "coordinates": {
+      "latitude": 35.21081660623552,
+      "longitude": -0.6392442707947211
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "Centre Niaama",
+    "coordinates": {
+      "latitude": 35.214165143720926,
+      "longitude": -0.6386971345382598
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "Cite Universitaire Campus",
+    "coordinates": {
+      "latitude": 35.21877170361864,
+      "longitude": -0.6383645926135829
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "Campus",
+    "coordinates": {
+      "latitude": 35.22105078012314,
+      "longitude": -0.637577934515401
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "Sogral Gare Routiere Nord",
+    "coordinates": {
+      "latitude": 35.222310088445525,
+      "longitude": -0.6298901377685185
+    },
+    "line": "Ligne 17"
+  },
+  {
+    "name": "Amir Abdelkader",
+    "coordinates": {
+      "latitude": 35.19917329830375,
+      "longitude": -0.6310300789721303
+    },
+    "line": "Ligne 22"
+  },
+  {
+    "name": "Institut D'informatique",
+    "coordinates": {
+      "latitude": 35.20532083767901,
+      "longitude": -0.6256325296598676
+    },
+    "line": "Ligne 22"
+  },
+  {
+    "name": "Cadastre",
+    "coordinates": {
+      "latitude": 35.20970288550616,
+      "longitude": -0.6190549925455958
+    },
+    "line": "Ligne 22"
+  },
+  {
+    "name": "Ghalmi Gare Routiere Est",
+    "coordinates": {
+      "latitude": 35.21319491169461,
+      "longitude": -0.6156151507074649
+    },
+    "line": "Ligne 22"
+  },
+  {
+    "name": "Ront Point Rocher",
+    "coordinates": {
+      "latitude": 35.217335471094515,
+      "longitude": -0.6131461167462217
+    },
+    "line": "Ligne 22"
+  },
+  {
+    "name": "Batiments Citroen",
+    "coordinates": {
+      "latitude": 35.21921282509467,
+      "longitude": -0.6123862758904465
+    },
+    "line": "Ligne 22"
+  },
+  {
+    "name": "Dgarp Sidi Brahim",
+    "coordinates": {
+      "latitude": 35.25950885206534,
+      "longitude": -0.5712883831940286
+    },
+    "line": "Ligne 22"
+  },
+  {
+    "name": "Sidi Brahim Terminus",
+    "coordinates": {
+      "latitude": 35.25724253829736,
+      "longitude": -0.5663056179033155
+    },
+    "line": "Ligne 22"
+  },
+  {
+    "name": "Amir Abdelkader",
+    "coordinates": {
+      "latitude": 35.19919352645217,
+      "longitude": -0.6310118663931852
+    },
+    "line": "Ligne 25"
+  },
+  {
+    "name": "Prado",
+    "coordinates": {
+      "latitude": 35.18926763945464,
+      "longitude": -0.633902835542417
+    },
+    "line": "Ligne 25"
+  },
+  {
+    "name": "Lycee Ennajah",
+    "coordinates": {
+      "latitude": 35.18577896907384,
+      "longitude": -0.6311477434659386
+    },
+    "line": "Ligne 25"
+  },
+  {
+    "name": "Parc De La Commune",
+    "coordinates": {
+      "latitude": 35.18380008317989,
+      "longitude": -0.6285157272427089
+    },
+    "line": "Ligne 25"
+  },
+  {
+    "name": "Palais De Justice",
+    "coordinates": {
+      "latitude": 35.18273018771833,
+      "longitude": -0.6235132950575829
+    },
+    "line": "Ligne 25"
+  },
+  {
+    "name": "Beni Tala",
+    "coordinates": {
+      "latitude": 35.18451480057954,
+      "longitude": -0.6167337304940613
+    },
+    "line": "Ligne 25"
+  },
+  {
+    "name": "Batiments Bosquet Hai Jazira",
+    "coordinates": {
+      "latitude": 35.18332067830112,
+      "longitude": -0.6116240270477015
+    },
+    "line": "Ligne 25"
+  },
+  {
+    "name": "La Zone Industrielle",
+    "coordinates": {
+      "latitude": 35.176431971682035,
+      "longitude": -0.5831513025547476
+    },
+    "line": "Ligne 25"
+  },
+  {
+    "name": "Telmouni 1",
+    "coordinates": {
+      "latitude": 35.17237995848086,
+      "longitude": -0.5522356300639998
+    },
+    "line": "Ligne 25"
+  },
+  {
+    "name": "Telmouni Terminus",
+    "coordinates": {
+      "latitude": 35.17800292206704,
+      "longitude": -0.5615796069167202
+    },
+    "line": "Ligne 25"
+  },
+  {
+    "name": "Amir Abdelkader",
+    "coordinates": {
+      "latitude": 35.19918590497824,
+      "longitude": -0.6310300900578026
+    },
+    "line": "Ligne 27"
+  },
+  {
+    "name": "Prado",
+    "coordinates": {
+      "latitude": 35.18923689269054,
+      "longitude": -0.6338996701363798
+    },
+    "line": "Ligne 27"
+  },
+  {
+    "name": "Lycee Ennajah",
+    "coordinates": {
+      "latitude": 35.185711681907726,
+      "longitude": -0.6311123962559596
+    },
+    "line": "Ligne 27"
+  },
+  {
+    "name": "Parc De La Commune",
+    "coordinates": {
+      "latitude": 35.183818937485775,
+      "longitude": -0.6285360903787464
+    },
+    "line": "Ligne 27"
+  },
+  {
+    "name": "Clos",
+    "coordinates": {
+      "latitude": 35.177289870976495,
+      "longitude": -0.6196678833595559
+    },
+    "line": "Ligne 27"
+  },
+  {
+    "name": "Amarna",
+    "coordinates": {
+      "latitude": 35.13000538617646,
+      "longitude": -0.5808394021148789
+    },
+    "line": "Ligne 27"
+  },
+  {
+    "name": "Bouaich Terminus",
+    "coordinates": {
+      "latitude": 35.132450588847455,
+      "longitude": -0.5603491591147526
+    },
+    "line": "Ligne 27"
+  }
+]

@@ -54,8 +54,7 @@ function addStation(station, layer) {
   let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { item: station }).bindPopup('<b>' + station.name + '</b>')
   if (layer === 'segment') marker.addTo(segmentLayer)
   else if (layer === 'line') marker.addTo(linelayer)
-  else if (layer === 'part') marker.addTo(partLayer)
-  else if (layer === 'markers') marker.addTo(markersLayer)
+  // else if (layer === 'markers') marker.addTo(markersLayer)
 }
 
 function addPolyline(seg, color, layer) {
@@ -64,7 +63,12 @@ function addPolyline(seg, color, layer) {
   let poly = L.polyline(pathArray, { color: color, item: seg })
   if (layer === 'segment') poly.addTo(segmentLayer)
   else if (layer === 'line') poly.addTo(linelayer)
-  else if (layer === 'part') poly.addTo(partLayer)
+}
+
+function addSegment(segment, color, layer) {
+  addStation(segment.from, layer)
+  addStation(segment.to, layer)
+  addPolyline(segment.path, color, layer)
 }
 
 const toTitleCase = (string) => {
@@ -128,25 +132,30 @@ map.on('draw:created', function (e) {
     let from = {}
     let to = {}
 
-    from = fromOptionValue
-    to = toOptionValue
+    from.name = fromOptionValue.name
+    from.coordinates = fromOptionValue.coordinates
+    from.id = fromOptionValue._id
+    console.log('from', from)
+    to.name = toOptionValue.name
+    to.coordinates = toOptionValue.coordinates
+    to.id = toOptionValue._id
+    console.log('to', to)
 
     segment.from = from
     segment.to = to
     segment.path = path
     segment.order = order
-    console.log(segment)
     route.push(segment)
     lastValue++
 
-    // const optionsPost = {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: segment,
-    // }
-    // const response = fetch('/lines', optionsPost)
+    /* const optionsPost = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: segment,
+    }
+    const response = fetch('/lines', optionsPost) */
     console.log(segment)
 
     point = {}
@@ -158,6 +167,7 @@ map.on('draw:created', function (e) {
 })
 
 let addline = document.getElementById('addline')
+addline.disabled = true
 addline.addEventListener('click', (event) => {
   let line = {}
   line.name = lineElement.value
@@ -168,8 +178,25 @@ addline.addEventListener('click', (event) => {
   }
   line.route = route
   console.log(line)
-  line = {}
-  route = []
+
+  const response = fetch(baseURI + 'lines', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(line),
+  })
+    .then((data) => {
+      data.json()
+      line = {}
+      route = []
+    })
+    .catch((err) => {
+      console.log(err)
+      line = {}
+      route = []
+    })
 })
 
 map.on('draw:edited', function (e) {
