@@ -8,10 +8,60 @@ let path = segment.path
 
 after changing the whole segment
 
-1- getModifiedFrom()
-2- getModifiedTo()
-3- getModifiedPath()
+A- getModifiedFrom()
+B- getModifiedTo()
+C- getModifiedPath()
 
-Update stations collection (from & to) by id if exists, otherwise add them
-Update every segment (from & to) containing modifiedFrom() & modifiedTo()
+
+Case 1-   Updated only one station
+  1- Update stations collection with the new data
+  2.1- IF (FROM_STATION) ==> 
+      Update the affected segment (Ghalmi => Adnane)
+          Replace the first point of the segment with the new coordinates
+      Update the segment that have FROM_STATION as a TO_STATION if exists (Les cascades only in FROM, not in TO)  (Cascades => Ghalmi)
+          Replace the last point of the segment with the new coordinates
+
+  2.2- IF (TO_STATION) ==> 
+      Update the affected segment (Cascades => Ghalmi)
+          Replace the last point of the segment with the new coordinates  
+      Update the segment that have TO_STATION as a FROM_STATION if exists (Gare Routiere Sud only in TO, not in FROM) (Ghalmi => Adnane)
+          Replace the first point of the segment with the new coordinates
+
+
+
+Case 2-   Updated two stations (Ghalmi & Adnane)
+  1- Update stations collection with the new data
+  2- Update the segment
+      Replace from with FROM_STATION
+      Replace to with TO_STATION
+      Replace first point of segment with FROM_STATION coordinates
+      Replace last point of segment with TO_STATION coordinates
+
+  -(FROM_STATION) ==> 
+      Update the segment that have FROM_STATION as a TO_STATION if exists (Les cascades only in FROM, not in TO)  (Cascades => Ghalmi)
+          Replace the last point of the segment with the new coordinates
+
+  -(TO_STATION) ==> 
+      Update the segment that have TO_STATION as a FROM_STATION if exists (Gare Routiere Sud only in TO, not in FROM) (Adnane => Benhamouda)
+          Replace the first point of the segment with the new coordinates
+
+Case 3-   Updated the path (Ghalmi & Adnane)
+  1- 
+  2-
+  3- Update the segment
+      Replace from with FROM_STATION
+      Replace to with TO_STATION
+      Replace first point of segment with FROM_STATION coordinates
+      Replace last point of segment with TO_STATION coordinates
+
+  -(FROM_STATION) ==> 
+      Update the segment that have FROM_STATION as a TO_STATION if exists (Les cascades only in FROM, not in TO)  (Cascades => Ghalmi)
+          Replace the last point of the segment with the new coordinates
+
+  -(TO_STATION) ==> 
+      Update the segment that have TO_STATION as a FROM_STATION if exists (Gare Routiere Sud only in TO, not in FROM) (Adnane => Benhamouda)
+          Replace the first point of the segment with the new coordinates          
+          
+                
+
 

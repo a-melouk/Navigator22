@@ -118,6 +118,22 @@ app.get('/lines/:line', (request, response) => {
     })
 })
 
+app.get('/test', (request, response) => {
+  Line.aggregate([
+    { $match: { $or: [{ 'route.from.id': '61eb2de817e57cb86cb3f8fa' }, { 'route.to.id': '61eb2de817e57cb86cb3f8fa' }] } },
+    { $unwind: '$route' },
+    { $match: { $or: [{ 'route.from.id': '61eb2de817e57cb86cb3f8fa' }, { 'route.to.id': '61eb2de817e57cb86cb3f8fa' }] } },
+  ])
+    .then((data) => {
+      console.log(data)
+      response.json(data)
+    })
+    .catch((err) => {
+      response.json(err)
+      console.log('Failed to retrieve a segment')
+    })
+})
+
 app.patch('/lines/:from', (request, response) => {
   console.log('Attempt to patch a segment')
   let from = request.params.from
