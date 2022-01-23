@@ -58,18 +58,17 @@ function addStation(station, layer) {
   // else if (layer === 'markers') marker.addTo(markersLayer)
 }
 
-function addPolyline(seg, color, layer) {
+function addPolyline(path, color, layer) {
   let pathArray = []
-  console.log('Original path', seg)
-  for (let i = 0; i < seg.length; i++) pathArray.push([seg[i].latitude, seg[i].longitude])
-  let poly = L.polyline(pathArray, { color: color, item: seg })
+  for (let i = 0; i < path.length; i++) pathArray.push([path[i].latitude, path[i].longitude])
+  let poly = L.polyline(pathArray, { color: color, item: path })
   if (layer === 'segment') poly.addTo(segmentLayer)
   else if (layer === 'line') poly.addTo(linelayer)
 }
 
 function addSegment(segment, color, layer) {
   clearMap()
-  console.log('Segment from ' + segment.from.name + ' to ' + segment.to.name)
+  console.log('segment', segment)
   addStation(segment.from, layer)
   addStation(segment.to, layer)
   addPolyline(segment.path, color, layer)
@@ -137,14 +136,14 @@ function newSegment(layer) {
   let fromOptionValue = JSON.parse(document.getElementById('from').value)
   let toOptionValue = JSON.parse(document.getElementById('to').value)
 
-  //Put from station at the beginning of the path
+  //Put FROM station at the beginning of the path
   point = {
     latitude: fromOptionValue.coordinates.latitude,
     longitude: fromOptionValue.coordinates.longitude,
   }
   path.unshift(point)
 
-  //Put from station at the end of the path
+  //Put TO station at the end of the path
   point = {
     latitude: toOptionValue.coordinates.latitude,
     longitude: toOptionValue.coordinates.longitude,
@@ -232,14 +231,13 @@ map.on('draw:edited', function (e) {
 
   layers.eachLayer(function (layer) {
     if (layer instanceof L.Polyline) {
-      console.log('Path', layer._latlngs)
+      console.log('New Path', layer._latlngs)
     } else if (layer instanceof L.Marker) {
-      console.log(layer.options.title, layer._latlng)
+      console.log('New Coordinates', '{latitude: ' + layer._latlng.lat + ', longitude: ' + layer._latlng.lng + '}')
     }
   })
   if (segmentLayer.getLayers().length > 0) {
     let tempLayers = segmentLayer.getLayers()
-    console.log(tempLayers)
     let from = {
       name: tempLayers[0].options.item.name,
       id: tempLayers[0].options.item.id,
@@ -268,10 +266,27 @@ map.on('draw:edited', function (e) {
       path.push(coordinates)
     })
 
+    path.unshift(from.coordinates)
+    path.push(to.coordinates)
+
+    //Patch if stations coordinates were updated
+    let fromOptionValue = JSON.parse(document.getElementById('from').value)
+    let toOptionValue = JSON.parse(document.getElementById('to').value)
+
+    if (from.coordinates.latitude !== fromOptionValue.coordinates.latitude && from.coordinates.longitude !== fromOptionValue.coordinates.longitude) {
+      console.log('FROM coordinates updated')
+    }
+    if (to.coordinates.latitude !== toOptionValue.coordinates.latitude && to.coordinates.longitude !== toOptionValue.coordinates.longitude) {
+      console.log('TO coordinates updated')
+    }
+
     temp.from = from
     temp.to = to
     temp.path = path
     console.log(temp)
+    clearMap()
+    addSegment(temp, 'red', 'segment')
+    segmentLayer.addTo(map)
     temp = {}
     from = {}
     to = {}

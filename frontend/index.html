@@ -91,6 +91,9 @@
           .then((data) => {
             segmentLayer.clearLayers()
             addSegment(data, 'blue', 'segment')
+            segmentLayer.options = {
+              id: data.id,
+            }
             segmentLayer.addTo(map)
           })
       })
