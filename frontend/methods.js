@@ -60,34 +60,3 @@ async function addLine(number) {
   })
   linelayer.addTo(map)
 }
-
-/* async function getSegment(from, to) {
-  console.log('salam')
-  from = JSON.parse(from)
-  to = JSON.parse(to)
-  const response = await fetch(baseURI + 'lines/segment?from=' + from.name + '&to=' + to.name)
-  let data = await response.json()
-  addSegment(data)
-}
-
-function addSegment(seg) {
-  clearMap()
-  addStation(seg.from, 'segment')
-  addStation(seg.to, 'segment')
-  addPolyline(seg.path, 'black', 'segment')
-  segmentLayer.addTo(map)
-  console.log(segmentLayer.toGeoJSON())
-  drawControl = new L.Control.Draw({
-    position: 'topright',
-    draw: {
-      polygon: false,
-      rectangle: false,
-      circle: false,
-      circlemarker: false,
-    },
-    edit: {
-      featureGroup: segmentLayer,
-    },
-  })
-  drawControl.addTo(map)
-} */
