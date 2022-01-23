@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
+    <title>Navigator 22</title>
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -23,17 +23,17 @@
       <div class="stations-list" style="min-width: 200px">
         <label for="line">Line</label>
         <select name="line" id="line">
-          <option disabled selected value>-- select an option --</option>
+          <option disabled selected value>--Select a line --</option>
         </select>
 
         <label for="from">From</label>
         <select name="from" id="from">
-          <option disabled selected value>-- select an option --</option>
+          <option disabled selected value>-- --</option>
         </select>
 
         <label for="to">To</label>
         <select name="to" id="to">
-          <option disabled selected value>-- select an option --</option>
+          <option disabled selected value>-- --</option>
         </select>
         <button class="get line" id="getsegment" style="margin-left: 10px">Get segment</button>
         <button class="add line" id="addline" style="margin-left: 10px">Add line</button>
@@ -89,6 +89,7 @@
           .then((data) => data.json())
           .catch((err) => console.log(err))
           .then((data) => {
+            segmentLayer.clearLayers()
             addSegment(data, 'blue', 'segment')
             segmentLayer.addTo(map)
           })

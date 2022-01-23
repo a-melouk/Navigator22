@@ -100,7 +100,7 @@ app.get('/lines/:line', (request, response) => {
   let from = request.query.from
   let to = request.query.to
   console.log('Attempt to retrieve the segment :' + from + ' to ' + to)
-  Line.find({ name: line, 'route.from.name': from, 'route.to.name': to }, { route: { $elemMatch: { 'from.name': from, 'to.name': to } } })
+  Line.find({ name: line, 'route.from.name': from, 'route.to.name': to })
     .then((data) => {
       let donnee = data[0].route[0]
       response.json({
@@ -132,10 +132,44 @@ app.patch('/lines/:from', (request, response) => {
     })
 })
 
+// 61eb3a340ea98782be559c2d
+
 /*
 
-db.lines.find({ "route._id": ObjectId("61e89506430fd641ba131aa3") },{ route: { $elemMatch: { '_id': ObjectId("61e89506430fd641ba131aa3") } } }).pretty()
+db.lines.find({ "route._id": ObjectId("61eb2de817e57cb86cb3f8fa") },{ route: { $elemMatch: { '_id': ObjectId("61eb2de817e57cb86cb3f8fa") } } }).pretty()
+
+db.lines.find({ "route.from.id": "61eb2de817e57cb86cb3f8fa","route.to.id": "61eb2de817e57cb86cb3f8fa"  },
+{ route: { $elemMatch: { "route.from.id": "61eb2de817e57cb86cb3f8fa" } } }).pretty()
+
+
+db.lines.find(
+  {$or  : [ { "route.from.id" : "61eb2de817e57cb86cb3f8fa" },{ "route.to.id" : "61eb2de817e57cb86cb3f8fa" }]}, 
+  {route: {$elemMatch:{"route.to.id" : "61eb2de817e57cb86cb3f8fa"}}}).pretty()
+{
+  route:{
+    $elemMatch: {
+        {$or: 
+          [
+            { "route.from.id" : "61eb2de817e57cb86cb3f8fa" }, 
+            { "route.to.id" : "61eb2de817e57cb86cb3f8fa" }
+          ]
+        }
+    }
+  }
+}
+).pretty() 
+
+).pretty()
+db.lines.find({ $or : [ { "route.from.id" : "61eb2de817e57cb86cb3f8fa" }, { "route.to.id" : "61eb2de817e57cb86cb3f8fa" } ] },{_id: 0}).pretty()
+
 db.lines.find({ "route.from.name": "Wiam" }).pretty()
+
+
+db.lines.find({},{_id:0, route: {$elemMatch : {"from.id": "61eb2de817e57cb86cb3f8fa"}}}).pretty()
+db.lines.find({},{_id:0, route: {$elemMatch : {"from.id": "61eb2de817e57cb86cb3f8fa","to.id":"61eb2de817e57cb86cb3f8fa"}}}).pretty()
+
+
+
 // stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
 "_id": "+[a-zA-Z0-9]+"
 */

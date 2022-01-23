@@ -1,0 +1,17 @@
+Steps for updating a line:
+
+------------ We update a line by updating its segments ------------
+
+let from = segment.from
+let to = segment.to
+let path = segment.path
+
+after changing the whole segment
+
+1- getModifiedFrom()
+2- getModifiedTo()
+3- getModifiedPath()
+
+Update stations collection (from & to) by id if exists, otherwise add them
+Update every segment (from & to) containing modifiedFrom() & modifiedTo()
+

@@ -60,6 +60,7 @@ function addStation(station, layer) {
 
 function addPolyline(seg, color, layer) {
   let pathArray = []
+  console.log('Original path', seg)
   for (let i = 0; i < seg.length; i++) pathArray.push([seg[i].latitude, seg[i].longitude])
   let poly = L.polyline(pathArray, { color: color, item: seg })
   if (layer === 'segment') poly.addTo(segmentLayer)
@@ -67,10 +68,24 @@ function addPolyline(seg, color, layer) {
 }
 
 function addSegment(segment, color, layer) {
+  clearMap()
   console.log('Segment from ' + segment.from.name + ' to ' + segment.to.name)
   addStation(segment.from, layer)
   addStation(segment.to, layer)
   addPolyline(segment.path, color, layer)
+  drawControl = new L.Control.Draw({
+    position: 'topright',
+    draw: {
+      polygon: false,
+      rectangle: false,
+      circle: false,
+      circlemarker: false,
+    },
+    edit: {
+      featureGroup: segmentLayer,
+    },
+  })
+  drawControl.addTo(map)
 }
 
 const toTitleCase = (string) => {
@@ -152,15 +167,8 @@ map.on('draw:created', function (e) {
     route.push(segment)
     lastValue++
 
-    /* const optionsPost = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: segment,
-    }
-    const response = fetch('/lines', optionsPost) */
     console.log(segment)
+    console.log(route)
 
     point = {}
     segment = {}
@@ -211,28 +219,49 @@ map.on('draw:edited', function (e) {
 
   layers.eachLayer(function (layer) {
     if (layer instanceof L.Polyline) {
-      console.log(layer.options.item, layer._latlngs)
+      console.log('Path', layer._latlngs)
     } else if (layer instanceof L.Marker) {
       console.log(layer.options.title, layer._latlng)
     }
   })
   if (segmentLayer.getLayers().length > 0) {
     let tempLayers = segmentLayer.getLayers()
-    temp.from = tempLayers[0].options.item
-    temp.to = tempLayers[1].options.item
-    temp.path = tempLayers[2].options.item
-    console.log(temp)
-  } else if (partLayer.getLayers().length > 0) {
-    let tempLayers = partLayer.getLayers()
     console.log(tempLayers)
-    let result = []
-    for (let i = 0; i < tempLayers.length; i = i + 3) {
-      temp.from = tempLayers[i].options.item
-      temp.to = tempLayers[i + 1].options.item
-      temp.path = tempLayers[i + 2].options.item
-      result.push(temp)
-      temp = {}
+    let from = {
+      name: tempLayers[0].options.item.name,
+      id: tempLayers[0].options.item.id,
+      coordinates: {
+        latitude: tempLayers[0]._latlng.lat,
+        longitude: tempLayers[0]._latlng.lng,
+      },
     }
-    console.log(result)
+    let to = {
+      name: tempLayers[1].options.item.name,
+      id: tempLayers[1].options.item.id,
+      coordinates: {
+        latitude: tempLayers[1]._latlng.lat,
+        longitude: tempLayers[1]._latlng.lng,
+      },
+    }
+    let path = []
+
+    let tempPath = tempLayers[2]._latlngs
+
+    tempPath.forEach((item) => {
+      let coordinates = {
+        latitude: item.lat,
+        longitude: item.lng,
+      }
+      path.push(coordinates)
+    })
+
+    temp.from = from
+    temp.to = to
+    temp.path = path
+    console.log(temp)
+    temp = {}
+    from = {}
+    to = {}
+    path = []
   }
 })
