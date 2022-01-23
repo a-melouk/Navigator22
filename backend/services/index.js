@@ -100,6 +100,7 @@ app.get('/lines/:line', (request, response) => {
   let from = request.query.from
   let to = request.query.to
   console.log('Attempt to retrieve the segment :' + from + ' to ' + to)
+  // Line.find({ name: line, 'route.from.name': from, 'route.to.name': to }, { route: { $elemMatch: { 'from.name': from, 'to.name': to } } })
   Line.find({ name: line, 'route.from.name': from, 'route.to.name': to })
     .then((data) => {
       let donnee = data[0].route[0]
