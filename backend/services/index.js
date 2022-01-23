@@ -137,39 +137,23 @@ app.patch('/lines/:from', (request, response) => {
 
 /*
 
-db.lines.find({ "route._id": ObjectId("61eb2de817e57cb86cb3f8fa") },{ route: { $elemMatch: { '_id': ObjectId("61eb2de817e57cb86cb3f8fa") } } }).pretty()
-
-db.lines.find({ "route.from.id": "61eb2de817e57cb86cb3f8fa","route.to.id": "61eb2de817e57cb86cb3f8fa"  },
-{ route: { $elemMatch: { "route.from.id": "61eb2de817e57cb86cb3f8fa" } } }).pretty()
-
-
-db.lines.find(
-  {$or  : [ { "route.from.id" : "61eb2de817e57cb86cb3f8fa" },{ "route.to.id" : "61eb2de817e57cb86cb3f8fa" }]}, 
-  {route: {$elemMatch:{"route.to.id" : "61eb2de817e57cb86cb3f8fa"}}}).pretty()
-{
-  route:{
-    $elemMatch: {
-        {$or: 
-          [
-            { "route.from.id" : "61eb2de817e57cb86cb3f8fa" }, 
-            { "route.to.id" : "61eb2de817e57cb86cb3f8fa" }
-          ]
+db.lines.find({$or:[{"route.from.id":"61eb2de817e57cb86cb3f8fa"},{"route.to.id":"61eb2de817e57cb86cb3f8fa"}]},
+    {route:
+        {$elemMatch:
+            {$or:[
+                    {"from.id":"61eb2de817e57cb86cb3f8fa"},
+                    
+                 ]
+            }
         }
     }
-  }
-}
-).pretty() 
+)
 
-).pretty()
-db.lines.find({ $or : [ { "route.from.id" : "61eb2de817e57cb86cb3f8fa" }, { "route.to.id" : "61eb2de817e57cb86cb3f8fa" } ] },{_id: 0}).pretty()
-
-db.lines.find({ "route.from.name": "Wiam" }).pretty()
-
-
-db.lines.find({},{_id:0, route: {$elemMatch : {"from.id": "61eb2de817e57cb86cb3f8fa"}}}).pretty()
-db.lines.find({},{_id:0, route: {$elemMatch : {"from.id": "61eb2de817e57cb86cb3f8fa","to.id":"61eb2de817e57cb86cb3f8fa"}}}).pretty()
-
-
+db.lines.aggregate(
+  {$match: {$or:[{"route.from.id":"61eb2de817e57cb86cb3f8fa"},{"route.to.id":"61eb2de817e57cb86cb3f8fa"}]}},
+  {$unwind: "$route"},
+  {$match: {$or:[{"route.from.id":"61eb2de817e57cb86cb3f8fa"},{"route.to.id":"61eb2de817e57cb86cb3f8fa"}]}}
+)
 
 // stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
 "_id": "+[a-zA-Z0-9]+"
