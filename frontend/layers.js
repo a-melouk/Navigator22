@@ -226,7 +226,6 @@ addline.addEventListener('click', (event) => {
 
 map.on('draw:edited', function (e) {
   let layers = e.layers
-
   layers.eachLayer(function (layer) {
     if (layer instanceof L.Polyline) {
       console.log('New Path', layer._latlngs)
@@ -306,8 +305,8 @@ map.on('draw:edited', function (e) {
         })
         .catch((err) => console.log(err))
     }
-
-    // getStationsByLine(fromOptionValue.line)
+    console.log(fromOptionValue)
+    getStationsByLine(fromOptionValue.line)
 
     let temp = {
       from: from,
