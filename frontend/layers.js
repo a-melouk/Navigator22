@@ -66,6 +66,7 @@ function addPolyline(path, color, layer) {
   else if (layer === 'line') poly.addTo(linelayer)
 }
 
+let originalSegment = {}
 function addSegment(segment, color, layer) {
   clearMap()
   addStation(segment.from, layer)
@@ -84,6 +85,7 @@ function addSegment(segment, color, layer) {
     },
   })
   drawControl.addTo(map)
+  originalSegment = segment
 }
 
 const toTitleCase = (string) => {
@@ -190,7 +192,6 @@ map.on('draw:created', function (e) {
 })
 
 let addline = document.getElementById('addline')
-// addline.disabled = true
 addline.addEventListener('click', (event) => {
   let line = {}
   line.name = lineElement.value
@@ -224,18 +225,29 @@ addline.addEventListener('click', (event) => {
   }
 })
 
+function compareCoordinates(a, b) {
+  if (a.latitude !== b.latitude) return true
+  if (a.longitude !== b.longitude) return true
+  return false
+}
+
 map.on('draw:edited', function (e) {
   let layers = e.layers
   layers.eachLayer(function (layer) {
     if (layer instanceof L.Polyline) {
-      console.log('New Path', layer._latlngs)
+      console.log('Updated Polyline', layer._latlngs)
     } else if (layer instanceof L.Marker) {
-      console.log('New Coordinates', '{latitude: ' + layer._latlng.lat + ', longitude: ' + layer._latlng.lng + '}')
+      console.log('Updated Marker', '{latitude: ' + layer._latlng.lat + ', longitude: ' + layer._latlng.lng + '}')
     }
   })
   if (segmentLayer.getLayers().length > 0) {
     let tempLayers = segmentLayer.getLayers()
 
+    let modifiedFrom = false,
+      modifiedTo = false,
+      modifiedPath = false
+
+    //New segment's from
     let from = {
       name: tempLayers[0].options.item.name,
       coordinates: {
@@ -244,6 +256,8 @@ map.on('draw:edited', function (e) {
       },
       id: tempLayers[0].options.item.id,
     }
+
+    //New segment's to
     let to = {
       name: tempLayers[1].options.item.name,
       coordinates: {
@@ -253,10 +267,9 @@ map.on('draw:edited', function (e) {
       id: tempLayers[1].options.item.id,
     }
 
+    //New segment's path
     let path = []
-
     let tempPath = tempLayers[2]._latlngs
-
     tempPath.forEach((item) => {
       let coordinates = {
         latitude: item.lat,
@@ -265,16 +278,27 @@ map.on('draw:edited', function (e) {
       path.push(coordinates)
     })
 
-    path.unshift(from.coordinates)
-    path.push(to.coordinates)
-
     //Patch if stations coordinates were updated
-    let fromOptionValue = JSON.parse(document.getElementById('from').value)
-    let toOptionValue = JSON.parse(document.getElementById('to').value)
+    let choosenLine = document.getElementById('line').value
 
-    if (from.coordinates.latitude !== fromOptionValue.coordinates.latitude && from.coordinates.longitude !== fromOptionValue.coordinates.longitude) {
-      console.log('FROM coordinates updated')
-      const patchStationsFrom = fetch(baseURI + 'station?id=' + from.id, {
+    if (from.coordinates.latitude !== originalSegment.from.coordinates.latitude && from.coordinates.longitude !== originalSegment.from.coordinates.longitude) modifiedFrom = true
+
+    if (to.coordinates.latitude !== originalSegment.to.coordinates.latitude && to.coordinates.longitude !== originalSegment.to.coordinates.longitude) modifiedTo = true
+
+    if (path.length === originalSegment.path.length) {
+      console.log('Same length')
+      for (let i = 0; i < path.length; i++) {
+        if (compareCoordinates(path[i], originalSegment.path[i])) {
+          modifiedPath = true
+          console.log('First different coordinates: ', i)
+          break
+        }
+      }
+    } else modifiedPath = true
+
+    if (modifiedFrom) {
+      modifiedPath = true
+      /* fetch(baseURI + 'station?id=' + from.id, {
         method: 'PATCH',
         headers: {
           Accept: 'application/json',
@@ -284,14 +308,21 @@ map.on('draw:edited', function (e) {
       })
         .then((data) => {
           data.json()
-          console.log('Patched FROM in stations collection')
+          console.log('Patched FROM successfully')
+        })
+        .catch((err) => console.log(err)) */
+
+      fetch(baseURI + 'segment/to?id=' + from.id)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Affected Segment with FROM station: ', data)
         })
         .catch((err) => console.log(err))
     }
 
-    if (to.coordinates.latitude !== toOptionValue.coordinates.latitude && to.coordinates.longitude !== toOptionValue.coordinates.longitude) {
-      console.log('TO coordinates updated')
-      const patchStationsTo = fetch(baseURI + 'station?id=' + to.id, {
+    if (modifiedTo) {
+      modifiedPath = true
+      /* fetch(baseURI + 'station?id=' + to.id, {
         method: 'PATCH',
         headers: {
           Accept: 'application/json',
@@ -301,12 +332,22 @@ map.on('draw:edited', function (e) {
       })
         .then((data) => {
           data.json()
-          console.log('Patched TO in stations collection')
+          console.log('Patched TO successfully')
+        })
+        .catch((err) => console.log(err)) */
+      fetch(baseURI + 'segment/from?id=' + to.id)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Affected Segment with TO station: ', data)
         })
         .catch((err) => console.log(err))
     }
-    console.log(fromOptionValue)
-    getStationsByLine(fromOptionValue.line)
+
+    //The polyline always start with FROM coordinate and ends with TO coordinates
+    if (modifiedPath) {
+      path.unshift(from.coordinates)
+      path.push(to.coordinates)
+    }
 
     let temp = {
       from: from,
@@ -314,21 +355,23 @@ map.on('draw:edited', function (e) {
       path: path,
     }
 
-    const patchSegment = fetch(baseURI + 'segment?id=' + segmentLayer.options.id, {
-      method: 'PATCH',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(temp),
-    })
-      .then((data) => {
-        data.json()
-        console.log('Patched segment collection')
+    if (modifiedPath) {
+      /* fetch(baseURI + 'segment?id=' + segmentLayer.options.id, {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(temp),
       })
-      .catch((err) => console.log(err))
+        .then((data) => {
+          data.json()
+          console.log('Patched the segment successfully')
+        })
+        .catch((err) => console.log(err)) */
+    }
 
-    // console.log('New segment', temp)
+    getStationsByLine(choosenLine)
     clearMap()
     addSegment(temp, 'red', 'segment')
   }

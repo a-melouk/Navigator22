@@ -148,7 +148,8 @@ app.get('/segment/from', (request, response) => {
 app.get('/segment/to', (request, response) => {
   let id = request.query.id
   console.log('Attempt to get the segment with TO station ID :' + id)
-  Line.find({ 'route.to.id': id }, { route: { $elemMatch: { 'to.id': id } } })
+  // db.lines.find({ 'route.to.id': '61eb2de817e57cb86cb3f8fc' }, { route: { $elemMatch: { 'to.id': '61eb2de817e57cb86cb3f8fc' } }, _id: 0 })
+  Line.findOne({ 'route.to.id': id }, { route: { $elemMatch: { 'to.id': id } }, _id: 0 })
     .then((data) => {
       response.json(data.route[0])
       console.log('Segment retreived successfully')
