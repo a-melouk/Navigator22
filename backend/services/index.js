@@ -128,6 +128,37 @@ app.get('/segment', (request, response) => {
     })
 })
 
+//Get segment by FROM station ID
+app.get('/segment/from', (request, response) => {
+  let id = request.query.id
+  console.log('Attempt to get the segment with FROM station ID :' + id)
+  // db.lines.find({ 'route.from.id': "61eb2de817e57cb86cb3f8fa" }, { route: { $elemMatch: { 'from.id': "61eb2de817e57cb86cb3f8fa" } }, _id: 0 })
+  Line.findOne({ 'route.from.id': id }, { route: { $elemMatch: { 'from.id': id } }, _id: 0 })
+    .then((data) => {
+      response.json(data.route[0])
+      console.log('Segment retreived successfully')
+    })
+    .catch((err) => {
+      response.json(err)
+      console.log('Failed to retrieve the segment with FROM station ID: ' + id)
+    })
+})
+
+//Get segment by TO station ID
+app.get('/segment/to', (request, response) => {
+  let id = request.query.id
+  console.log('Attempt to get the segment with TO station ID :' + id)
+  Line.find({ 'route.to.id': id }, { route: { $elemMatch: { 'to.id': id } } })
+    .then((data) => {
+      response.json(data.route[0])
+      console.log('Segment retreived successfully')
+    })
+    .catch((err) => {
+      response.json(err)
+      console.log('Failed to retrieve the segment with TO station ID: ' + id)
+    })
+})
+
 //Get a segment that includes FROM & TO stations
 app.get('/lines/:line', (request, response) => {
   let line = request.params.line
@@ -213,8 +244,8 @@ app.patch('/segment', (request, response) => {
   console.log('Attempt to patch a segment')
   let id = request.query.id
   let body = request.body
-  // Line.updateOne({ 'route._id': id }, { $set: { 'route.$': body } })
-  Line.findByIdAndUpdate(id, body)
+  // Line.findByIdAndUpdate(id, body)
+  Line.updateOne({ 'route._id': id }, { $set: { 'route.$': body } })
     .then((data) => {
       response.json(data)
       console.log('Patched successfully')

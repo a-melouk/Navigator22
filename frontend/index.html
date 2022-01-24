@@ -89,7 +89,7 @@
           .then((data) => data.json())
           .catch((err) => console.log(err))
           .then((data) => {
-            segmentLayer.clearLayers()
+            clearMap()
             addSegment(data, 'blue', 'segment')
             segmentLayer.options = {
               id: data.id,
