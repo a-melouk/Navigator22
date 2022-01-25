@@ -15,6 +15,12 @@ const tile = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   subdomains: ['a', 'b', 'c'],
 })
 
+drawControl = new L.Control.Draw({
+  position: 'topright',
+  draw: false,
+  edit: false,
+})
+
 let getLatLngs = (layer) => {
   if (layer instanceof L.Polyline) {
     return layer.getLatLngs()
@@ -26,6 +32,7 @@ let getLatLngs = (layer) => {
 
 function init() {
   tile.addTo(map)
+  drawControl.addTo(map)
   console.log('Map initialized')
 }
 
@@ -34,11 +41,14 @@ init()
 clearMap = () => {
   map.eachLayer((layer) => {
     if (!layer instanceof L.TileLayer) map.removeLayer(layer)
-    // map.removeControl(drawControl)
   })
-
+  map.removeControl(drawControl)
   linelayer.clearLayers()
   segmentLayer.clearLayers()
+}
+
+function centerMap() {
+  map.flyTo(new L.LatLng(35.20118653849822, -0.6343081902114373), 16)
 }
 
 function addStation(station, layer, line) {
@@ -65,6 +75,13 @@ function addStation(station, layer, line) {
   // else if (layer === 'markers') marker.addTo(markersLayer)
 }
 
+/* function addStation(station, layer) {
+  let marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { item: station }).bindPopup('<b>' + station.name + '</b>')
+  if (layer === 'segment') marker.addTo(segmentLayer)
+  else if (layer === 'line') marker.addTo(linelayer)
+  // else if (layer === 'markers') marker.addTo(markersLayer)
+} */
+
 function addPolyline(path, color, layer) {
   let pathArray = []
   for (let i = 0; i < path.length; i++) pathArray.push([path[i].latitude, path[i].longitude])
@@ -76,19 +93,15 @@ function addPolyline(path, color, layer) {
 let originalSegment = {}
 function addSegment(segment, color, layer) {
   clearMap()
+  // map.removeControl(drawControl)
   addStation(segment.from, layer, segment.line)
   addStation(segment.to, layer, segment.line)
+  // addStation(segment.from, layer)
+  // addStation(segment.to, layer)
   addPolyline(segment.path, color, layer)
   drawControl = new L.Control.Draw({
     position: 'topright',
-    draw: {
-      polygon: false,
-      rectangle: false,
-      circle: false,
-      circlemarker: false,
-      marker: false,
-      polyline: false,
-    },
+    draw: false,
     edit: {
       featureGroup: segmentLayer,
     },
@@ -240,9 +253,9 @@ function trueIfDifferent(a, b) {
 }
 
 map.on('draw:edited', function (e) {
+  map.removeControl(drawControl)
   let layers = e.layers
   let choosenLine = document.getElementById('line').value
-  console.log(choosenLine)
 
   layers.eachLayer(function (layer) {
     if (layer instanceof L.Polyline) console.log('Updated Polyline', layer._latlngs)

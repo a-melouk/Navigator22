@@ -1,25 +1,16 @@
-.stations-list {
-  display: flex;
-  min-width: 500px;
-  height: 10vh;
-  align-items: center;
-  /* justify-content: center; */
-  grid-area: 1 / 1 / 2 / 3;
-}
-
 label {
   font-weight: bold;
   font-size: 25px;
   color: white;
   padding: 10px;
-  /* font-family: sans-serif; */
+  font-family: sans-serif;
 }
 label[for='to'] {
   margin-left: 25px;
 }
 
 select {
-  min-width: 200px;
+  /* min-width: 100px; */
   min-height: 50px;
   text-align: justify;
   color: black;
