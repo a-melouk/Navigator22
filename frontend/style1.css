@@ -108,3 +108,8 @@
   box-shadow: 0 0 #2c0b8e;
   top: 5px;
 }
+
+.leaflet-vertex-icon {
+  width: 5px !important;
+  height: 5px !important;
+}

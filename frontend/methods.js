@@ -47,15 +47,12 @@ function populateList(data, id) {
 
 async function addLine(number) {
   clearMap()
-
-  //fetching the data
   const response = await fetch(baseURI + 'lines?name=' + number)
   let data = await response.json()
-  console.log(data)
   data = data[0].route
   data.forEach((item) => {
-    addStation(item.from, 'line')
-    addStation(item.to, 'line')
+    addStation(item.from, 'line', number)
+    addStation(item.to, 'line', number)
     addPolyline(item.path, 'black', 'line')
   })
   linelayer.addTo(map)
