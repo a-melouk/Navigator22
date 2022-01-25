@@ -15,16 +15,6 @@ const tile = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   subdomains: ['a', 'b', 'c'],
 })
 
-let drawControl = new L.Control.Draw({
-  position: 'topright',
-  draw: {
-    polygon: false,
-    rectangle: false,
-    circle: false,
-    circlemarker: false,
-  },
-})
-
 let getLatLngs = (layer) => {
   if (layer instanceof L.Polyline) {
     return layer.getLatLngs()
@@ -36,7 +26,6 @@ let getLatLngs = (layer) => {
 
 function init() {
   tile.addTo(map)
-  drawControl.addTo(map)
   console.log('Map initialized')
 }
 
@@ -45,7 +34,7 @@ init()
 clearMap = () => {
   map.eachLayer((layer) => {
     if (!layer instanceof L.TileLayer) map.removeLayer(layer)
-    map.removeControl(drawControl)
+    // map.removeControl(drawControl)
   })
 
   linelayer.clearLayers()
@@ -97,6 +86,8 @@ function addSegment(segment, color, layer) {
       rectangle: false,
       circle: false,
       circlemarker: false,
+      marker: false,
+      polyline: false,
     },
     edit: {
       featureGroup: segmentLayer,
@@ -221,7 +212,7 @@ addline.addEventListener('click', () => {
   line.route = route
   console.log('New line to be added', line)
   let confirm = prompt('Confirm adding the line', 'No')
-  if (confirm.toLowerCase() === 'yes') {
+  if (confirm !== null && confirm.toLowerCase() === 'yes') {
     fetch(baseURI + 'lines', {
       method: 'POST',
       headers: {
@@ -254,11 +245,8 @@ map.on('draw:edited', function (e) {
   console.log(choosenLine)
 
   layers.eachLayer(function (layer) {
-    if (layer instanceof L.Polyline) {
-      console.log('Updated Polyline', layer._latlngs)
-    } else if (layer instanceof L.Marker) {
-      console.log('Updated Marker', '{latitude: ' + layer._latlng.lat + ', longitude: ' + layer._latlng.lng + '}')
-    }
+    if (layer instanceof L.Polyline) console.log('Updated Polyline', layer._latlngs)
+    else if (layer instanceof L.Marker) console.log('Updated Marker', '{latitude: ' + layer._latlng.lat + ', longitude: ' + layer._latlng.lng + '}')
   })
   if (segmentLayer.getLayers().length > 0) {
     let tempLayers = segmentLayer.getLayers()
