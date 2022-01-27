@@ -5,48 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Navigator 22</title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-      crossorigin=""
-    />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.14/leaflet.draw.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.14/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="./static/leaflet.css" />
+    <script src="./static/leaflet.js"></script>
+    <link rel="stylesheet" href="./static/leaflet.draw.css" />
+    <script src="./static/leaflet.draw.js"></script>
     <link href="style1.css" rel="stylesheet" />
     <link href="style2.css" rel="stylesheet" />
     <link href="./content.html" rel="import" />
-    <!--  <style>
+    <!-- <style>
       .leaflet-marker-icon {
-        width: 10px !important;
-        height: 10px !important;
-      }
-      .leaflet-vertex-icon {
-        width: 10px !important;
-        height: 10px !important;
+        width: 2px !important;
+        height: 2px !important;
       }
     </style> -->
   </head>
   <body>
     <div class="container">
-      <div class="stations-list" style="min-width: 200px">
-        <label for="line">Line</label>
-        <select name="line" id="line">
-          <option disabled selected value>--Select a line --</option>
-        </select>
+      <div class="stations-list">
+        <div class="line">
+          <label for="line">Line</label>
+          <select name="line" id="line">
+            <option disabled selected value>--Select a line --</option>
+          </select>
+        </div>
 
-        <label for="from">From</label>
-        <select name="from" id="from">
-          <option disabled selected value>-- --</option>
-        </select>
+        <div class="from">
+          <label for="from">From</label>
+          <select name="from" id="from">
+            <option disabled selected value>-- --</option>
+          </select>
+        </div>
 
-        <label for="to">To</label>
-        <select name="to" id="to">
-          <option disabled selected value>-- --</option>
-        </select>
-        <button class="get line" id="getsegment" style="margin-left: 10px">Get segment</button>
-        <button class="add line" id="addline" style="margin-left: 10px">Add line</button>
+        <div class="to">
+          <label for="to">To</label>
+          <select name="to" id="to">
+            <option disabled selected value>-- --</option>
+          </select>
+        </div>
+
+        <div class="modifications">
+          <button class="get btn-modification" id="getsegment" style="margin-left: 10px">Get segment</button>
+          <button class="add btn-modification" id="addline" style="margin-left: 10px">Add line</button>
+        </div>
       </div>
       <div id="map"></div>
       <div class="right">

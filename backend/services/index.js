@@ -13,7 +13,7 @@ const Station = Models.Station
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
-const dbURI = 'mongodb://127.0.0.1/navigator'
+const dbURI = 'mongodb://127.0.0.1/navigator-copy2'
 mongoose
   .connect(dbURI, {
     useNewUrlParser: true,
