@@ -105,7 +105,7 @@
         repeatMode: !1,
         drawError: { color: '#b00b00', timeout: 2500 },
         icon: new L.DivIcon({ iconSize: new L.Point(8, 8), className: 'leaflet-div-icon leaflet-editing-icon' }),
-        touchIcon: new L.DivIcon({ iconSize: new L.Point(4, 4), className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon' }),
+        touchIcon: new L.DivIcon({ iconSize: new L.Point(10, 10), className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon' }),
         guidelineDistance: 20,
         maxGuideLineLength: 4e3,
         shapeOptions: { stroke: !0, color: '#3388ff', weight: 4, opacity: 0.5, fill: !1, clickable: !0 },
@@ -698,8 +698,8 @@
     })),
     (L.Edit.PolyVerticesEdit = L.Handler.extend({
       options: {
-        icon: new L.DivIcon({ iconSize: new L.Point(8, 8), className: 'leaflet-div-icon leaflet-editing-icon' }),
-        touchIcon: new L.DivIcon({ iconSize: new L.Point(4, 4), className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon' }),
+        icon: new L.DivIcon({ iconSize: new L.Point(6, 6), className: 'leaflet-div-icon leaflet-editing-icon' }),
+        touchIcon: new L.DivIcon({ iconSize: new L.Point(6, 6), className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon' }),
         drawError: { color: '#b00b00', timeout: 1e3 },
       },
       initialize: function (t, e, i) {
@@ -864,7 +864,7 @@
           n,
           a = this._getMiddleLatLng(t, e),
           s = this._createMarker(a)
-        s.setOpacity(0.6),
+        s.setOpacity(0.5),
           (t._middleRight = e._middleLeft = s),
           (o = function () {
             s.off('touchmove', o, this)
@@ -914,13 +914,13 @@
     (L.Edit = L.Edit || {}),
     (L.Edit.SimpleShape = L.Handler.extend({
       options: {
-        moveIcon: new L.DivIcon({ iconSize: new L.Point(8, 8), className: 'leaflet-div-icon leaflet-editing-icon leaflet-edit-move' }),
-        resizeIcon: new L.DivIcon({ iconSize: new L.Point(8, 8), className: 'leaflet-div-icon leaflet-editing-icon leaflet-edit-resize' }),
+        moveIcon: new L.DivIcon({ iconSize: new L.Point(2, 2), className: 'leaflet-div-icon leaflet-editing-icon leaflet-edit-move' }),
+        resizeIcon: new L.DivIcon({ iconSize: new L.Point(2, 2), className: 'leaflet-div-icon leaflet-editing-icon leaflet-edit-resize' }),
         touchMoveIcon: new L.DivIcon({
-          iconSize: new L.Point(4, 4),
+          iconSize: new L.Point(10, 10),
           className: 'leaflet-div-icon leaflet-editing-icon leaflet-edit-move leaflet-touch-icon',
         }),
-        touchResizeIcon: new L.DivIcon({ iconSize: new L.Point(4, 4), className: 'leaflet-div-icon leaflet-editing-icon leaflet-edit-resize leaflet-touch-icon' }),
+        touchResizeIcon: new L.DivIcon({ iconSize: new L.Point(2, 2), className: 'leaflet-div-icon leaflet-editing-icon leaflet-edit-resize leaflet-touch-icon' }),
       },
       initialize: function (t, e) {
         L.Browser.touch && ((this.options.moveIcon = this.options.touchMoveIcon), (this.options.resizeIcon = this.options.touchResizeIcon)), (this._shape = t), L.Util.setOptions(this, e)

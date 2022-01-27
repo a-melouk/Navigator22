@@ -56,6 +56,12 @@ async function addLine(number) {
     // addStation(item.from, 'line')
     // addStation(item.to, 'line')
     addPolyline(item.path, 'black', 'line')
+    for (let i = 0; i < item.path.length - 1; i++) {
+      let distance = map.distance([item.path[i].latitude, item.path[i].longitude], [item.path[i + 1].latitude, item.path[i + 1].longitude])
+      if (distance <= 2.5) {
+        console.log(i, distance, item.from.name, item.to.name)
+      }
+    }
   })
   linelayer.addTo(map)
 }

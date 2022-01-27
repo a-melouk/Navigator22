@@ -99,9 +99,6 @@ function addSegment(segment, color, layer) {
   })
   drawControl.addTo(map)
   originalSegment = segment
-  for (let i = 0; i < segment.path.length - 1; i++) {
-    console.log(map.distance([segment.path[i].latitude, segment.path[i].longitude], [segment.path[i + 1].latitude, segment.path[i + 1].longitude]))
-  }
 }
 
 const toTitleCase = (string) => {
@@ -199,16 +196,6 @@ function newSegment(layer) {
   // path = []
   // return route
 }
-
-map.on('draw:editstart', function (e) {
-  var icons = document.getElementsByClassName('leaflet-touch-icon')
-  for (var i = 0; i < icons.length; i++) {
-    icons[i].style.width = '2px'
-    icons[i].style.height = '2px'
-    console.log(icons[i].style)
-  }
-  console.log(icons)
-})
 
 map.on('draw:created', function (e) {
   let layer = e.layer

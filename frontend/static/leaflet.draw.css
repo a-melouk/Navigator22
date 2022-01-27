@@ -211,10 +211,7 @@
 }
 .leaflet-draw-guide-dash {
   font-size: 1%;
-  opacity: 0.6;
   position: absolute;
-  width: 5px;
-  height: 5px;
 }
 .leaflet-edit-marker-selected {
   background-color: rgba(254, 87, 161, 0.1);
