@@ -200,6 +200,16 @@ function newSegment(layer) {
   // return route
 }
 
+map.on('draw:editstart', function (e) {
+  var icons = document.getElementsByClassName('leaflet-touch-icon')
+  for (var i = 0; i < icons.length; i++) {
+    icons[i].style.width = '2px'
+    icons[i].style.height = '2px'
+    console.log(icons[i].style)
+  }
+  console.log(icons)
+})
+
 map.on('draw:created', function (e) {
   let layer = e.layer
   layer.addTo(map)
