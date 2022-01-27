@@ -53,13 +53,11 @@ async function addLine(number) {
   data.forEach((item) => {
     addStation(item.from, 'line', number)
     addStation(item.to, 'line', number)
-    // addStation(item.from, 'line')
-    // addStation(item.to, 'line')
     addPolyline(item.path, 'black', 'line')
     for (let i = 0; i < item.path.length - 1; i++) {
       let distance = map.distance([item.path[i].latitude, item.path[i].longitude], [item.path[i + 1].latitude, item.path[i + 1].longitude])
-      if (distance <= 2.5) {
-        console.log(i, distance, item.from.name, item.to.name)
+      if (distance <= 4.6) {
+        console.log(i, item.path[i], item.path[i + 1], distance, item.from.name, item.to.name)
       }
     }
   })

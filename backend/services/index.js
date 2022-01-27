@@ -157,9 +157,18 @@ app.patch('/station', (request, response) => {
 
 //Update segment by id
 app.patch('/segment', (request, response) => {
+  console.log('Attempt to patch a segment')
   let id = request.query.id
   let body = request.body
   Line.updateOne({ 'route._id': id }, { $set: { 'route.$': body } })
+    .then((data) => response.json(data))
+    .catch((err) => response.json(err))
+})
+
+app.patch('/patchline/:id', (request, response) => {
+  let id = request.params.id
+  let body = request.body
+  Line.findByIdAndUpdate(id, body)
     .then((data) => response.json(data))
     .catch((err) => response.json(err))
 })

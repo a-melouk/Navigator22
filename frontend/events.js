@@ -21,17 +21,19 @@ toElement = document.getElementById('to').addEventListener('change', (event) => 
 })
 
 let getsegment = document.getElementById('getsegment')
-getsegment.addEventListener('click', (event) => {
-  const response = fetch(baseURI + 'lines/' + line + '?from=' + JSON.parse(from).name + '&to=' + JSON.parse(to).name)
+getsegment.addEventListener('click', () => {
+  fetch(baseURI + 'lines/' + line + '?from=' + JSON.parse(from).name + '&to=' + JSON.parse(to).name)
     .then((data) => data.json())
     .catch((err) => console.log(err))
     .then((data) => {
-      clearMap()
-      addSegment(data, 'blue', 'segment')
-      segmentLayer.options = {
-        id: data.id,
-      }
-      segmentLayer.addTo(map)
+      if (data.from != undefined) {
+        clearMap()
+        addSegment(data, 'blue', 'segment')
+        segmentLayer.options = {
+          id: data.id,
+        }
+        segmentLayer.addTo(map)
+      } else console.warn('Inexistant segment')
     })
 })
 

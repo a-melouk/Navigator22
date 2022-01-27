@@ -51,14 +51,14 @@
       <div id="map"></div>
       <div class="right">
         <div class="Lines">
-          <button class="lines" onclick="addLine('tramway')">Tramway</button>
-          <button class="lines" onclick="addLine('Ligne 03'); addLine('Ligne 03 bis')">Bus 03</button>
-          <button class="lines" onclick="addLine('Ligne 11')">Bus 11</button>
-          <button class="lines" onclick="addLine('Ligne 16')">Bus 16</button>
-          <button class="lines" onclick="addLine('Ligne 17')">Bus 17</button>
-          <button class="lines" onclick="addLine('Ligne 22')">Bus 22</button>
-          <button class="lines" onclick="addLine('Ligne 25')">Bus 25</button>
-          <button class="lines" onclick="addLine('Ligne 27')">Bus 27</button>
+          <button class="lines" onclick="addLine('tramway'); cleanPath('tramway');">Tramway</button>
+          <button class="lines" onclick="addLine('Ligne 03'); addLine('Ligne 03 bis'); cleanPath('Ligne 03');cleanPath('Ligne 03 bis');">Bus 03</button>
+          <button class="lines" onclick="addLine('Ligne 11');cleanPath('Ligne 11');">Bus 11</button>
+          <button class="lines" onclick="addLine('Ligne 16');cleanPath('Ligne 16');">Bus 16</button>
+          <button class="lines" onclick="addLine('Ligne 17');cleanPath('Ligne 17');">Bus 17</button>
+          <button class="lines" onclick="addLine('Ligne 22');cleanPath('Ligne 22');">Bus 22</button>
+          <button class="lines" onclick="addLine('Ligne 25');cleanPath('Ligne 25');">Bus 25</button>
+          <button class="lines" onclick="addLine('Ligne 27');cleanPath('Ligne 27');">Bus 27</button>
         </div>
         <div class="clear">
           <button class="clear-all" onclick="clearMap()">Clear the map</button>
@@ -69,6 +69,8 @@
     <script src="./layers.js" type="text/javascript"></script>
     <script src="./methods.js" type="text/javascript"></script>
     <script src="./events.js" type="text/javascript"></script>
+    <script src="./removeClosePoints.js" type="text/javascript"></script>
+    <script src="./add-line.js" type="text/javascript"></script>
 
     <script>
       populate()
