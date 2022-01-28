@@ -37,7 +37,6 @@
 .leaflet-safari .leaflet-tile-container {
   width: 1600px;
   height: 1600px;
-  transform-origin: 0 0;
   -webkit-transform-origin: 0 0;
 }
 .leaflet-marker-icon,
@@ -92,7 +91,6 @@
 }
 /* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
 .leaflet-overlay-pane svg {
-  user-select: none;
   -moz-user-select: none;
 }
 
@@ -336,12 +334,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-touch .leaflet-bar a:first-child {
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
-  padding: 3px;
 }
 .leaflet-touch .leaflet-bar a:last-child {
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
-  padding: 3px;
 }
 
 /* zoom control */
@@ -547,7 +543,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 }
 
 .leaflet-oldie .leaflet-popup-content-wrapper {
-  zoom: 1;
   -ms-zoom: 1;
 }
 .leaflet-oldie .leaflet-popup-tip {
@@ -571,9 +566,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* div icon */
 
 .leaflet-div-icon {
-  background: #fff;
+  background: rgb(255, 255, 255);
   border: 1px solid #666;
-  opacity: 0.8;
+  opacity: 0.75;
 }
 
 /* Tooltip */

@@ -5,75 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Navigator 22</title>
-    <!-- <link rel="stylesheet" href="./static/leaflet.css" />
+    <link rel="stylesheet" href="./static/leaflet.css" />
     <script src="./static/leaflet.js"></script>
     <link rel="stylesheet" href="./static/leaflet.draw.css" />
-    <script src="./static/leaflet.draw.js"></script> -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"
-      integrity="sha512-gc3xjCmIy673V6MyOAZhIW93xhM9ei1I+gLbmFjUHIjocENRsLX/QUE1htk5q1XV2D/iie/VQ8DXI6Vu8bexvQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
-      integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
+    <script src="./static/leaflet.draw.js"></script>
+
     <link href="style1.css" rel="stylesheet" />
     <link href="style2.css" rel="stylesheet" />
     <link href="./content.html" rel="import" />
-    <!-- <style>
-      .leaflet-marker-icon {
-        width: 2px !important;
-        height: 2px !important;
-      }
-    </style> -->
   </head>
   <body>
     <div class="container">
-      <div class="stations-list">
-        <div class="line">
-          <label for="line">Line</label>
-          <select name="line" id="line">
-            <option disabled selected value>--Select a line --</option>
-          </select>
-        </div>
+      <div class="nav">
+        <div class="navigation">
+          <div class="line">
+            <label for="line">Line</label>
+            <select name="line" id="line">
+              <option disabled selected value>--Select a line --</option>
+            </select>
+          </div>
 
-        <div class="from">
-          <label for="from">From</label>
-          <select name="from" id="from">
-            <option disabled selected value>-- --</option>
-          </select>
-        </div>
+          <div class="from">
+            <label for="from">From</label>
+            <select name="from" id="from">
+              <option disabled selected value>-- --</option>
+            </select>
+          </div>
 
-        <div class="to">
-          <label for="to">To</label>
-          <select name="to" id="to">
-            <option disabled selected value>-- --</option>
-          </select>
+          <div class="to">
+            <label for="to">To</label>
+            <select name="to" id="to">
+              <option disabled selected value>-- --</option>
+            </select>
+          </div>
+          <button class="get btn-modification" id="getsegment" style="margin-left: 10px">Get segment</button>
         </div>
 
         <div class="modifications">
-          <button class="get btn-modification" id="getsegment" style="margin-left: 10px">Get segment</button>
           <button class="add btn-modification" id="addline" style="margin-left: 10px">Add line</button>
         </div>
       </div>
       <div id="map"></div>
       <div class="right">
         <div class="Lines">
-          <button class="lines" onclick="addLine('tramway'); cleanPath('tramway');">Tramway</button>
-          <button class="lines" onclick="addLine('Ligne 03'); addLine('Ligne 03 bis'); cleanPath('Ligne 03');cleanPath('Ligne 03 bis');">Bus 03</button>
-          <button class="lines" onclick="addLine('Ligne 11');cleanPath('Ligne 11');">Bus 11</button>
-          <button class="lines" onclick="addLine('Ligne 16');cleanPath('Ligne 16');">Bus 16</button>
-          <button class="lines" onclick="addLine('Ligne 17');cleanPath('Ligne 17');">Bus 17</button>
-          <button class="lines" onclick="addLine('Ligne 22');cleanPath('Ligne 22');">Bus 22</button>
-          <button class="lines" onclick="addLine('Ligne 25');cleanPath('Ligne 25');">Bus 25</button>
-          <button class="lines" onclick="addLine('Ligne 27');cleanPath('Ligne 27');">Bus 27</button>
+          <button class="lines tramway" onclick="addLineToMap('tramway');">Tramway</button>
+          <button class="lines bus" onclick="addLineToMap('Ligne 03'); addLineToMap('Ligne 03 bis');">Bus 03</button>
+          <button class="lines bus" onclick="addLineToMap('Ligne 11');">Bus 11</button>
+          <button class="lines bus" onclick="addLineToMap('Ligne 16');">Bus 16</button>
+          <button class="lines bus" onclick="addLineToMap('Ligne 17');">Bus 17</button>
+          <button class="lines bus" onclick="addLineToMap('Ligne 22');">Bus 22</button>
+          <button class="lines bus" onclick="addLineToMap('Ligne 25');">Bus 25</button>
+          <button class="lines bus" onclick="addLineToMap('Ligne 27');">Bus 27</button>
         </div>
         <div class="clear">
           <button class="clear-all" onclick="clearMap()">Clear the map</button>

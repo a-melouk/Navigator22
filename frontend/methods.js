@@ -46,7 +46,7 @@ function populateList(data, id) {
   }
 }
 
-async function addLine(number) {
+async function addLineToMap(number) {
   clearMap()
   const response = await fetch(baseURI + 'lines?name=' + number)
   let data = await response.json()

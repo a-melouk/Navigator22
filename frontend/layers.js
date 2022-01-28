@@ -69,7 +69,7 @@ function addStation(station, layer, line) {
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
       item: station,
       icon: iconOptions,
-    }).bindPopup('<b>' + station.name + '</b>' + 'Delete' + '</button>')
+    }).bindPopup('<b>' + station.name + '</b>')
   else
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
       item: station,

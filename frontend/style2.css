@@ -19,7 +19,7 @@ select {
 }
 
 .btn-modification {
-  min-width: 130px;
+  width: 100px;
   min-height: 50px;
   height: 40px;
   color: #fff;

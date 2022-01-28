@@ -105,10 +105,10 @@
         repeatMode: !1,
         drawError: { color: '#b00b00', timeout: 2500 },
         icon: new L.DivIcon({ iconSize: new L.Point(8, 8), className: 'leaflet-div-icon leaflet-editing-icon' }),
-        touchIcon: new L.DivIcon({ iconSize: new L.Point(10, 10), className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon' }),
+        touchIcon: new L.DivIcon({ iconSize: new L.Point(2, 2), className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon' }),
         guidelineDistance: 20,
         maxGuideLineLength: 4e3,
-        shapeOptions: { stroke: !0, color: '#3388ff', weight: 4, opacity: 0.5, fill: !1, clickable: !0 },
+        shapeOptions: { stroke: !0, color: '#3388ff', weight: 4, opacity: 0.8, fill: !1, clickable: !0 },
         metric: !0,
         feet: !0,
         nautic: !1,
@@ -138,18 +138,8 @@
                 opacity: 0,
                 zIndexOffset: this.options.zIndexOffset,
               })),
-            this._mouseMarker
-              .on('mouseout', this._onMouseOut, this)
-              .on('mousemove', this._onMouseMove, this)
-              .on('mousedown', this._onMouseDown, this)
-              .on('mouseup', this._onMouseUp, this)
-              .addTo(this._map),
-            this._map
-              .on('mouseup', this._onMouseUp, this)
-              .on('mousemove', this._onMouseMove, this)
-              .on('zoomlevelschange', this._onZoomEnd, this)
-              .on('touchstart', this._onTouch, this)
-              .on('zoomend', this._onZoomEnd, this))
+            this._mouseMarker.on('mouseout', this._onMouseOut, this).on('mousemove', this._onMouseMove, this).on('mousedown', this._onMouseDown, this).on('mouseup', this._onMouseUp, this).addTo(this._map),
+            this._map.on('mouseup', this._onMouseUp, this).on('mousemove', this._onMouseMove, this).on('zoomlevelschange', this._onZoomEnd, this).on('touchstart', this._onTouch, this).on('zoomend', this._onZoomEnd, this))
       },
       removeHooks: function () {
         L.Draw.Feature.prototype.removeHooks.call(this),
@@ -183,11 +173,7 @@
       },
       addVertex: function (t) {
         if (this._markers.length >= 2 && !this.options.allowIntersection && this._poly.newLatLngIntersects(t)) return void this._showErrorTooltip()
-        this._errorShown && this._hideErrorTooltip(),
-          this._markers.push(this._createMarker(t)),
-          this._poly.addLatLng(t),
-          2 === this._poly.getLatLngs().length && this._map.addLayer(this._poly),
-          this._vertexChanged(t, !0)
+        this._errorShown && this._hideErrorTooltip(), this._markers.push(this._createMarker(t)), this._poly.addLatLng(t), 2 === this._poly.getLatLngs().length && this._map.addLayer(this._poly), this._vertexChanged(t, !0)
       },
       completeShape: function () {
         this._markers.length <= 1 || (this._fireCreatedEvent(), this.disable(), this.options.repeatMode && this.enable())
@@ -252,13 +238,7 @@
           this._clickHandled ||
           this._touchHandled ||
           this._disableMarkers ||
-          ((e = o.touches[0].clientX),
-          (i = o.touches[0].clientY),
-          this._disableNewMarkers(),
-          (this._touchHandled = !0),
-          this._startPoint.call(this, e, i),
-          this._endPoint.call(this, e, i, t),
-          (this._touchHandled = null)),
+          ((e = o.touches[0].clientX), (i = o.touches[0].clientY), this._disableNewMarkers(), (this._touchHandled = !0), this._startPoint.call(this, e, i), this._endPoint.call(this, e, i, t), (this._touchHandled = null)),
           (this._clickHandled = null)
       },
       _onMouseOut: function () {
@@ -324,8 +304,7 @@
         return (
           0 === this._markers.length
             ? (t = { text: L.drawLocal.draw.handlers.polyline.tooltip.start })
-            : ((e = i ? this._getMeasurementString() : ''),
-              (t = 1 === this._markers.length ? { text: L.drawLocal.draw.handlers.polyline.tooltip.cont, subtext: e } : { text: L.drawLocal.draw.handlers.polyline.tooltip.end, subtext: e })),
+            : ((e = i ? this._getMeasurementString() : ''), (t = 1 === this._markers.length ? { text: L.drawLocal.draw.handlers.polyline.tooltip.cont, subtext: e } : { text: L.drawLocal.draw.handlers.polyline.tooltip.end, subtext: e })),
           t
         )
       },
@@ -336,9 +315,7 @@
         1 === this._markers.length
           ? (this._measurementRunningTotal = 0)
           : ((i = n - (e ? 2 : 1)),
-            (o = L.GeometryUtil.isVersion07x()
-              ? t.distanceTo(this._markers[i].getLatLng()) * (this.options.factor || 1)
-              : this._map.distance(t, this._markers[i].getLatLng()) * (this.options.factor || 1)),
+            (o = L.GeometryUtil.isVersion07x() ? t.distanceTo(this._markers[i].getLatLng()) * (this.options.factor || 1) : this._map.distance(t, this._markers[i].getLatLng()) * (this.options.factor || 1)),
             (this._measurementRunningTotal += o * (e ? 1 : -1)))
       },
       _getMeasurementString: function () {
@@ -410,8 +387,7 @@
       },
       _updateFinishHandler: function () {
         var t = this._markers.length
-        1 === t && this._markers[0].on('click', this._finishShape, this),
-          t > 2 && (this._markers[t - 1].on('dblclick', this._finishShape, this), t > 3 && this._markers[t - 2].off('dblclick', this._finishShape, this))
+        1 === t && this._markers[0].on('click', this._finishShape, this), t > 2 && (this._markers[t - 1].on('dblclick', this._finishShape, this), t > 3 && this._markers[t - 2].off('dblclick', this._finishShape, this))
       },
       _getTooltipText: function () {
         var t, e
@@ -427,19 +403,14 @@
       _getMeasurementString: function () {
         var t = this._area,
           e = ''
-        return t || this.options.showLength
-          ? (this.options.showLength && (e = L.Draw.Polyline.prototype._getMeasurementString.call(this)),
-            t && (e += '<br>' + L.GeometryUtil.readableArea(t, this.options.metric, this.options.precision)),
-            e)
-          : null
+        return t || this.options.showLength ? (this.options.showLength && (e = L.Draw.Polyline.prototype._getMeasurementString.call(this)), t && (e += '<br>' + L.GeometryUtil.readableArea(t, this.options.metric, this.options.precision)), e) : null
       },
       _shapeIsValid: function () {
         return this._markers.length >= 3
       },
       _vertexChanged: function (t, e) {
         var i
-        !this.options.allowIntersection && this.options.showArea && ((i = this._poly.getLatLngs()), (this._area = L.GeometryUtil.geodesicArea(i))),
-          L.Draw.Polyline.prototype._vertexChanged.call(this, t, e)
+        !this.options.allowIntersection && this.options.showArea && ((i = this._poly.getLatLngs()), (this._area = L.GeometryUtil.geodesicArea(i))), L.Draw.Polyline.prototype._vertexChanged.call(this, t, e)
       },
       _cleanUpShape: function () {
         var t = this._markers.length
@@ -502,9 +473,7 @@
         ;(this._isCurrentlyTwoClickDrawing && !o(t.target, 'leaflet-pane')) || L.Draw.SimpleShape.prototype._onMouseUp.call(this)
       },
       _drawShape: function (t) {
-        this._shape
-          ? this._shape.setBounds(new L.LatLngBounds(this._startLatLng, t))
-          : ((this._shape = new L.Rectangle(new L.LatLngBounds(this._startLatLng, t), this.options.shapeOptions)), this._map.addLayer(this._shape))
+        this._shape ? this._shape.setBounds(new L.LatLngBounds(this._startLatLng, t)) : ((this._shape = new L.Rectangle(new L.LatLngBounds(this._startLatLng, t), this.options.shapeOptions)), this._map.addLayer(this._shape))
       },
       _fireCreatedEvent: function () {
         var t = new L.Rectangle(this._shape.getBounds(), this.options.shapeOptions)
@@ -517,13 +486,7 @@
           o = L.Draw.SimpleShape.prototype._getTooltipText.call(this),
           n = this._shape,
           a = this.options.showArea
-        return (
-          n &&
-            ((t = this._shape._defaultShape ? this._shape._defaultShape() : this._shape.getLatLngs()),
-            (e = L.GeometryUtil.geodesicArea(t)),
-            (i = a ? L.GeometryUtil.readableArea(e, this.options.metric) : '')),
-          { text: o.text, subtext: i }
-        )
+        return n && ((t = this._shape._defaultShape ? this._shape._defaultShape() : this._shape.getLatLngs()), (e = L.GeometryUtil.geodesicArea(t)), (i = a ? L.GeometryUtil.readableArea(e, this.options.metric) : '')), { text: o.text, subtext: i }
       },
     })),
     (L.Draw.Marker = L.Draw.Feature.extend({
@@ -560,9 +523,7 @@
         var e = t.latlng
         this._tooltip.updatePosition(e),
           this._mouseMarker.setLatLng(e),
-          this._marker
-            ? ((e = this._mouseMarker.getLatLng()), this._marker.setLatLng(e))
-            : ((this._marker = this._createMarker(e)), this._marker.on('click', this._onClick, this), this._map.on('click', this._onClick, this).addLayer(this._marker))
+          this._marker ? ((e = this._mouseMarker.getLatLng()), this._marker.setLatLng(e)) : ((this._marker = this._createMarker(e)), this._marker.on('click', this._onClick, this), this._map.on('click', this._onClick, this).addLayer(this._marker))
       },
       _createMarker: function (t) {
         return new L.Marker(t, { icon: this.options.icon, zIndexOffset: this.options.zIndexOffset })
@@ -621,8 +582,7 @@
         if ((this._tooltip.updatePosition(i), this._isDrawing)) {
           this._drawShape(i), (e = this._shape.getRadius().toFixed(1))
           var a = ''
-          o && (a = L.drawLocal.draw.handlers.circle.radius + ': ' + L.GeometryUtil.readableDistance(e, n, this.options.feet, this.options.nautic)),
-            this._tooltip.updateContent({ text: this._endLabelText, subtext: a })
+          o && (a = L.drawLocal.draw.handlers.circle.radius + ': ' + L.GeometryUtil.readableDistance(e, n, this.options.feet, this.options.nautic)), this._tooltip.updateContent({ text: this._endLabelText, subtext: a })
         }
       },
     })),
@@ -647,9 +607,7 @@
         var t = this._marker._icon
         t &&
           ((t.style.display = 'none'),
-          L.DomUtil.hasClass(t, 'leaflet-edit-marker-selected')
-            ? (L.DomUtil.removeClass(t, 'leaflet-edit-marker-selected'), this._offsetMarker(t, -4))
-            : (L.DomUtil.addClass(t, 'leaflet-edit-marker-selected'), this._offsetMarker(t, 4)),
+          L.DomUtil.hasClass(t, 'leaflet-edit-marker-selected') ? (L.DomUtil.removeClass(t, 'leaflet-edit-marker-selected'), this._offsetMarker(t, -4)) : (L.DomUtil.addClass(t, 'leaflet-edit-marker-selected'), this._offsetMarker(t, 4)),
           (t.style.display = ''))
       },
       _offsetMarker: function (t, e) {
@@ -698,16 +656,12 @@
     })),
     (L.Edit.PolyVerticesEdit = L.Handler.extend({
       options: {
-        icon: new L.DivIcon({ iconSize: new L.Point(6, 6), className: 'leaflet-div-icon leaflet-editing-icon' }),
-        touchIcon: new L.DivIcon({ iconSize: new L.Point(6, 6), className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon' }),
+        icon: new L.DivIcon({ iconSize: new L.Point(2, 2), className: 'leaflet-div-icon leaflet-editing-icon' }),
+        touchIcon: new L.DivIcon({ iconSize: new L.Point(5, 5), className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon' }),
         drawError: { color: '#b00b00', timeout: 1e3 },
       },
       initialize: function (t, e, i) {
-        L.Browser.touch && (this.options.icon = this.options.touchIcon),
-          (this._poly = t),
-          i && i.drawError && (i.drawError = L.Util.extend({}, this.options.drawError, i.drawError)),
-          (this._latlngs = e),
-          L.setOptions(this, i)
+        L.Browser.touch && (this.options.icon = this.options.touchIcon), (this._poly = t), i && i.drawError && (i.drawError = L.Util.extend({}, this.options.drawError, i.drawError)), (this._latlngs = e), L.setOptions(this, i)
       },
       _defaultShape: function () {
         return L.Polyline._flat ? (L.Polyline._flat(this._latlngs) ? this._latlngs : this._latlngs[0]) : this._latlngs
@@ -755,8 +709,7 @@
           n = this._defaultShape()
         for (t = 0, i = n.length; t < i; t++) (o = this._createMarker(n[t], t)), o.on('click', this._onMarkerClick, this), o.on('contextmenu', this._onContextMenu, this), this._markers.push(o)
         var a, s
-        for (t = 0, e = i - 1; t < i; e = t++)
-          (0 !== t || (L.Polygon && this._poly instanceof L.Polygon)) && ((a = this._markers[e]), (s = this._markers[t]), this._createMiddleMarker(a, s), this._updatePrevNext(a, s))
+        for (t = 0, e = i - 1; t < i; e = t++) (0 !== t || (L.Polygon && this._poly instanceof L.Polygon)) && ((a = this._markers[e]), (s = this._markers[t]), this._createMiddleMarker(a, s), this._updatePrevNext(a, s))
       },
       _createMarker: function (t, e) {
         var i = new L.Marker.Touch(t, { draggable: !0, icon: this.options.icon })
@@ -805,12 +758,7 @@
       _onMarkerDrag: function (t) {
         var e = t.target,
           i = this._poly
-        if (
-          (L.extend(e._origLatLng, e._latlng),
-          e._middleLeft && e._middleLeft.setLatLng(this._getMiddleLatLng(e._prev, e)),
-          e._middleRight && e._middleRight.setLatLng(this._getMiddleLatLng(e, e._next)),
-          i.options.poly)
-        ) {
+        if ((L.extend(e._origLatLng, e._latlng), e._middleLeft && e._middleLeft.setLatLng(this._getMiddleLatLng(e._prev, e)), e._middleRight && e._middleRight.setLatLng(this._getMiddleLatLng(e, e._next)), i.options.poly)) {
           var o = i._map._editTooltip
           if (!i.options.poly.allowIntersection && i.intersects()) {
             var n = i.options.color
@@ -847,11 +795,7 @@
         var e = this._map.mouseEventToLayerPoint(t.originalEvent.touches[0]),
           i = this._map.layerPointToLatLng(e),
           o = t.target
-        L.extend(o._origLatLng, i),
-          o._middleLeft && o._middleLeft.setLatLng(this._getMiddleLatLng(o._prev, o)),
-          o._middleRight && o._middleRight.setLatLng(this._getMiddleLatLng(o, o._next)),
-          this._poly.redraw(),
-          this.updateMarkers()
+        L.extend(o._origLatLng, i), o._middleLeft && o._middleLeft.setLatLng(this._getMiddleLatLng(o._prev, o)), o._middleRight && o._middleRight.setLatLng(this._getMiddleLatLng(o, o._next)), this._poly.redraw(), this.updateMarkers()
       },
       _updateIndexes: function (t, e) {
         this._markerGroup.eachLayer(function (i) {
@@ -864,7 +808,7 @@
           n,
           a = this._getMiddleLatLng(t, e),
           s = this._createMarker(a)
-        s.setOpacity(0.5),
+        s.setOpacity(0.4),
           (t._middleRight = e._middleLeft = s),
           (o = function () {
             s.off('touchmove', o, this)
@@ -875,7 +819,7 @@
               (a.lng = s.getLatLng().lng),
               this._spliceLatLngs(n, 0, a),
               this._markers.splice(n, 0, s),
-              s.setOpacity(1),
+              s.setOpacity(0.8),
               this._updateIndexes(n, 1),
               e._index++,
               this._updatePrevNext(t, s),
@@ -927,8 +871,7 @@
       },
       addHooks: function () {
         var t = this._shape
-        this._shape._map &&
-          ((this._map = this._shape._map), t.setStyle(t.options.editing), t._map && ((this._map = t._map), this._markerGroup || this._initMarkers(), this._map.addLayer(this._markerGroup)))
+        this._shape._map && ((this._map = this._shape._map), t.setStyle(t.options.editing), t._map && ((this._map = t._map), this._markerGroup || this._initMarkers(), this._map.addLayer(this._markerGroup)))
       },
       removeHooks: function () {
         var t = this._shape
@@ -1028,10 +971,7 @@
         var e,
           i,
           o = t.target
-        o === this._moveMarker && ((e = this._shape.getBounds()), (i = e.getCenter()), o.setLatLng(i)),
-          this._toggleCornerMarkers(1),
-          this._repositionCornerMarkers(),
-          L.Edit.SimpleShape.prototype._onMarkerDragEnd.call(this, t)
+        o === this._moveMarker && ((e = this._shape.getBounds()), (i = e.getCenter()), o.setLatLng(i)), this._toggleCornerMarkers(1), this._repositionCornerMarkers(), L.Edit.SimpleShape.prototype._onMarkerDragEnd.call(this, t)
       },
       _move: function (t) {
         for (var e, i = this._shape._defaultShape ? this._shape._defaultShape() : this._shape.getLatLngs(), o = this._shape.getBounds(), n = o.getCenter(), a = [], s = 0, r = i.length; s < r; s++)
@@ -1040,10 +980,7 @@
       },
       _resize: function (t) {
         var e
-        this._shape.setBounds(L.latLngBounds(t, this._oppositeCorner)),
-          (e = this._shape.getBounds()),
-          this._moveMarker.setLatLng(e.getCenter()),
-          this._map.fire(L.Draw.Event.EDITRESIZE, { layer: this._shape })
+        this._shape.setBounds(L.latLngBounds(t, this._oppositeCorner)), (e = this._shape.getBounds()), this._moveMarker.setLatLng(e.getCenter()), this._map.fire(L.Draw.Event.EDITRESIZE, { layer: this._shape })
       },
       _getCorners: function () {
         var t = this._shape.getBounds()
@@ -1282,13 +1219,7 @@
                     : e >= 1e4 && -1 !== a.indexOf('ha')
                     ? L.GeometryUtil.formattedNumber(1e-4 * e, o.ha) + ' ha'
                     : L.GeometryUtil.formattedNumber(e, o.m) + ' m²'))
-              : ((e /= 0.836127),
-                (n =
-                  e >= 3097600
-                    ? L.GeometryUtil.formattedNumber(e / 3097600, o.mi) + ' mi²'
-                    : e >= 4840
-                    ? L.GeometryUtil.formattedNumber(e / 4840, o.ac) + ' acres'
-                    : L.GeometryUtil.formattedNumber(e, o.yd) + ' yd²')),
+              : ((e /= 0.836127), (n = e >= 3097600 ? L.GeometryUtil.formattedNumber(e / 3097600, o.mi) + ' mi²' : e >= 4840 ? L.GeometryUtil.formattedNumber(e / 4840, o.ac) + ' acres' : L.GeometryUtil.formattedNumber(e, o.yd) + ' yd²')),
             n
           )
         },
@@ -1372,10 +1303,7 @@
           i,
           o,
           n = this._getProjectedPoints()
-        return (
-          !this._tooFewPointsForIntersection() &&
-          (!!L.Polyline.prototype.intersects.call(this) || ((t = n.length), (e = n[0]), (i = n[t - 1]), (o = t - 2), this._lineSegmentsIntersectsRange(i, e, o, 1)))
-        )
+        return !this._tooFewPointsForIntersection() && (!!L.Polyline.prototype.intersects.call(this) || ((t = n.length), (e = n[0]), (i = n[t - 1]), (o = t - 2), this._lineSegmentsIntersectsRange(i, e, o, 1)))
       },
     }),
     (L.Control.Draw = L.Control.extend({
@@ -1385,12 +1313,8 @@
         L.Control.prototype.initialize.call(this, t)
         var e
         ;(this._toolbars = {}),
-          L.DrawToolbar &&
-            this.options.draw &&
-            ((e = new L.DrawToolbar(this.options.draw)), (this._toolbars[L.DrawToolbar.TYPE] = e), this._toolbars[L.DrawToolbar.TYPE].on('enable', this._toolbarEnabled, this)),
-          L.EditToolbar &&
-            this.options.edit &&
-            ((e = new L.EditToolbar(this.options.edit)), (this._toolbars[L.EditToolbar.TYPE] = e), this._toolbars[L.EditToolbar.TYPE].on('enable', this._toolbarEnabled, this)),
+          L.DrawToolbar && this.options.draw && ((e = new L.DrawToolbar(this.options.draw)), (this._toolbars[L.DrawToolbar.TYPE] = e), this._toolbars[L.DrawToolbar.TYPE].on('enable', this._toolbarEnabled, this)),
+          L.EditToolbar && this.options.edit && ((e = new L.EditToolbar(this.options.edit)), (this._toolbars[L.EditToolbar.TYPE] = e), this._toolbars[L.EditToolbar.TYPE].on('enable', this._toolbarEnabled, this)),
           (L.toolbar = this)
       },
       onAdd: function (t) {
@@ -1398,9 +1322,7 @@
           i = L.DomUtil.create('div', 'leaflet-draw'),
           o = !1
         for (var n in this._toolbars)
-          this._toolbars.hasOwnProperty(n) &&
-            (e = this._toolbars[n].addToolbar(t)) &&
-            (o || (L.DomUtil.hasClass(e, 'leaflet-draw-toolbar-top') || L.DomUtil.addClass(e.childNodes[0], 'leaflet-draw-toolbar-top'), (o = !0)), i.appendChild(e))
+          this._toolbars.hasOwnProperty(n) && (e = this._toolbars[n].addToolbar(t)) && (o || (L.DomUtil.hasClass(e, 'leaflet-draw-toolbar-top') || L.DomUtil.addClass(e.childNodes[0], 'leaflet-draw-toolbar-top'), (o = !0)), i.appendChild(e))
         return i
       },
       onRemove: function () {
@@ -1436,12 +1358,8 @@
           o = 0,
           n = this._toolbarClass || '',
           a = this.getModeHandlers(t)
-        for (this._toolbarContainer = L.DomUtil.create('div', 'leaflet-draw-toolbar leaflet-bar'), this._map = t, e = 0; e < a.length; e++)
-          a[e].enabled && this._initModeHandler(a[e].handler, this._toolbarContainer, o++, n, a[e].title)
-        if (o)
-          return (
-            (this._lastButtonIndex = --o), (this._actionsContainer = L.DomUtil.create('ul', 'leaflet-draw-actions')), i.appendChild(this._toolbarContainer), i.appendChild(this._actionsContainer), i
-          )
+        for (this._toolbarContainer = L.DomUtil.create('div', 'leaflet-draw-toolbar leaflet-bar'), this._map = t, e = 0; e < a.length; e++) a[e].enabled && this._initModeHandler(a[e].handler, this._toolbarContainer, o++, n, a[e].title)
+        if (o) return (this._lastButtonIndex = --o), (this._actionsContainer = L.DomUtil.create('ul', 'leaflet-draw-actions')), i.appendChild(this._toolbarContainer), i.appendChild(this._actionsContainer), i
       },
       removeToolbar: function () {
         for (var t in this._modes)
@@ -1506,9 +1424,7 @@
         for (this._actionButtons = []; a.firstChild; ) a.removeChild(a.firstChild)
         for (var l = 0; l < r; l++)
           ('enabled' in s[l] && !s[l].enabled) ||
-            ((e = L.DomUtil.create('li', '', a)),
-            (n = this._createButton({ title: s[l].title, text: s[l].text, container: e, callback: s[l].callback, context: s[l].context })),
-            this._actionButtons.push({ button: n, callback: s[l].callback }))
+            ((e = L.DomUtil.create('li', '', a)), (n = this._createButton({ title: s[l].title, text: s[l].text, container: e, callback: s[l].callback, context: s[l].context })), this._actionButtons.push({ button: n, callback: s[l].callback }))
       },
       _showActionsToolbar: function () {
         var t = this._activeMode.buttonIndex,
@@ -1602,9 +1518,7 @@
       statics: { TYPE: 'edit' },
       options: { edit: { selectedPathOptions: { dashArray: '10, 10', fill: !0, fillColor: '#fe57a1', fillOpacity: 0.1, maintainColor: !1 } }, remove: {}, poly: null, featureGroup: null },
       initialize: function (t) {
-        t.edit &&
-          (void 0 === t.edit.selectedPathOptions && (t.edit.selectedPathOptions = this.options.edit.selectedPathOptions),
-          (t.edit.selectedPathOptions = L.extend({}, this.options.edit.selectedPathOptions, t.edit.selectedPathOptions))),
+        t.edit && (void 0 === t.edit.selectedPathOptions && (t.edit.selectedPathOptions = this.options.edit.selectedPathOptions), (t.edit.selectedPathOptions = L.extend({}, this.options.edit.selectedPathOptions, t.edit.selectedPathOptions))),
           t.remove && (t.remove = L.extend({}, this.options.remove, t.remove)),
           t.poly && (t.poly = L.extend({}, this.options.poly, t.poly)),
           (this._toolbarClass = 'leaflet-draw-edit'),
@@ -1627,10 +1541,7 @@
           { title: L.drawLocal.edit.toolbar.actions.save.title, text: L.drawLocal.edit.toolbar.actions.save.text, callback: this._save, context: this },
           { title: L.drawLocal.edit.toolbar.actions.cancel.title, text: L.drawLocal.edit.toolbar.actions.cancel.text, callback: this.disable, context: this },
         ]
-        return (
-          t.removeAllLayers && e.push({ title: L.drawLocal.edit.toolbar.actions.clearAll.title, text: L.drawLocal.edit.toolbar.actions.clearAll.text, callback: this._clearAllLayers, context: this }),
-          e
-        )
+        return t.removeAllLayers && e.push({ title: L.drawLocal.edit.toolbar.actions.clearAll.title, text: L.drawLocal.edit.toolbar.actions.clearAll.text, callback: this._clearAllLayers, context: this }), e
       },
       addToolbar: function (t) {
         var e = L.Toolbar.prototype.addToolbar.call(this, t)
@@ -1665,8 +1576,7 @@
     (L.EditToolbar.Edit = L.Handler.extend({
       statics: { TYPE: 'edit' },
       initialize: function (t, e) {
-        if ((L.Handler.prototype.initialize.call(this, t), L.setOptions(this, e), (this._featureGroup = e.featureGroup), !(this._featureGroup instanceof L.FeatureGroup)))
-          throw new Error('options.featureGroup must be a L.FeatureGroup')
+        if ((L.Handler.prototype.initialize.call(this, t), L.setOptions(this, e), (this._featureGroup = e.featureGroup), !(this._featureGroup instanceof L.FeatureGroup))) throw new Error('options.featureGroup must be a L.FeatureGroup')
         ;(this._uneditedLayerProps = {}), (this.type = L.EditToolbar.Edit.TYPE)
         var i = L.version.split('.')
         1 === parseInt(i[0], 10) && parseInt(i[1], 10) >= 2 ? L.EditToolbar.Edit.include(L.Evented.prototype) : L.EditToolbar.Edit.include(L.Mixin.Events)
@@ -1695,11 +1605,7 @@
           this._tooltip.updateContent({ text: L.drawLocal.edit.handlers.edit.tooltip.text, subtext: L.drawLocal.edit.handlers.edit.tooltip.subtext }),
           (t._editTooltip = this._tooltip),
           this._updateTooltip(),
-          this._map
-            .on('mousemove', this._onMouseMove, this)
-            .on('touchmove', this._onMouseMove, this)
-            .on('MSPointerMove', this._onMouseMove, this)
-            .on(L.Draw.Event.EDITVERTEX, this._updateTooltip, this))
+          this._map.on('mousemove', this._onMouseMove, this).on('touchmove', this._onMouseMove, this).on('MSPointerMove', this._onMouseMove, this).on(L.Draw.Event.EDITVERTEX, this._updateTooltip, this))
       },
       removeHooks: function () {
         this._map &&
@@ -1707,11 +1613,7 @@
           (this._uneditedLayerProps = {}),
           this._tooltip.dispose(),
           (this._tooltip = null),
-          this._map
-            .off('mousemove', this._onMouseMove, this)
-            .off('touchmove', this._onMouseMove, this)
-            .off('MSPointerMove', this._onMouseMove, this)
-            .off(L.Draw.Event.EDITVERTEX, this._updateTooltip, this))
+          this._map.off('mousemove', this._onMouseMove, this).off('touchmove', this._onMouseMove, this).off('MSPointerMove', this._onMouseMove, this).off(L.Draw.Event.EDITVERTEX, this._updateTooltip, this))
       },
       revertLayers: function () {
         this._featureGroup.eachLayer(function (t) {
@@ -1758,19 +1660,11 @@
         this._backupLayer(o),
           this.options.poly && ((i = L.Util.extend({}, this.options.poly)), (o.options.poly = i)),
           this.options.selectedPathOptions &&
-            ((e = L.Util.extend({}, this.options.selectedPathOptions)),
-            e.maintainColor && ((e.color = o.options.color), (e.fillColor = o.options.fillColor)),
-            (o.options.original = L.extend({}, o.options)),
-            (o.options.editing = e)),
+            ((e = L.Util.extend({}, this.options.selectedPathOptions)), e.maintainColor && ((e.color = o.options.color), (e.fillColor = o.options.fillColor)), (o.options.original = L.extend({}, o.options)), (o.options.editing = e)),
           o instanceof L.Marker
             ? (o.editing && o.editing.enable(),
               o.dragging.enable(),
-              o
-                .on('dragend', this._onMarkerDragEnd)
-                .on('touchmove', this._onTouchMove, this)
-                .on('MSPointerMove', this._onTouchMove, this)
-                .on('touchend', this._onMarkerDragEnd, this)
-                .on('MSPointerUp', this._onMarkerDragEnd, this))
+              o.on('dragend', this._onMarkerDragEnd).on('touchmove', this._onTouchMove, this).on('MSPointerMove', this._onTouchMove, this).on('touchend', this._onMarkerDragEnd, this).on('MSPointerUp', this._onMarkerDragEnd, this))
             : o.editing.enable()
       },
       _disableLayerEdit: function (t) {
@@ -1782,12 +1676,7 @@
           this._selectedPathOptions && (e instanceof L.Marker ? this._toggleMarkerHighlight(e) : (e.setStyle(e.options.previousOptions), delete e.options.previousOptions)),
           e instanceof L.Marker
             ? (e.dragging.disable(),
-              e
-                .off('dragend', this._onMarkerDragEnd, this)
-                .off('touchmove', this._onTouchMove, this)
-                .off('MSPointerMove', this._onTouchMove, this)
-                .off('touchend', this._onMarkerDragEnd, this)
-                .off('MSPointerUp', this._onMarkerDragEnd, this))
+              e.off('dragend', this._onMarkerDragEnd, this).off('touchmove', this._onTouchMove, this).off('MSPointerMove', this._onTouchMove, this).off('touchend', this._onMarkerDragEnd, this).off('MSPointerUp', this._onMarkerDragEnd, this))
             : e.editing.disable()
       },
       _onMouseMove: function (t) {
@@ -1842,12 +1731,7 @@
           this._map.on('mousemove', this._onMouseMove, this))
       },
       removeHooks: function () {
-        this._map &&
-          (this._deletableLayers.eachLayer(this._disableLayerDelete, this),
-          (this._deletedLayers = null),
-          this._tooltip.dispose(),
-          (this._tooltip = null),
-          this._map.off('mousemove', this._onMouseMove, this))
+        this._map && (this._deletableLayers.eachLayer(this._disableLayerDelete, this), (this._deletedLayers = null), this._tooltip.dispose(), (this._tooltip = null), this._map.off('mousemove', this._onMouseMove, this))
       },
       revertLayers: function () {
         this._deletedLayers.eachLayer(function (t) {
