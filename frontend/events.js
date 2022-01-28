@@ -39,3 +39,9 @@ getsegment.addEventListener('click', () => {
       }
     })
 })
+
+/* let buttonMarker = document.getElementById('buttonMarker')
+buttonMarker.addEventListener('click', () => {
+  console.log('salam')
+})
+ */

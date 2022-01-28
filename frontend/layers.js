@@ -17,7 +17,12 @@ const tile = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 drawControl = new L.Control.Draw({
   position: 'topright',
-  draw: false,
+  draw: {
+    polygon: false,
+    rectangle: false,
+    circle: false,
+    circlemarker: false,
+  },
   edit: false,
 })
 
@@ -64,7 +69,7 @@ function addStation(station, layer, line) {
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
       item: station,
       icon: iconOptions,
-    }).bindPopup('<b>' + station.name + '</b>')
+    }).bindPopup('<b>' + station.name + '</b>' + 'Delete' + '</button>')
   else
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
       item: station,
@@ -183,6 +188,7 @@ map.on('draw:edited', function (e) {
         let tempPath = data.path
         tempPath.pop()
         tempPath.push(from.coordinates)
+        removeClosePoints(tempPath)
         let temp = {
           from: data.from,
           to: from,
@@ -199,6 +205,7 @@ map.on('draw:edited', function (e) {
         let tempPath = data.path
         tempPath.shift()
         tempPath.unshift(to.coordinates)
+        removeClosePoints(tempPath)
         let temp = {
           from: to,
           to: data.to,

@@ -7,42 +7,32 @@ const toTitleCase = (string) => {
 }
 
 function newStation(layer) {
-  let station = {}
-  station.coordinates = {
-    latitude: layer.getLatLng().lat,
-    longitude: layer.getLatLng().lng,
+  let station = {
+    coordinates: {
+      latitude: layer.getLatLng().lat,
+      longitude: layer.getLatLng().lng,
+    },
+    name: toTitleCase(prompt('Name of the station', '')),
+    line: prompt('Line ?', 'tramway'),
   }
-  station.name = toTitleCase(prompt('Name of the station', ''))
-  station.line = prompt('Line ?', 'tramway')
   let confirm = prompt('Confirm adding the station', 'No')
-  if (confirm.toLowerCase() === 'yes') {
-    fetch(baseURI + 'stations', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(station),
-    })
-      .then((data) => data.json())
-      .catch((err) => console.log(err))
-  }
-  station = {}
+  if (confirm.toLowerCase() === 'yes') postStation(station).then(() => console.log('Station added successfully'))
 }
 
 let route = []
+let lastValue = 1
 function newSegment(layer) {
   let polyline = layer.getLatLngs()
   let path = []
   let point = {}
   polyline.forEach((item) => {
-    point.latitude = item.lat
-    point.longitude = item.lng
+    point = {
+      latitude: item.lat,
+      longitude: item.lng,
+    }
     path.push(point)
-    point = {}
   })
 
-  let lastValue = 1
   let order = Number(prompt('Order', String(lastValue)))
   let fromOptionValue = JSON.parse(document.getElementById('from').value)
   let toOptionValue = JSON.parse(document.getElementById('to').value)
@@ -103,34 +93,18 @@ map.on('draw:created', function (e) {
 
 let addline = document.getElementById('addline')
 addline.addEventListener('click', () => {
-  let line = {}
-  line.name = lineElement.value
-  if (lineElement.value === 'tramway') {
-    line.type = 'tramway'
-  } else {
-    line.type = 'bus'
+  let line = {
+    name: lineElement.value,
+    type: lineElement.value === 'tramway' ? 'tramway' : 'bus',
+    route: route,
   }
-  line.route = route
   console.log('New line to be added', line)
   let confirm = prompt('Confirm adding the line', 'No')
   if (confirm !== null && confirm.toLowerCase() === 'yes') {
-    fetch(baseURI + 'lines', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(line),
+    postLine(line).then(() => {
+      console.log('Line added with success')
+      route = []
+      lastValue = 1
     })
-      .then((data) => {
-        data.json()
-        line = {}
-        route = []
-      })
-      .catch((err) => {
-        console.log(err)
-        line = {}
-        route = []
-      })
   }
 })
