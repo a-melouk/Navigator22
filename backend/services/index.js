@@ -13,7 +13,7 @@ const Station = Models.Station
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
-const dbURI = 'mongodb://127.0.0.1/navigator-copy2'
+const dbURI = 'mongodb://127.0.0.1/navigator'
 mongoose
   .connect(dbURI, {
     useNewUrlParser: true,
@@ -67,6 +67,26 @@ app.get('/lines', (request, response) => {
   let name = request.query.name
   Line.find({ name: name })
     .then((data) => response.json(data))
+    .catch((err) => response.json(err))
+})
+
+//Get stations of a line
+app.get('/lines/:line/stations', (request, response) => {
+  let line = request.params.line
+  Line.find({ name: line }, { route: 1, _id: 0 })
+    .then((data) => {
+      let result = []
+      data = data[0].route
+      let segment
+      data.forEach((item) => {
+        segment = {
+          from: item.from,
+          to: item.to,
+        }
+        result.push(segment)
+      })
+      response.json(result)
+    })
     .catch((err) => response.json(err))
 })
 

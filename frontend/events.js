@@ -36,8 +36,3 @@ getsegment.addEventListener('click', () => {
       } else console.warn('Inexistant segment')
     })
 })
-
-/* let addline = document.getElementById('addline')
-addline.addEventListener('click', (event) => {
-  getSegment(from, to)
-}) */
