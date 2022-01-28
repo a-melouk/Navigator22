@@ -1,3 +1,4 @@
+//Fetching all available lines
 let populate = () => {
   fetch(baseURI + 'stations')
     .then((response) => response.json())
@@ -54,12 +55,18 @@ async function addLine(number) {
     addStation(item.from, 'line', number)
     addStation(item.to, 'line', number)
     addPolyline(item.path, 'black', 'line')
-    for (let i = 0; i < item.path.length - 1; i++) {
-      let distance = map.distance([item.path[i].latitude, item.path[i].longitude], [item.path[i + 1].latitude, item.path[i + 1].longitude])
-      if (distance <= 4.6) {
-        console.log(i, item.path[i], item.path[i + 1], distance, item.from.name, item.to.name)
-      }
-    }
   })
   linelayer.addTo(map)
+}
+
+function removeClosePoints(path) {
+  for (let i = 0; i < path.length - 2; i++)
+    if (map.distance([path[i].latitude, path[i].longitude], [path[i + 1].latitude, path[i + 1].longitude]) < 5) {
+      path.splice(i + 1, 1)
+    }
+
+  if (map.distance([path[path.length - 2].latitude, path[path.length - 2].longitude], [path[path.length - 1].latitude, path[path.length - 1].longitude]) < 5) {
+    path.splice(path.length - 2, 1)
+  }
+  return path
 }

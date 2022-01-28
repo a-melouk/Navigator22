@@ -213,12 +213,12 @@ map.on('draw:edited', function (e) {
     }
 
     for (let i = 0; i < path.length - 2; i++)
-      if (map.distance([path[i].latitude, path[i].longitude], [path[i + 1].latitude, path[i + 1].longitude]) <= 4.6) {
+      if (map.distance([path[i].latitude, path[i].longitude], [path[i + 1].latitude, path[i + 1].longitude]) < 5) {
         path.splice(i + 1, 1)
         modifiedPath = true
       }
 
-    if (map.distance([path[path.length - 2].latitude, path[path.length - 2].longitude], [path[path.length - 1].latitude, path[path.length - 1].longitude]) <= 4.6) {
+    if (map.distance([path[path.length - 2].latitude, path[path.length - 2].longitude], [path[path.length - 1].latitude, path[path.length - 1].longitude]) < 5) {
       path.splice(path.length - 2, 1)
       modifiedPath = true
     }
@@ -232,7 +232,7 @@ map.on('draw:edited', function (e) {
 
     if (modifiedPath) {
       patchSegment(segmentLayer.options.id, temp).then(() => {
-        console.log('Related segment patched successfully')
+        console.log('Segment patched successfully')
         clearMap()
         addSegment(temp, 'red', 'segment')
         getStationsByLine(choosenLine)
