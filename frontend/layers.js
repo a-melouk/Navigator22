@@ -60,8 +60,15 @@ function addStation(station, layer, line) {
     popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
   })
   let marker
-  if (url !== '') marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { item: station, icon: iconOptions }).bindPopup('<b>' + station.name + '</b>')
-  else marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], { item: station }).bindPopup('<b>' + station.name + '</b>')
+  if (url !== '')
+    marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
+      item: station,
+      icon: iconOptions,
+    }).bindPopup('<b>' + station.name + '</b>')
+  else
+    marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
+      item: station,
+    }).bindPopup('<b>' + station.name + '</b>')
   if (layer === 'segment') marker.addTo(segmentLayer)
   else if (layer === 'line') marker.addTo(linelayer)
   // else if (layer === 'markers') marker.addTo(markersLayer)
@@ -164,88 +171,35 @@ map.on('draw:edited', function (e) {
     } else modifiedPath = true
 
     if (modifiedFrom) {
-      fetch(baseURI + 'station?id=' + from.id, {
-        method: 'PATCH',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(from),
+      patchStation(from.id, from)
+      getSegmentByStationId('from', from.id).then((data) => {
+        console.log(data)
+        let tempPath = data.path
+        tempPath.pop()
+        tempPath.push(from.coordinates)
+        let temp = {
+          from: data.from,
+          to: from,
+          path: tempPath,
+        }
+        patchSegment(data._id, temp).then(() => console.log('Related segment patched successfully'))
       })
-        .then((data) => data.json())
-        .catch((err) => console.log(err))
-
-      //Get Cascades Ghalmi after updating Ghalmi Adnane
-      fetch(baseURI + 'segment/to?id=' + from.id)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('Patching affected segment 10')
-          if (data.from != undefined) {
-            console.log('Patching affected segment 11')
-            let tempPath = data.path
-            tempPath.pop()
-            tempPath.push(from.coordinates)
-            let temp = {
-              from: data.from,
-              to: from,
-              path: tempPath,
-            }
-
-            fetch(baseURI + 'segment?id=' + data._id, {
-              method: 'PATCH',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(temp),
-            })
-              .then((data) => data.json())
-              .catch((err) => console.log(err))
-          }
-        })
-        .catch((err) => console.log(err))
     }
 
     if (modifiedTo) {
-      fetch(baseURI + 'station?id=' + to.id, {
-        method: 'PATCH',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(to),
+      patchStation(to.id, to)
+      getSegmentByStationId('to', to.id).then((data) => {
+        console.log(data)
+        let tempPath = data.path
+        tempPath.shift()
+        tempPath.unshift(to.coordinates)
+        let temp = {
+          from: to,
+          to: data.to,
+          path: tempPath,
+        }
+        patchSegment(data._id, temp).then(() => console.log('Related segment patched successfully'))
       })
-        .then((data) => data.json())
-        .catch((err) => console.log(err))
-
-      //Get Adnane Benhamouda after updating Ghalmi Adnane
-      fetch(baseURI + 'segment/from?id=' + to.id)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('Patching affected segment 13')
-          if (data.from != undefined) {
-            console.log('Patching affected segment 14')
-            let tempPath = data.path
-            tempPath.shift()
-            tempPath.unshift(to.coordinates)
-            let temp = {
-              from: to,
-              to: data.to,
-              path: tempPath,
-            }
-            fetch(baseURI + 'segment?id=' + data._id, {
-              method: 'PATCH',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(temp),
-            })
-              .then((data) => data.json())
-              .catch((err) => console.log(err))
-          }
-        })
-        .catch((err) => console.log(err))
     }
 
     //The polyline always start with FROM coordinate and ends with TO coordinates
@@ -258,13 +212,15 @@ map.on('draw:edited', function (e) {
       modifiedPath = true
     }
 
-    for (let i = 0; i < path.length - 1; i++) {
-      let distance = map.distance([path[i].latitude, path[i].longitude], [path[i + 1].latitude, path[i + 1].longitude])
-      if (distance <= 4.6) {
-        console.log(i, distance)
+    for (let i = 0; i < path.length - 2; i++)
+      if (map.distance([path[i].latitude, path[i].longitude], [path[i + 1].latitude, path[i + 1].longitude]) <= 4.6) {
         path.splice(i + 1, 1)
         modifiedPath = true
       }
+
+    if (map.distance([path[path.length - 2].latitude, path[path.length - 2].longitude], [path[path.length - 1].latitude, path[path.length - 1].longitude]) <= 4.6) {
+      path.splice(path.length - 2, 1)
+      modifiedPath = true
     }
 
     let temp = {
@@ -275,21 +231,12 @@ map.on('draw:edited', function (e) {
     }
 
     if (modifiedPath) {
-      fetch(baseURI + 'segment?id=' + segmentLayer.options.id, {
-        method: 'PATCH',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(temp),
+      patchSegment(segmentLayer.options.id, temp).then(() => {
+        console.log('Related segment patched successfully')
+        clearMap()
+        addSegment(temp, 'red', 'segment')
+        getStationsByLine(choosenLine)
       })
-        .then((data) => data.json())
-        .catch((err) => console.log(err))
-        .then(() => {
-          clearMap()
-          addSegment(temp, 'red', 'segment')
-          getStationsByLine(choosenLine)
-        })
     }
   }
 })
