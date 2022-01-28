@@ -33,6 +33,9 @@ getsegment.addEventListener('click', () => {
           id: data.id,
         }
         segmentLayer.addTo(map)
-      } else console.warn('Inexistant segment')
+      } else {
+        console.warn('Inexistant segment')
+        alert('Inexistant segment')
+      }
     })
 })

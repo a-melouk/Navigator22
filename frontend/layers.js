@@ -78,8 +78,12 @@ function addPolyline(path, color, layer) {
   let pathArray = []
   for (let i = 0; i < path.length; i++) pathArray.push([path[i].latitude, path[i].longitude])
   let poly = L.polyline(pathArray, { color: color, item: path })
-  if (layer === 'segment') poly.addTo(segmentLayer)
-  else if (layer === 'line') poly.addTo(linelayer)
+
+  // map.setZoom(14)
+  if (layer === 'segment') {
+    poly.addTo(segmentLayer)
+    map.fitBounds(poly.getBounds())
+  } else if (layer === 'line') poly.addTo(linelayer)
 }
 
 let originalSegment = {}
