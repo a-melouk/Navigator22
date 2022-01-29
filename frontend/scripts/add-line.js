@@ -54,20 +54,25 @@ function newSegment(layer) {
   let from = {
     name: fromOptionValue.name,
     coordinates: fromOptionValue.coordinates,
-    id: fromOptionValue._id,
+    id: fromOptionValue._id, //change to _id when adding a new line because we add segment by using stations data
   }
 
   let to = {
     name: toOptionValue.name,
     coordinates: toOptionValue.coordinates,
-    id: toOptionValue._id,
+    id: toOptionValue._id, //change to _id when adding a new line because we add segment by using stations data
   }
 
   let segment = {
     from: from,
     to: to,
     path: path,
-    order: order,
+    // order: order,
+  }
+
+  let choice = prompt('What to do ?', 'New segment to line')
+  if (choice.toLowerCase() === 'new segment to line') {
+    patchLine(JSON.parse(document.getElementById('line').value)._id, segment)
   }
 
   route.push(segment)

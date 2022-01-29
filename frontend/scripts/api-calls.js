@@ -52,21 +52,31 @@ async function patchStation(id, body) {
   }
 }
 
-async function getSegmentByStationId(destination, id) {
+async function getSegmentByStationId(want, id) {
   let uri = 'http://localhost:4000/segment/'
-  if (destination === 'from') uri += 'to?id=' + id
-  if (destination === 'to') uri += 'from?id=' + id
+  if (want === 'from') uri += 'to?id=' + id
+  if (want === 'to') uri += 'from?id=' + id
 
   const response = await fetch(uri)
   const data = await response.json()
-  if (data.from != undefined) {
-    console.log(data)
-    return data
-  }
+  if (data.from != undefined) return data
 }
 
 async function patchSegment(id, body) {
   await fetch(baseURI + 'segment?id=' + id, {
+    method: 'PATCH',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+    .then((data) => data.json())
+    .catch((err) => console.log(err))
+}
+
+async function patchLine(id, body) {
+  await fetch(baseURI + 'line?id=' + id, {
     method: 'PATCH',
     headers: {
       Accept: 'application/json',
