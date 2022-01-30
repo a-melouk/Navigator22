@@ -19,9 +19,8 @@ select {
 }
 
 .btn-modification {
-  width: 100px;
-  min-height: 50px;
-  height: 40px;
+  width: 135px;
+  height: 50px;
   color: #fff;
   padding: 5px 10px;
   font-size: 20px;
@@ -31,7 +30,7 @@ select {
   position: relative;
   display: inline-block;
   outline: none;
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 .get {
