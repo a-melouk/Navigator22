@@ -1,4 +1,3 @@
-const baseURI = 'http://localhost:4000/'
 let linelayer = L.featureGroup() //Contains markers and polyline
 let segmentLayer = L.featureGroup() //Contains markers and polyline
 let partLayer = L.featureGroup() //Contains markers and polyline
@@ -74,7 +73,6 @@ function addStationToMap(station, layer, line) {
     }).bindPopup('<b>' + station.name + '</b>')
   if (layer === 'segment') marker.addTo(segmentLayer)
   else if (layer === 'line') marker.addTo(linelayer)
-  // else if (layer === 'markers') marker.addTo(markersLayer)
 }
 
 function addPolylineToMap(path, color, layer) {
@@ -96,18 +94,18 @@ function addSegment(segment, color, layer) {
   addPolylineToMap(segment.path, color, layer)
   drawControl = new L.Control.Draw({
     position: 'topright',
-    draw: false,
+    draw: {
+      polygon: false,
+      rectangle: false,
+      circle: false,
+      circlemarker: false,
+    },
     edit: {
       featureGroup: segmentLayer,
     },
   })
   drawControl.addTo(map)
   originalSegment = segment
-}
-
-function trueIfDifferent(a, b) {
-  if (Math.fround(a.latitude) === Math.fround(b.latitude) && Math.fround(a.longitude) === Math.fround(b.longitude)) return false
-  return true
 }
 
 map.on('draw:edited', function (e) {
@@ -180,7 +178,7 @@ map.on('draw:edited', function (e) {
 
     if (modifiedFrom) {
       patchStation(from.id, from)
-      getSegmentByStationId('from', from.id).then((data) => {
+      getRelatedSegment('from', from.id).then((data) => {
         let tempPath = data.path
         tempPath.pop()
         tempPath.push(from.coordinates)
@@ -196,7 +194,7 @@ map.on('draw:edited', function (e) {
 
     if (modifiedTo) {
       patchStation(to.id, to)
-      getSegmentByStationId('to', to.id).then((data) => {
+      getRelatedSegment('to', to.id).then((data) => {
         let tempPath = data.path
         tempPath.shift()
         tempPath.unshift(to.coordinates)
@@ -243,7 +241,7 @@ map.on('draw:edited', function (e) {
         console.log('Segment patched successfully')
         clearMap()
         addSegment(temp, 'red', 'segment')
-        getStationsByLine(choosenLine)
+        getStationsByLine(JSON.parse(choosenLine).name)
       })
     }
   }

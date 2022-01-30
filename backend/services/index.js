@@ -132,19 +132,19 @@ app.get('/segment/to', (request, response) => {
 //Get a segment that includes FROM & TO stations
 app.get('/lines/:line', (request, response) => {
   let line = request.params.line
-  let from = request.query.from
-  let to = request.query.to
+  let fromID = request.query.from
+  let toID = request.query.to
   Line.find(
     {
       name: line,
-      'route.from.name': from,
-      'route.to.name': to,
+      'route.from.id': fromID,
+      'route.to.id': toID,
     },
     {
       route: {
         $elemMatch: {
-          'from.name': from,
-          'to.name': to,
+          'from.id': fromID,
+          'to.id': toID,
         },
       },
     }

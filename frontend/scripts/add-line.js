@@ -1,9 +1,13 @@
-const toTitleCase = (string) => {
-  return string
-    .toLowerCase()
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+//Needed when you want to add a new line
+function populateListsToAddNewSegment(line) {
+  getStationsByLineForAdd(line).then((data) => {
+    if (line === 'Ligne 03') {
+      let temp = [...data].reverse()
+      data = temp
+    }
+    populateList(data, 'from')
+    populateList(data, 'to')
+  })
 }
 
 function newStation(layer) {
@@ -33,7 +37,6 @@ function newSegment(layer) {
     path.push(point)
   })
 
-  let order = Number(prompt('Order', String(lastValue)))
   let fromOptionValue = JSON.parse(document.getElementById('from').value)
   let toOptionValue = JSON.parse(document.getElementById('to').value)
 
@@ -94,22 +97,4 @@ map.on('draw:created', function (e) {
   layer.addTo(map)
   if (layer instanceof L.Marker) newStation(layer)
   else if (layer instanceof L.Polyline) newSegment(layer)
-})
-
-let addline = document.getElementById('addline')
-addline.addEventListener('click', () => {
-  let line = {
-    name: lineElement.value,
-    type: lineElement.value === 'tramway' ? 'tramway' : 'bus',
-    route: route,
-  }
-  console.log('New line to be added', line)
-  let confirm = prompt('Confirm adding the line', 'No')
-  if (confirm !== null && confirm.toLowerCase() === 'yes') {
-    postLine(line).then(() => {
-      console.log('Line added with success')
-      route = []
-      lastValue = 1
-    })
-  }
 })
