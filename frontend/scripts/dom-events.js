@@ -5,15 +5,14 @@ let toElement = document.getElementById('to')
 //Select a line
 lineElement.addEventListener('change', (event) => {
   let line = event.target.value
-  let choice = prompt('Add or Get', 'get')
+  /* let choice = prompt('Add or Get', 'get')
   if (choice.toLowerCase() === 'get') getStationsByLine(JSON.parse(line).name)
-  else if (choice.toLowerCase() === 'add') populateListsToAddNewSegment(JSON.parse(line).name)
+  else if (choice.toLowerCase() === 'add') populateListsToAddNewSegment(JSON.parse(line).name) */
 })
 
 //Automatically fill TO select after picking FROM station
 fromElement.addEventListener('change', (event) => {
   let from = event.target.value
-  console.log(from)
   getRelatedSegment('to', JSON.parse(from).id).then((data) => {
     toElement.value = JSON.stringify(data.to)
   })

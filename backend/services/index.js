@@ -23,6 +23,8 @@ mongoose
     console.log('Running on 4000')
   })
 
+//---------------------------------------------------------------------//
+
 //Add new station to db
 app.post('/stations', (request, response) => {
   const station = new Station(request.body)

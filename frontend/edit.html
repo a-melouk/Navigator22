@@ -10,46 +10,70 @@
     <link rel="stylesheet" href="./static/leaflet.draw.css" />
     <script src="./static/leaflet.draw.js"></script>
 
-    <link href="style1.css" rel="stylesheet" />
-    <link href="style2.css" rel="stylesheet" />
+    <link href="screen-big.css" rel="stylesheet" />
+    <link href="screen-small.css" rel="stylesheet" />
     <link href="./content.html" rel="import" />
   </head>
   <body>
     <div class="container">
       <div class="nav">
         <div class="navigation">
-          <div class="line">
+          <div class="div-line">
             <label for="line">Line</label>
             <select name="line" id="line">
               <option disabled selected value>--Select a line --</option>
             </select>
           </div>
 
-          <div class="from">
+          <div class="div-from">
             <label for="from">From</label>
             <select name="from" id="from">
               <option disabled selected value>-- --</option>
             </select>
           </div>
 
-          <div class="to">
+          <div class="div-to">
             <label for="to">To</label>
             <select name="to" id="to">
               <option disabled selected value>-- --</option>
             </select>
           </div>
-          <button class="get btn-modification" id="getsegment" style="margin-left: 10px">Get segment</button>
-        </div>
 
-        <div class="modifications">
-          <button class="add btn-modification" id="addline" style="margin-right: 10px">Add line</button>
+          <button class="btn-modification get" id="getsegment" style="margin-left: 10px">
+            Get segment
+          </button>
         </div>
       </div>
       <div id="map"></div>
       <div class="right">
+        <div class="form">
+          <div class="manipulations">
+            <label for="manipulations">What to do ?</label>
+            <select name="manipulations" id="manipulations">
+              <option disabled selected value>-- --</option>
+              <option value="edit-segment">Edit a segment</option>
+              <option value="add-segment">Add a segment</option>
+              <option value="add-line">Add a new line</option>
+            </select>
+          </div>
+          <button
+            class="btn add-line"
+            id="addline"
+            onclick="populateListsToAddNewSegment(JSON.parse(lineElement.value).name)"
+          >
+            Add line
+          </button>
+        </div>
         <div class="Lines">
-          <button class="lines tramway" onclick="addLineToMap('tramway');">Tramway</button>
-          <button class="lines bus" onclick="addLineToMap('Ligne 03');addLineToMap('Ligne 03 bis');">Bus 03</button>
+          <button class="lines tramway" onclick="addLineToMap('tramway');">
+            Tramway
+          </button>
+          <button
+            class="lines bus"
+            onclick="addLineToMap('Ligne 03');addLineToMap('Ligne 03 bis');"
+          >
+            Bus 03
+          </button>
           <button class="lines bus" onclick="addLineToMap('Ligne 11');">Bus 11</button>
           <button class="lines bus" onclick="addLineToMap('Ligne 16');">Bus 16</button>
           <button class="lines bus" onclick="addLineToMap('Ligne 17');">Bus 17</button>
@@ -57,10 +81,9 @@
           <button class="lines bus" onclick="addLineToMap('Ligne 25');">Bus 25</button>
           <button class="lines bus" onclick="addLineToMap('Ligne 27');">Bus 27</button>
         </div>
-        <div class="form">Test test</div>
         <div class="buttons">
-          <button class="clear-all" onclick="clearMap()">Clear the map</button>
-          <button class="center" onclick="centerMap()">Center the map</button>
+          <button class="btn center-map" onclick="centerMap()">Center the map</button>
+          <button class="btn clear-map" onclick="clearMap()">Clear the map</button>
         </div>
       </div>
     </div>
