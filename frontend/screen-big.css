@@ -200,6 +200,31 @@ body {
   top: 5px;
 }
 
+.btn:disabled {
+  box-shadow: 0 0;
+  cursor: not-allowed;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+.btn:disabled:hover {
+  box-shadow: 0 0;
+  cursor: not-allowed;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  top: 0;
+}
+
+.button:active:hover:not([disabled]) {
+  box-shadow: 0 0;
+  cursor: not-allowed;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
 .clear-map {
   background: #ef233c;
   box-shadow: 0 5px #d90429;

@@ -50,7 +50,7 @@
           <div class="manipulations">
             <label for="manipulations">What to do ?</label>
             <select name="manipulations" id="manipulations">
-              <option disabled selected value>-- --</option>
+              <option disabled selected value="">-- --</option>
               <option value="edit-segment">Edit a segment</option>
               <option value="add-segment">Add a segment</option>
               <option value="add-line">Add a new line</option>
@@ -61,7 +61,7 @@
             id="addline"
             onclick="populateListsToAddNewSegment(JSON.parse(lineElement.value).name)"
           >
-            Add line
+            Add
           </button>
         </div>
         <div class="Lines">
@@ -91,7 +91,6 @@
     <script src="./scripts/add-line.js" type="text/javascript"></script>
     <script src="./scripts/api-calls.js" type="text/javascript"></script>
     <script src="./scripts/dom-events.js" type="text/javascript"></script>
-    <script src="./scripts/removeClosePoints.js" type="text/javascript"></script>
     <script src="./scripts/methods.js" type="text/javascript"></script>
 
     <script>

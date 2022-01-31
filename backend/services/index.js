@@ -57,6 +57,14 @@ app.get('/station', (request, response) => {
     .catch((err) => response.json(err))
 })
 
+//Get station by ID
+app.get('/station/:name', (request, response) => {
+  let name = request.params.name
+  Station.find({ name: name })
+    .then((data) => response.json(data))
+    .catch((err) => response.json(err))
+})
+
 //Get the stations of a line (no duplicates)
 app.get('/stations/:line', (request, response) => {
   let line = request.params.line
@@ -118,7 +126,10 @@ app.get('/segment', (request, response) => {
 //Get segment by FROM station ID
 app.get('/segment/from', (request, response) => {
   let id = request.query.id
-  Line.findOne({ 'route.from.id': id }, { route: { $elemMatch: { 'from.id': id } }, _id: 0 })
+  Line.findOne(
+    { 'route.from.id': id },
+    { route: { $elemMatch: { 'from.id': id } }, _id: 0 }
+  )
     .then((data) => response.json(data.route[0]))
     .catch((err) => response.json(err))
 })

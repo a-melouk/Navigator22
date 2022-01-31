@@ -20,7 +20,8 @@ function newStation(layer) {
     line: prompt('Line ?', 'tramway'),
   }
   let confirm = prompt('Confirm adding the station', 'No')
-  if (confirm.toLowerCase() === 'yes') postStation(station).then(() => console.log('Station added successfully'))
+  if (confirm.toLowerCase() === 'yes')
+    postStation(station).then(() => console.log('Station added successfully'))
 }
 
 let route = []

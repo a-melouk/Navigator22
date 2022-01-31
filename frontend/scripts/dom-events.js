@@ -1,35 +1,74 @@
 let lineElement = document.getElementById('line')
 let fromElement = document.getElementById('from')
 let toElement = document.getElementById('to')
+let manipulationsElement = document.getElementById('manipulations')
+let getsegment = document.getElementById('getsegment')
+let addline = document.getElementById('addline')
 
-//Select a line
-lineElement.addEventListener('change', (event) => {
-  let line = event.target.value
-  /* let choice = prompt('Add or Get', 'get')
-  if (choice.toLowerCase() === 'get') getStationsByLine(JSON.parse(line).name)
-  else if (choice.toLowerCase() === 'add') populateListsToAddNewSegment(JSON.parse(line).name) */
+manipulationsElement.addEventListener('change', (event) => {
+  if (lineElement.value !== '') {
+    let manipulation = event.target.value
+    if (manipulation.toLowerCase() === 'edit-segment') {
+      addline.disabled = true
+      getsegment.disabled = false
+      clearMap()
+      getStationsByLine(JSON.parse(lineElement.value).name)
+      drawControl = new L.Control.Draw({
+        position: 'topright',
+        draw: false,
+        edit: {
+          featureGroup: segmentLayer,
+        },
+      })
+      drawControl.addTo(map)
+    } else {
+      clearMap()
+      getsegment.disabled = true
+      addline.disabled = false
+      populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
+      drawControl = new L.Control.Draw({
+        position: 'topright',
+        draw: {
+          polygon: false,
+          rectangle: false,
+          circle: false,
+          circlemarker: false,
+        },
+        edit: false,
+      })
+      drawControl.addTo(map)
+    }
+  } else {
+    manipulationsElement.value = ''
+    alert('Please select a line first')
+  }
 })
 
 //Automatically fill TO select after picking FROM station
 fromElement.addEventListener('change', (event) => {
   let from = event.target.value
-  getRelatedSegment('to', JSON.parse(from).id).then((data) => {
-    toElement.value = JSON.stringify(data.to)
-  })
+  if (manipulationsElement.value === 'edit-segment')
+    getRelatedSegment('to', JSON.parse(from).id).then((data) => {
+      toElement.value = JSON.stringify(data.to)
+    })
 })
 
 //Automatically fill FROM select after picking TO station
 toElement.addEventListener('change', (event) => {
   let to = event.target.value
-  getRelatedSegment('from', JSON.parse(to).id).then((data) => {
-    fromElement.value = JSON.stringify(data.from)
-  })
+  if (manipulationsElement.value === 'edit-segment')
+    getRelatedSegment('from', JSON.parse(to).id).then((data) => {
+      fromElement.value = JSON.stringify(data.from)
+    })
 })
 
 //Button for getting a segment
-let getsegment = document.getElementById('getsegment')
 getsegment.addEventListener('click', () => {
-  getSegmentHavingFromTo(JSON.parse(lineElement.value).name, JSON.parse(fromElement.value).id, JSON.parse(toElement.value).id).then((data) => {
+  getSegmentHavingFromTo(
+    JSON.parse(lineElement.value).name,
+    JSON.parse(fromElement.value).id,
+    JSON.parse(toElement.value).id
+  ).then((data) => {
     if (data.from != undefined) {
       clearMap()
       addSegment(data, 'blue', 'segment')
@@ -45,7 +84,6 @@ getsegment.addEventListener('click', () => {
 })
 
 //Button for adding new line
-let addline = document.getElementById('addline')
 addline.addEventListener('click', () => {
   let line = {
     name: lineElement.value,

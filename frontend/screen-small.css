@@ -165,6 +165,10 @@
     margin: 10px;
   }
 
+  .tramway {
+    color: black;
+  }
+
   .buttons {
     height: 25%;
     width: 100%;
@@ -173,5 +177,22 @@
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: space-evenly;
+  }
+
+  #getsegment:disabled {
+    box-shadow: 0 0;
+    cursor: not-allowed;
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+  }
+
+  #getsegment:disabled:hover {
+    box-shadow: 0 0;
+    cursor: not-allowed;
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    top: 0;
   }
 }

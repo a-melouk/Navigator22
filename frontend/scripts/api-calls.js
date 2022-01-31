@@ -58,7 +58,6 @@ async function postStation(station) {
       body: JSON.stringify(station),
     })
     const data = await response.json()
-    console.log(data)
     return data
   } catch (err) {
     return console.log(err)
@@ -76,7 +75,6 @@ async function postLine(line) {
       body: JSON.stringify(line),
     })
     const data = await response.json()
-    console.log(data)
     return data
   } catch (err) {
     return console.log(err)
@@ -96,7 +94,6 @@ async function patchStation(id, body) {
       body: JSON.stringify(body),
     })
     const data = await response.json()
-    console.log(data)
     return data
   } catch (err) {
     return console.log(err)
