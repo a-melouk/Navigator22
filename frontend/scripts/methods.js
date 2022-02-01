@@ -5,6 +5,10 @@ let populate = () => {
   })
 }
 
+let emptyList = (id) => {
+  document.getElementById(id).replaceChildren()
+}
+
 //Upper case first letter of every word
 const toTitleCase = (string) => {
   return string
@@ -25,7 +29,7 @@ function getStationsByLine(line) {
 function populateList(data, id) {
   let list = document.getElementById(id)
   list.replaceChildren()
-  let option = new Option('', '')
+  let option = new Option('-- --', '')
   option.disabled = true
   option.selected = true
   list.appendChild(option)

@@ -6,42 +6,65 @@ let getsegment = document.getElementById('getsegment')
 let addline = document.getElementById('addline')
 
 manipulationsElement.addEventListener('change', (event) => {
-  if (lineElement.value !== '') {
-    let manipulation = event.target.value
-    if (manipulation.toLowerCase() === 'edit-segment') {
-      addline.disabled = true
-      getsegment.disabled = false
-      clearMap()
-      getStationsByLine(JSON.parse(lineElement.value).name)
-      drawControl = new L.Control.Draw({
-        position: 'topright',
-        draw: false,
-        edit: {
-          featureGroup: segmentLayer,
-        },
-      })
-      drawControl.addTo(map)
+  if (event.target.value !== 'add-line')
+    if (lineElement.value !== '') {
+      let manipulation = event.target.value
+      if (manipulation.toLowerCase() === 'edit-segment') {
+        addline.disabled = true
+        getsegment.disabled = false
+        clearMap()
+        getStationsByLine(JSON.parse(lineElement.value).name)
+        drawControl = new L.Control.Draw({
+          position: 'topright',
+          draw: false,
+          edit: {
+            featureGroup: segmentLayer,
+          },
+        })
+        drawControl.addTo(map)
+      } else {
+        clearMap()
+        getsegment.disabled = true
+        addline.disabled = false
+        populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
+        drawControl = new L.Control.Draw({
+          position: 'topright',
+          draw: {
+            polygon: false,
+            rectangle: false,
+            circle: false,
+            circlemarker: false,
+          },
+          edit: false,
+        })
+        drawControl.addTo(map)
+      }
     } else {
-      clearMap()
-      getsegment.disabled = true
-      addline.disabled = false
-      populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
-      drawControl = new L.Control.Draw({
-        position: 'topright',
-        draw: {
-          polygon: false,
-          rectangle: false,
-          circle: false,
-          circlemarker: false,
-        },
-        edit: false,
-      })
-      drawControl.addTo(map)
+      manipulationsElement.value = ''
+      alert('Please select a line first')
     }
-  } else {
-    manipulationsElement.value = ''
-    alert('Please select a line first')
+  else {
+    // lineElement.options.length = 1
+    fromElement.options.length = 1
+    toElement.options.length = 1
+    drawControl = new L.Control.Draw({
+      position: 'topright',
+      draw: {
+        polygon: false,
+        rectangle: false,
+        circle: false,
+        circlemarker: false,
+      },
+      edit: false,
+    })
+    drawControl.addTo(map)
   }
+})
+
+lineElement.addEventListener('change', (event) => {
+  manipulationsElement.value = ''
+  fromElement.options.length = 1
+  toElement.options.length = 1
 })
 
 //Automatically fill TO select after picking FROM station
