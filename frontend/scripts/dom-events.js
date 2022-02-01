@@ -4,49 +4,65 @@ let toElement = document.getElementById('to')
 let manipulationsElement = document.getElementById('manipulations')
 let getsegment = document.getElementById('getsegment')
 let addline = document.getElementById('addline')
+let routeLine = []
+let finish = false
+let nameOfTheLine = ''
 
 manipulationsElement.addEventListener('change', (event) => {
-  if (event.target.value !== 'add-line')
+  let manipulation = event.target.value
+
+  if (manipulation.toLowerCase() === 'edit-segment') {
     if (lineElement.value !== '') {
-      let manipulation = event.target.value
-      if (manipulation.toLowerCase() === 'edit-segment') {
-        addline.disabled = true
-        getsegment.disabled = false
-        clearMap()
-        getStationsByLine(JSON.parse(lineElement.value).name)
-        drawControl = new L.Control.Draw({
-          position: 'topright',
-          draw: false,
-          edit: {
-            featureGroup: segmentLayer,
-          },
-        })
-        drawControl.addTo(map)
-      } else {
-        clearMap()
-        getsegment.disabled = true
-        addline.disabled = false
-        populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
-        drawControl = new L.Control.Draw({
-          position: 'topright',
-          draw: {
-            polygon: false,
-            rectangle: false,
-            circle: false,
-            circlemarker: false,
-          },
-          edit: false,
-        })
-        drawControl.addTo(map)
-      }
+      addline.disabled = true
+      getsegment.disabled = false
+      clearMap()
+      getStationsByLine(JSON.parse(lineElement.value).name)
+      drawControl = new L.Control.Draw({
+        position: 'topright',
+        draw: false,
+        edit: {
+          featureGroup: segmentLayer,
+        },
+      })
+      drawControl.addTo(map)
     } else {
       manipulationsElement.value = ''
       alert('Please select a line first')
     }
-  else {
-    // lineElement.options.length = 1
-    fromElement.options.length = 1
-    toElement.options.length = 1
+  } else if (manipulation.toLowerCase() === 'add-segment') {
+    if (lineElement.value !== '') {
+      getsegment.disabled = true
+      addline.disabled = true
+      populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
+      clearMap()
+      drawControl = new L.Control.Draw({
+        position: 'topright',
+        draw: {
+          polygon: false,
+          rectangle: false,
+          circle: false,
+          circlemarker: false,
+        },
+        edit: false,
+      })
+      drawControl.addTo(map)
+      map.on('draw:created', function (e) {
+        let layer = e.layer
+        layer.addTo(map)
+        if (layer instanceof L.Marker) {
+          newStation(layer, JSON.parse(lineElement.value).name)
+        } else if (layer instanceof L.Polyline) newSegment(layer, 'Patch line segment')
+        map.removeEventListener('draw:created')
+      })
+    } else {
+      manipulationsElement.value = ''
+      alert('Please select a line first')
+    }
+  } else if (manipulation.toLowerCase() === 'add-line') {
+    addline.disabled = false
+    getsegment.disabled = true
+    nameOfTheLine = prompt('Name of the line', 'metro')
+    clearMap()
     drawControl = new L.Control.Draw({
       position: 'topright',
       draw: {
@@ -58,6 +74,17 @@ manipulationsElement.addEventListener('change', (event) => {
       edit: false,
     })
     drawControl.addTo(map)
+    map.on('draw:created', function (e) {
+      let layer = e.layer
+      layer.addTo(map)
+      if (layer instanceof L.Marker) {
+        newStation(layer, nameOfTheLine).then(() => {
+          console.log('salaaaam')
+          populateListsToAddNewSegment(nameOfTheLine)
+        })
+      } else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')
+      if (finish) map.removeEventListener('draw:created')
+    })
   }
 })
 
@@ -109,19 +136,18 @@ getsegment.addEventListener('click', () => {
 //Button for adding new line
 addline.addEventListener('click', () => {
   let line = {
-    name: lineElement.value,
-    type: lineElement.value === 'tramway' ? 'tramway' : 'bus',
-    route: route,
+    name: nameOfTheLine,
+    type: nameOfTheLine === 'tramway' ? 'tramway' : 'bus',
+    route: routeLine,
   }
   console.log('New line to be added', line)
-  let confirm = prompt('Confirm adding the line', 'No')
-  if (confirm !== null && confirm.toLowerCase() === 'yes') {
-    postLine(line).then(() => {
-      console.log('Line added with success')
-      route = []
-      lastValue = 1
-    })
-  }
+
+  postLine(line).then(() => {
+    console.log('Line added with success')
+    routeLine = []
+  })
+
+  finish = true
 })
 
 /* let buttonMarker = document.getElementById('buttonMarker')

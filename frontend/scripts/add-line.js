@@ -1,32 +1,25 @@
 //Needed when you want to add a new line
 function populateListsToAddNewSegment(line) {
   getStationsByLineForAdd(line).then((data) => {
-    if (line === 'Ligne 03') {
-      let temp = [...data].reverse()
-      data = temp
-    }
     populateList(data, 'from')
     populateList(data, 'to')
   })
 }
 
-function newStation(layer) {
+function newStation(layer, line) {
   let station = {
     coordinates: {
       latitude: layer.getLatLng().lat,
       longitude: layer.getLatLng().lng,
     },
     name: toTitleCase(prompt('Name of the station', '')),
-    line: prompt('Line ?', 'tramway'),
+    line: line,
   }
-  let confirm = prompt('Confirm adding the station', 'No')
-  if (confirm.toLowerCase() === 'yes')
-    postStation(station).then(() => console.log('Station added successfully'))
+
+  return postStation(station)
 }
 
-let route = []
-let lastValue = 1
-function newSegment(layer) {
+function newSegment(layer, choice) {
   let polyline = layer.getLatLngs()
   let path = []
   let point = {}
@@ -38,64 +31,51 @@ function newSegment(layer) {
     path.push(point)
   })
 
-  let fromOptionValue = JSON.parse(document.getElementById('from').value)
-  let toOptionValue = JSON.parse(document.getElementById('to').value)
+  // let lineValue = JSON.parse(document.getElementById('line').value)
+  let fromValue = JSON.parse(document.getElementById('from').value)
+  let toValue = JSON.parse(document.getElementById('to').value)
 
   //Put FROM station at the beginning of the path
   point = {
-    latitude: fromOptionValue.coordinates.latitude,
-    longitude: fromOptionValue.coordinates.longitude,
+    latitude: fromValue.coordinates.latitude,
+    longitude: fromValue.coordinates.longitude,
   }
   path.unshift(point)
 
   //Put TO station at the end of the path
   point = {
-    latitude: toOptionValue.coordinates.latitude,
-    longitude: toOptionValue.coordinates.longitude,
+    latitude: toValue.coordinates.latitude,
+    longitude: toValue.coordinates.longitude,
   }
   path.push(point)
 
   let from = {
-    name: fromOptionValue.name,
-    coordinates: fromOptionValue.coordinates,
-    id: fromOptionValue._id, //change to _id when adding a new line because we add segment by using stations data
+    name: fromValue.name,
+    coordinates: fromValue.coordinates,
+    id: fromValue._id, //change to _id when adding a new line because we add segment by using stations data
   }
 
   let to = {
-    name: toOptionValue.name,
-    coordinates: toOptionValue.coordinates,
-    id: toOptionValue._id, //change to _id when adding a new line because we add segment by using stations data
+    name: toValue.name,
+    coordinates: toValue.coordinates,
+    id: toValue._id, //change to _id when adding a new line because we add segment by using stations data
   }
 
   let segment = {
     from: from,
     to: to,
     path: path,
-    // order: order,
   }
+  console.log(segment.from.name, segment.to.name)
 
-  let choice = prompt('What to do ?', 'New segment to line')
-  if (choice.toLowerCase() === 'new segment to line') {
+  if (choice === 'Patch line segment')
     patchLine(JSON.parse(document.getElementById('line').value)._id, segment)
-  }
-
-  route.push(segment)
-  lastValue++
-
-  console.log(segment)
-  console.log(route)
-
-  // point = {}
-  // segment = {}
-  // from = {}
-  // to = {}
-  // path = []
-  // return route
+  else if (choice === 'New line segment') routeLine.push(segment)
 }
 
-map.on('draw:created', function (e) {
+/* map.on('draw:created', function (e) {
   let layer = e.layer
   layer.addTo(map)
   if (layer instanceof L.Marker) newStation(layer)
   else if (layer instanceof L.Polyline) newSegment(layer)
-})
+}) */
