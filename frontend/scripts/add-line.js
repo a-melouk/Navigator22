@@ -68,9 +68,10 @@ function newSegment(layer, choice) {
   }
   console.log(segment.from.name, segment.to.name)
 
-  if (choice === 'Patch line segment')
+  if (choice === 'Patch line segment') {
+    console.log('patching a segment...')
     patchLine(JSON.parse(document.getElementById('line').value)._id, segment)
-  else if (choice === 'New line segment') routeLine.push(segment)
+  } else if (choice === 'New line segment') routeLine.push(segment)
 }
 
 /* map.on('draw:created', function (e) {

@@ -28,7 +28,10 @@ function init() {
 
 clearMap = () => {
   map.eachLayer((layer) => {
-    if (!layer instanceof L.TileLayer) map.removeLayer(layer)
+    if (!layer instanceof L.TileLayer) {
+      map.removeLayer(layer)
+      console.log(layer)
+    }
   })
   map.removeControl(drawControl)
   linelayer.clearLayers()

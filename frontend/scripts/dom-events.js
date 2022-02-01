@@ -10,6 +10,7 @@ let nameOfTheLine = ''
 
 manipulationsElement.addEventListener('change', (event) => {
   let manipulation = event.target.value
+  map.removeEventListener('draw:created')
 
   if (manipulation.toLowerCase() === 'edit-segment') {
     if (lineElement.value !== '') {
@@ -47,12 +48,15 @@ manipulationsElement.addEventListener('change', (event) => {
       })
       drawControl.addTo(map)
       map.on('draw:created', function (e) {
+        console.log('patching')
         let layer = e.layer
         layer.addTo(map)
-        if (layer instanceof L.Marker) {
-          newStation(layer, JSON.parse(lineElement.value).name)
-        } else if (layer instanceof L.Polyline) newSegment(layer, 'Patch line segment')
-        map.removeEventListener('draw:created')
+        if (layer instanceof L.Marker)
+          newStation(layer, JSON.parse(lineElement.value).name).then(() => {
+            populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
+          })
+        else if (layer instanceof L.Polyline) newSegment(layer, 'Patch line segment')
+        // map.removeEventListener('draw:created')
       })
     } else {
       manipulationsElement.value = ''
@@ -75,15 +79,15 @@ manipulationsElement.addEventListener('change', (event) => {
     })
     drawControl.addTo(map)
     map.on('draw:created', function (e) {
+      console.log('adding')
       let layer = e.layer
       layer.addTo(map)
       if (layer instanceof L.Marker) {
         newStation(layer, nameOfTheLine).then(() => {
-          console.log('salaaaam')
           populateListsToAddNewSegment(nameOfTheLine)
         })
       } else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')
-      if (finish) map.removeEventListener('draw:created')
+      // if (finish) map.removeEventListener('draw:created')
     })
   }
 })
@@ -145,9 +149,9 @@ addline.addEventListener('click', () => {
   postLine(line).then(() => {
     console.log('Line added with success')
     routeLine = []
+    populate()
+    finish = true
   })
-
-  finish = true
 })
 
 /* let buttonMarker = document.getElementById('buttonMarker')
