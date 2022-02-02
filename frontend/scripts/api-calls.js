@@ -8,14 +8,14 @@ async function getRelatedSegment(want, id) {
 
   const response = await fetch(uri)
   const data = await response.json()
-  if (data.from != undefined) return data
+  if (typeof data.from !== 'undefined') return data
 }
 
 async function getSegmentHavingFromTo(line, fromID, toID) {
   let uri = baseURI + 'lines/' + line + '?from=' + fromID + '&to=' + toID
   const response = await fetch(uri)
   const data = await response.json()
-  if (data.from != undefined) return data
+  if (typeof data.from !== 'undefined') return data
 }
 
 async function getLineByName(line) {

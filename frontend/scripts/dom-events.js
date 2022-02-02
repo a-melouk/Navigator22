@@ -4,13 +4,14 @@ let toElement = document.getElementById('to')
 let manipulationsElement = document.getElementById('manipulations')
 let getsegment = document.getElementById('getsegment')
 let addline = document.getElementById('addline')
+addline.disabled = true
+getsegment.disabled = true
 let routeLine = []
-let finish = false
 let nameOfTheLine = ''
-
 manipulationsElement.addEventListener('change', (event) => {
   let manipulation = event.target.value
-  map.removeEventListener('draw:created')
+
+  map.removeEventListener('draw:created') //for creation of new segments of a new line or just adding new segment to a line(add-segment VS add-line)
 
   if (manipulation.toLowerCase() === 'edit-segment') {
     if (lineElement.value !== '') {
@@ -56,7 +57,6 @@ manipulationsElement.addEventListener('change', (event) => {
             populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
           })
         else if (layer instanceof L.Polyline) newSegment(layer, 'Patch line segment')
-        // map.removeEventListener('draw:created')
       })
     } else {
       manipulationsElement.value = ''
@@ -87,7 +87,6 @@ manipulationsElement.addEventListener('change', (event) => {
           populateListsToAddNewSegment(nameOfTheLine)
         })
       } else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')
-      // if (finish) map.removeEventListener('draw:created')
     })
   }
 })
@@ -123,7 +122,7 @@ getsegment.addEventListener('click', () => {
     JSON.parse(fromElement.value).id,
     JSON.parse(toElement.value).id
   ).then((data) => {
-    if (data.from != undefined) {
+    if (typeof data.from !== 'undefined') {
       clearMap()
       addSegment(data, 'blue', 'segment')
       segmentLayer.options = {
@@ -150,7 +149,6 @@ addline.addEventListener('click', () => {
     console.log('Line added with success')
     routeLine = []
     populate()
-    finish = true
   })
 })
 

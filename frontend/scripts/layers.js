@@ -28,10 +28,7 @@ function init() {
 
 clearMap = () => {
   map.eachLayer((layer) => {
-    if (!layer instanceof L.TileLayer) {
-      map.removeLayer(layer)
-      console.log(layer)
-    }
+    if (layer instanceof L.Polyline || layer instanceof L.Marker) map.removeLayer(layer)
   })
   map.removeControl(drawControl)
   linelayer.clearLayers()
@@ -177,36 +174,41 @@ map.on('draw:edited', function (e) {
     if (modifiedFrom) {
       patchStation(from.id, from)
       getRelatedSegment('from', from.id).then((data) => {
-        let tempPath = data.path
-        tempPath.pop()
-        tempPath.push(from.coordinates)
-        removeClosePoints(tempPath)
-        let temp = {
-          from: data.from,
-          to: from,
-          path: tempPath,
+        if (typeof data !== 'undefined') {
+          let tempPath = data.path
+          tempPath.pop()
+          tempPath.push(from.coordinates)
+          removeClosePoints(tempPath)
+          let temp = {
+            from: data.from,
+            to: from,
+            path: tempPath,
+          }
+          patchSegment(data._id, temp).then(() =>
+            console.log('Related segment patched successfully')
+          )
         }
-        patchSegment(data._id, temp).then(() =>
-          console.log('Related segment patched successfully')
-        )
       })
     }
 
     if (modifiedTo) {
       patchStation(to.id, to)
       getRelatedSegment('to', to.id).then((data) => {
-        let tempPath = data.path
-        tempPath.shift()
-        tempPath.unshift(to.coordinates)
-        removeClosePoints(tempPath)
-        let temp = {
-          from: to,
-          to: data.to,
-          path: tempPath,
+        console.log(data)
+        if (typeof data !== 'undefined') {
+          let tempPath = data.path
+          tempPath.shift()
+          tempPath.unshift(to.coordinates)
+          removeClosePoints(tempPath)
+          let temp = {
+            from: to,
+            to: data.to,
+            path: tempPath,
+          }
+          patchSegment(data._id, temp).then(() =>
+            console.log('Related segment patched successfully')
+          )
         }
-        patchSegment(data._id, temp).then(() =>
-          console.log('Related segment patched successfully')
-        )
       })
     }
 
