@@ -33,9 +33,6 @@ const stationSchema = {
     type: String,
     required: true,
   },
-  // order: {
-  //   type: Number,
-  // },
 }
 
 const lineSchema = new Schema({
@@ -51,6 +48,5 @@ const lineSchema = new Schema({
 })
 
 const Line = mongoose.model('Line', lineSchema)
-// const Polyline = mongoose.model('Polyline', polylineSchema)
 const Station = mongoose.model('Station', stationSchema)
 module.exports = { Line, Station }

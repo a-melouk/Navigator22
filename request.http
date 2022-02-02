@@ -1,0 +1,33 @@
+get http://localhost:4000/station?id=61eb2de817e57cb86cb3f8fa
+### Get station by ID
+
+get http://localhost:4000/station/Les Cascades
+### Get station by name
+
+get http://localhost:4000/stations/tramway
+### Get stations of a line
+
+get http://localhost:4000/stations
+### Get all stations
+
+get http://localhost:4000/lines?name=tramway
+### Get a line by name
+
+get http://localhost:4000/lines/tramway/stations
+### Get FROM & TO stations of a line
+
+get http://localhost:4000/lines/all
+### Get IDs and names of lines (needed to populate line select options
+
+get http://localhost:4000/segment?id=61f33b99f599b8cb46bb5ec6
+### Get segment by ID
+
+get http://localhost:4000/segment/from?id=61eb2de817e57cb86cb3f8fa
+### Get segment by FROM station ID
+
+get http://localhost:4000/segment/to?id=61eb2de817e57cb86cb3f8fa
+### Get segmen tby TO station ID
+
+get http://localhost:4000/lines/tramway?from=61eb2de817e57cb86cb3f8f9&to=61eb2de817e57cb86cb3f8fa
+### Get segment by FROM and TO stations ID
+

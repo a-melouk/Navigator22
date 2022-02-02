@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const Models = require('./Models/line')
-
 const Line = Models.Line
 const Station = Models.Station
 
@@ -24,30 +23,49 @@ mongoose
     console.log('Running on 4000')
   })
 
+//---------------------------------------------------------------------//
+
+//Add new station to db
 app.post('/stations', (request, response) => {
   const station = new Station(request.body)
   station
     .save()
-    .then((data) => response.json(data))
+    .then((data) => {
+      response.json(data)
+      console.log('Station added successfully')
+    })
     .catch((err) => response.json(err))
 })
 
+//Add new line to db
 app.post('/lines', (request, response) => {
   const line = new Line(request.body)
   line
     .save()
+    .then((data) => {
+      response.json(data)
+      console.log('Line added successfully')
+    })
+    .catch((err) => response.json(err))
+})
+
+//Get station by ID
+app.get('/station', (request, response) => {
+  let id = request.query.id
+  Station.findById(id)
     .then((data) => response.json(data))
     .catch((err) => response.json(err))
 })
 
-//Get all the stations
-app.get('/stations', (request, response) => {
-  Station.find({})
+//Get station by ID
+app.get('/station/:name', (request, response) => {
+  let name = request.params.name
+  Station.find({ name: name })
     .then((data) => response.json(data))
     .catch((err) => response.json(err))
 })
 
-//Get the stations of a line
+//Get the stations of a line (no duplicates)
 app.get('/stations/:line', (request, response) => {
   let line = request.params.line
   Station.find({ line: line })
@@ -55,9 +73,9 @@ app.get('/stations/:line', (request, response) => {
     .catch((err) => response.json(err))
 })
 
-app.get('/station', (request, response) => {
-  let id = request.query.id
-  Station.findById(id)
+//Get all the stations
+app.get('/stations', (request, response) => {
+  Station.find({})
     .then((data) => response.json(data))
     .catch((err) => response.json(err))
 })
@@ -75,22 +93,29 @@ app.get('/lines/:line/stations', (request, response) => {
   let line = request.params.line
   Line.find({ name: line }, { route: 1, _id: 0 })
     .then((data) => {
-      let result = []
-      data = data[0].route
-      let segment
-      data.forEach((item) => {
-        segment = {
-          from: item.from,
-          to: item.to,
-        }
-        result.push(segment)
+      raw = data[0].route
+      let fromStations = [],
+        toStations = []
+      raw.forEach((item) => {
+        fromStations.push(item.from)
+        toStations.push(item.to)
       })
+      let result = {
+        from: fromStations,
+        to: toStations,
+      }
       response.json(result)
     })
     .catch((err) => response.json(err))
 })
 
-//Get segment by _id
+app.get('/lines/all', (request, response) => {
+  Line.find({}, { _id: 1, name: 1 })
+    .then((data) => response.json(data))
+    .catch((err) => response.json(err))
+})
+
+//Get segment by ID
 app.get('/segment', (request, response) => {
   let id = request.query.id
   Line.find({ 'route._id': id }, { route: { $elemMatch: { _id: id } } })
@@ -101,7 +126,10 @@ app.get('/segment', (request, response) => {
 //Get segment by FROM station ID
 app.get('/segment/from', (request, response) => {
   let id = request.query.id
-  Line.findOne({ 'route.from.id': id }, { route: { $elemMatch: { 'from.id': id } }, _id: 0 })
+  Line.findOne(
+    { 'route.from.id': id },
+    { route: { $elemMatch: { 'from.id': id } }, _id: 0 }
+  )
     .then((data) => response.json(data.route[0]))
     .catch((err) => response.json(err))
 })
@@ -117,19 +145,19 @@ app.get('/segment/to', (request, response) => {
 //Get a segment that includes FROM & TO stations
 app.get('/lines/:line', (request, response) => {
   let line = request.params.line
-  let from = request.query.from
-  let to = request.query.to
+  let fromID = request.query.from
+  let toID = request.query.to
   Line.find(
     {
       name: line,
-      'route.from.name': from,
-      'route.to.name': to,
+      'route.from.id': fromID,
+      'route.to.id': toID,
     },
     {
       route: {
         $elemMatch: {
-          'from.name': from,
-          'to.name': to,
+          'from.id': fromID,
+          'to.id': toID,
         },
       },
     }
@@ -143,26 +171,6 @@ app.get('/lines/:line', (request, response) => {
         line: line,
       })
     )
-    .catch((err) => response.json(err))
-})
-
-//All segments that have (FROM || TO) as from || to
-app.get('/segments', (request, response) => {
-  let id = request.query.id
-  Line.aggregate([
-    {
-      $match: {
-        $or: [{ 'route.from.id': id }, { 'route.to.id': id }],
-      },
-    },
-    { $unwind: '$route' },
-    {
-      $match: {
-        $or: [{ 'route.from.id': id }, { 'route.to.id': id }],
-      },
-    },
-  ])
-    .then((data) => response.json(data))
     .catch((err) => response.json(err))
 })
 
@@ -185,30 +193,16 @@ app.patch('/segment', (request, response) => {
     .catch((err) => response.json(err))
 })
 
-app.patch('/patchline/:id', (request, response) => {
-  let id = request.params.id
+app.patch('/line', (request, response) => {
+  console.log('Attempt to patch a line')
+  let id = request.query.id
   let body = request.body
-  Line.findByIdAndUpdate(id, body)
+  Line.updateOne({ _id: id }, { $push: { route: body } })
     .then((data) => response.json(data))
     .catch((err) => response.json(err))
 })
 
-// 61eb3a340ea98782be559c2d
-
 /*
-
-db.lines.find({$or:[{"route.from.id":"61eb2de817e57cb86cb3f8fa"},{"route.to.id":"61eb2de817e57cb86cb3f8fa"}]},
-    {route:
-        {$elemMatch:
-            {$or:[
-                    {"from.id":"61eb2de817e57cb86cb3f8fa"},
-                    
-                 ]
-            }
-        }
-    }
-)
-
 db.lines.aggregate(
   {$match: {$or:[{"route.from.id":"61eb2de817e57cb86cb3f8fa"},{"route.to.id":"61eb2de817e57cb86cb3f8fa"}]}},
   {$unwind: "$route"},

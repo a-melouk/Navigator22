@@ -1,8 +1,6 @@
-const baseURI = 'http://localhost:4000/'
-let linelayer = L.featureGroup() //Contains markers and polyline
-let segmentLayer = L.featureGroup() //Contains markers and polyline
-let partLayer = L.featureGroup() //Contains markers and polyline
-let markersLayer = L.featureGroup() //Contains markers and polyline
+let linelayer = L.featureGroup() //Contains markers and polyline of a line
+let segmentLayer = L.featureGroup() //Contains markers and polyline of a segment
+let markersLayer = L.featureGroup() //Contains markers of stations that are goind to be added to a line
 
 let map = L.map('map', {
   center: [35.20118653849822, -0.6343081902114373],
@@ -27,22 +25,21 @@ function init() {
   console.log('Map initialized')
 }
 
-init()
-
 clearMap = () => {
   map.eachLayer((layer) => {
-    if (!layer instanceof L.TileLayer) map.removeLayer(layer)
+    if (layer instanceof L.Polyline || layer instanceof L.Marker) map.removeLayer(layer)
   })
   map.removeControl(drawControl)
   linelayer.clearLayers()
   segmentLayer.clearLayers()
+  markersLayer.clearLayers()
 }
 
 function centerMap() {
   map.flyTo(new L.LatLng(35.20118653849822, -0.6343081902114373), 14)
 }
 
-function addStation(station, layer, line) {
+function addStationToMap(station, layer, line) {
   let url = ''
   if (line === 'tramway') url = './icons/pin_subway.png'
   if (line === 'Ligne 03') url = './icons/pin_bus_3.png'
@@ -71,15 +68,15 @@ function addStation(station, layer, line) {
     }).bindPopup('<b>' + station.name + '</b>')
   if (layer === 'segment') marker.addTo(segmentLayer)
   else if (layer === 'line') marker.addTo(linelayer)
-  // else if (layer === 'markers') marker.addTo(markersLayer)
+  else if (layer === 'markers') marker.addTo(markersLayer)
 }
 
-function addPolyline(path, color, layer) {
+function addPolylineToMap(path, color, layer) {
   let pathArray = []
-  for (let i = 0; i < path.length; i++) pathArray.push([path[i].latitude, path[i].longitude])
+  for (let i = 0; i < path.length; i++)
+    pathArray.push([path[i].latitude, path[i].longitude])
   let poly = L.polyline(pathArray, { color: color, item: path })
 
-  // map.setZoom(14)
   if (layer === 'segment') {
     poly.addTo(segmentLayer)
     map.fitBounds(poly.getBounds())
@@ -89,9 +86,9 @@ function addPolyline(path, color, layer) {
 let originalSegment = {}
 function addSegment(segment, color, layer) {
   clearMap()
-  addStation(segment.from, layer, segment.line)
-  addStation(segment.to, layer, segment.line)
-  addPolyline(segment.path, color, layer)
+  addStationToMap(segment.from, layer, segment.line)
+  addStationToMap(segment.to, layer, segment.line)
+  addPolylineToMap(segment.path, color, layer)
   drawControl = new L.Control.Draw({
     position: 'topright',
     draw: false,
@@ -103,20 +100,10 @@ function addSegment(segment, color, layer) {
   originalSegment = segment
 }
 
-function trueIfDifferent(a, b) {
-  if (Math.fround(a.latitude) === Math.fround(b.latitude) && Math.fround(a.longitude) === Math.fround(b.longitude)) return false
-  return true
-}
-
-map.on('draw:edited', function (e) {
+map.on('draw:edited', function () {
   map.removeControl(drawControl)
-  let layers = e.layers
   let choosenLine = document.getElementById('line').value
 
-  layers.eachLayer(function (layer) {
-    if (layer instanceof L.Polyline) console.log('Updated Polyline', layer._latlngs)
-    else if (layer instanceof L.Marker) console.log('Updated Marker', '{latitude: ' + layer._latlng.lat + ', longitude: ' + layer._latlng.lng + '}')
-  })
   if (segmentLayer.getLayers().length > 0) {
     let tempLayers = segmentLayer.getLayers()
 
@@ -178,33 +165,41 @@ map.on('draw:edited', function (e) {
 
     if (modifiedFrom) {
       patchStation(from.id, from)
-      getSegmentByStationId('from', from.id).then((data) => {
-        console.log(data)
-        let tempPath = data.path
-        tempPath.pop()
-        tempPath.push(from.coordinates)
-        let temp = {
-          from: data.from,
-          to: from,
-          path: tempPath,
+      getRelatedSegment('from', from.id).then((data) => {
+        if (typeof data !== 'undefined') {
+          let tempPath = data.path
+          tempPath.pop()
+          tempPath.push(from.coordinates)
+          removeClosePoints(tempPath)
+          let temp = {
+            from: data.from,
+            to: from,
+            path: tempPath,
+          }
+          patchSegment(data._id, temp).then(() =>
+            console.log('Related segment patched successfully')
+          )
         }
-        patchSegment(data._id, temp).then(() => console.log('Related segment patched successfully'))
       })
     }
 
     if (modifiedTo) {
       patchStation(to.id, to)
-      getSegmentByStationId('to', to.id).then((data) => {
-        console.log(data)
-        let tempPath = data.path
-        tempPath.shift()
-        tempPath.unshift(to.coordinates)
-        let temp = {
-          from: to,
-          to: data.to,
-          path: tempPath,
+      getRelatedSegment('to', to.id).then((data) => {
+        if (typeof data !== 'undefined') {
+          let tempPath = data.path
+          tempPath.shift()
+          tempPath.unshift(to.coordinates)
+          removeClosePoints(tempPath)
+          let temp = {
+            from: to,
+            to: data.to,
+            path: tempPath,
+          }
+          patchSegment(data._id, temp).then(() =>
+            console.log('Related segment patched successfully')
+          )
         }
-        patchSegment(data._id, temp).then(() => console.log('Related segment patched successfully'))
       })
     }
 
@@ -219,12 +214,22 @@ map.on('draw:edited', function (e) {
     }
 
     for (let i = 0; i < path.length - 2; i++)
-      if (map.distance([path[i].latitude, path[i].longitude], [path[i + 1].latitude, path[i + 1].longitude]) < 4.5) {
+      if (
+        map.distance(
+          [path[i].latitude, path[i].longitude],
+          [path[i + 1].latitude, path[i + 1].longitude]
+        ) < 4.5
+      ) {
         path.splice(i + 1, 1)
         modifiedPath = true
       }
 
-    if (map.distance([path[path.length - 2].latitude, path[path.length - 2].longitude], [path[path.length - 1].latitude, path[path.length - 1].longitude]) < 4.5) {
+    if (
+      map.distance(
+        [path[path.length - 2].latitude, path[path.length - 2].longitude],
+        [path[path.length - 1].latitude, path[path.length - 1].longitude]
+      ) < 4.5
+    ) {
       path.splice(path.length - 2, 1)
       modifiedPath = true
     }
@@ -241,7 +246,7 @@ map.on('draw:edited', function (e) {
         console.log('Segment patched successfully')
         clearMap()
         addSegment(temp, 'red', 'segment')
-        getStationsByLine(choosenLine)
+        getStationsByLine(JSON.parse(choosenLine).name)
       })
     }
   }
