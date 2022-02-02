@@ -99,19 +99,10 @@ function addSegment(segment, color, layer) {
   originalSegment = segment
 }
 
-map.on('draw:edited', function (e) {
+map.on('draw:edited', function () {
   map.removeControl(drawControl)
-  let layers = e.layers
   let choosenLine = document.getElementById('line').value
 
-  layers.eachLayer(function (layer) {
-    if (layer instanceof L.Polyline) console.log('Updated Polyline', layer._latlngs)
-    else if (layer instanceof L.Marker)
-      console.log(
-        'Updated Marker',
-        '{latitude: ' + layer._latlng.lat + ', longitude: ' + layer._latlng.lng + '}'
-      )
-  })
   if (segmentLayer.getLayers().length > 0) {
     let tempLayers = segmentLayer.getLayers()
 
@@ -194,7 +185,6 @@ map.on('draw:edited', function (e) {
     if (modifiedTo) {
       patchStation(to.id, to)
       getRelatedSegment('to', to.id).then((data) => {
-        console.log(data)
         if (typeof data !== 'undefined') {
           let tempPath = data.path
           tempPath.shift()

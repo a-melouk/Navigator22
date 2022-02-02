@@ -49,7 +49,6 @@ manipulationsElement.addEventListener('change', (event) => {
       })
       drawControl.addTo(map)
       map.on('draw:created', function (e) {
-        console.log('patching')
         let layer = e.layer
         layer.addTo(map)
         if (layer instanceof L.Marker)
@@ -79,7 +78,6 @@ manipulationsElement.addEventListener('change', (event) => {
     })
     drawControl.addTo(map)
     map.on('draw:created', function (e) {
-      console.log('adding')
       let layer = e.layer
       layer.addTo(map)
       if (layer instanceof L.Marker) {
@@ -151,9 +149,3 @@ addline.addEventListener('click', () => {
     populate()
   })
 })
-
-/* let buttonMarker = document.getElementById('buttonMarker')
-buttonMarker.addEventListener('click', () => {
-  console.log('salam')
-})
- */
