@@ -1,7 +1,6 @@
-let linelayer = L.featureGroup() //Contains markers and polyline
-let segmentLayer = L.featureGroup() //Contains markers and polyline
-let partLayer = L.featureGroup() //Contains markers and polyline
-let markersLayer = L.featureGroup() //Contains markers and polyline
+let linelayer = L.featureGroup() //Contains markers and polyline of a line
+let segmentLayer = L.featureGroup() //Contains markers and polyline of a segment
+let markersLayer = L.featureGroup() //Contains markers of stations that are goind to be added to a line
 
 let map = L.map('map', {
   center: [35.20118653849822, -0.6343081902114373],
@@ -33,6 +32,7 @@ clearMap = () => {
   map.removeControl(drawControl)
   linelayer.clearLayers()
   segmentLayer.clearLayers()
+  markersLayer.clearLayers()
 }
 
 function centerMap() {
@@ -68,6 +68,7 @@ function addStationToMap(station, layer, line) {
     }).bindPopup('<b>' + station.name + '</b>')
   if (layer === 'segment') marker.addTo(segmentLayer)
   else if (layer === 'line') marker.addTo(linelayer)
+  else if (layer === 'markers') marker.addTo(markersLayer)
 }
 
 function addPolylineToMap(path, color, layer) {

@@ -31,7 +31,6 @@ function newSegment(layer, choice) {
     path.push(point)
   })
 
-  // let lineValue = JSON.parse(document.getElementById('line').value)
   let fromValue = JSON.parse(document.getElementById('from').value)
   let toValue = JSON.parse(document.getElementById('to').value)
 
@@ -52,13 +51,13 @@ function newSegment(layer, choice) {
   let from = {
     name: fromValue.name,
     coordinates: fromValue.coordinates,
-    id: fromValue._id, //change to _id when adding a new line because we add segment by using stations data
+    id: fromValue._id,
   }
 
   let to = {
     name: toValue.name,
     coordinates: toValue.coordinates,
-    id: toValue._id, //change to _id when adding a new line because we add segment by using stations data
+    id: toValue._id,
   }
 
   let segment = {

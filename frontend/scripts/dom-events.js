@@ -102,6 +102,11 @@ fromElement.addEventListener('change', (event) => {
     getRelatedSegment('to', JSON.parse(from).id).then((data) => {
       toElement.value = JSON.stringify(data.to)
     })
+  else {
+    console.log(from, lineElement.value)
+    addStationToMap(JSON.parse(from), 'markers', JSON.parse(lineElement.value).name)
+    markersLayer.addTo(map)
+  }
 })
 
 //Automatically fill FROM select after picking TO station
@@ -111,6 +116,11 @@ toElement.addEventListener('change', (event) => {
     getRelatedSegment('from', JSON.parse(to).id).then((data) => {
       fromElement.value = JSON.stringify(data.from)
     })
+  else {
+    console.log(to, lineElement.value)
+    addStationToMap(JSON.parse(to), 'markers', JSON.parse(lineElement.value).name)
+    markersLayer.addTo(map)
+  }
 })
 
 //Button for getting a segment
