@@ -8,15 +8,18 @@ function populateListsToAddNewSegment(line) {
 
 function newStation(layer, line) {
   let station = {
+    name: toTitleCase(prompt('Name of the station', '')),
     coordinates: {
       latitude: layer.getLatLng().lat,
       longitude: layer.getLatLng().lng,
     },
-    name: toTitleCase(prompt('Name of the station', '')),
     line: line,
   }
-
   return postStation(station)
+}
+
+function deleteStation(id) {
+  return deleteStationByID(id)
 }
 
 function newSegment(layer, choice) {

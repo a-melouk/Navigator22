@@ -74,11 +74,34 @@ function addStationToMap(station, layer, line) {
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
       item: station,
       icon: iconOptions,
-    }).bindPopup('<b>' + station.name + '</b>')
+    }).bindPopup(
+      '<div class="markerPopup">' +
+        '<b>' +
+        station.name +
+        '</b>' +
+        '<div class="operations">' +
+        '<button onClick="deleteStation(station.id);">Delete</button>' +
+        '</div>' +
+        '</div>'
+    )
+  // .bindPopup('<b>' + station.name + '</b>')
   else
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
       item: station,
-    }).bindPopup('<b>' + station.name + '</b>')
+    }).bindPopup(
+      '<div class="markerPopup">' +
+        '<b>' +
+        station.name +
+        '</b>' +
+        '<div class="operations">' +
+        '<button onClick=' +
+        'deleteStation("' +
+        station.id +
+        '");' +
+        '>Delete</button>' +
+        '</div>' +
+        '</div>'
+    )
   if (layer === 'segment') marker.addTo(segmentLayer)
   else if (layer === 'line') marker.addTo(linelayer)
   else if (layer === 'markers') marker.addTo(markersLayer)

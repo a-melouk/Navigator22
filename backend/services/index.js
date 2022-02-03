@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const Models = require('./Models/line')
-const { response } = require('express')
 const Line = Models.Line
 const Station = Models.Station
 
@@ -26,13 +25,19 @@ mongoose
 
 //---------------------------------------------------------------------//
 
-async function trueIfExistsStation(line, name) {
+async function stationAlreadyExistsLine(line, name) {
   const request = await Station.find({ line: line, name: name })
   if (request.length > 0) return true
   else return false
 }
 
-async function trueIfExistsSegment(lineID, fromID, toID) {
+async function stationExists(id) {
+  const request = await Station.findById(id)
+  if (!!request) return true
+  else return false
+}
+
+async function segmentAlreadyExistsLine(lineID, fromID, toID) {
   const request = await Line.find(
     {
       _id: lineID,
@@ -52,26 +57,26 @@ async function trueIfExistsSegment(lineID, fromID, toID) {
   else return false
 }
 
-// let a = trueIfExistsSegment()
-// a.then((data) => console.log(data))
-
 //Add new station to db
 app.post('/stations', (request, response) => {
   const body = request.body
   const station = new Station(body)
-  if (!trueIfExistsStation(body.line, body.name))
-    station
-      .save()
-      .then((data) => {
-        response.json(data)
-        console.log('Station added successfully')
+  // if (!stationAlreadyExistsLine(body.line, body.name))
+  stationAlreadyExistsLine(body.line, body.name).then((data) => {
+    if (!data)
+      station
+        .save()
+        .then((data) => {
+          response.json(data)
+          console.log('Station added successfully')
+        })
+        .catch((err) => response.json(err))
+    else
+      response.status(409).json({
+        status: 409,
+        message: 'Station already exists in this line',
       })
-      .catch((err) => response.json(err))
-  else
-    response.status(409).json({
-      status: 409,
-      message: 'Station already exists in this line',
-    })
+  })
 })
 
 //Add new line to db
@@ -229,7 +234,6 @@ app.patch('/station', (request, response) => {
 
 //Update segment by id
 app.patch('/segment', (request, response) => {
-  console.log('Attempt to patch a segment')
   let id = request.query.id
   let body = request.body
   Line.updateOne({ 'route._id': id }, { $set: { 'route.$': body } })
@@ -238,27 +242,13 @@ app.patch('/segment', (request, response) => {
 })
 
 app.patch('/line', (request, response) => {
-  console.log('Attempt to patch a line')
   let id = request.query.id
   let body = request.body
   let fromID = body.from.id
   let toID = body.to.id
-  Line.find(
-    {
-      _id: id,
-      'route.from.id': fromID,
-      'route.to.id': toID,
-    },
-    {
-      route: {
-        $elemMatch: {
-          'from.id': fromID,
-          'to.id': toID,
-        },
-      },
-    }
-  ).then((data) => {
-    if (data.length === 0) {
+
+  segmentAlreadyExistsLine(id, fromID, toID).then((data) => {
+    if (!data) {
       Line.updateOne({ _id: id }, { $push: { route: body } })
         .then((data) => response.json(data))
         .catch((err) => response.json(err))
@@ -270,11 +260,37 @@ app.patch('/line', (request, response) => {
   })
 })
 
+// Delete a station by ID
+app.delete('/stations/:id', (request, response) => {
+  let id = request.params.id
+  stationExists(id).then((data) => {
+    if (data) {
+      console.log('Station exists')
+      Station.findByIdAndDelete(id)
+        .then(() =>
+          response.status(200).json({
+            status: 200,
+            message: 'Station deleted successfully',
+          })
+        )
+        .catch((err) => response.json(err))
+    } else {
+      response.status(404).json({
+        status: 404,
+        message: 'Station does not exists',
+      })
+    }
+  })
+})
 /*
 db.lines.aggregate(
-  {$match: {$or:[{"route.from.id":"61eb2de817e57cb86cb3f8fa"},{"route.to.id":"61eb2de817e57cb86cb3f8fa"}]}},
+  {$match: {$or:[
+    {"route.from.id":"61eb2de817e57cb86cb3f8fa"},
+    {"route.to.id":"61eb2de817e57cb86cb3f8fa"}]}},
   {$unwind: "$route"},
-  {$match: {$or:[{"route.from.id":"61eb2de817e57cb86cb3f8fa"},{"route.to.id":"61eb2de817e57cb86cb3f8fa"}]}}
+  {$match: {$or:[
+    {"route.from.id":"61eb2de817e57cb86cb3f8fa"},
+    {"route.to.id":"61eb2de817e57cb86cb3f8fa"}]}}
 )
 
 // stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)

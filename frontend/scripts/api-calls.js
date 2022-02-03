@@ -44,7 +44,6 @@ async function getAllLinesNamesIds() {
   let data = await response.json()
   return data
 }
-//-------------------------------------------------------------------------//
 
 //-------------------------------POST METHODS------------------------------//
 async function postStation(station) {
@@ -80,9 +79,24 @@ async function postLine(line) {
     return console.log(err)
   }
 }
-//-------------------------------------------------------------------------//
 
-//------------------------------PATCH METHODS------------------------------//
+//------------------------------UPDATE METHODS------------------------------//
+async function deleteStationByID(id) {
+  try {
+    const response = await fetch(baseURI + 'stations/' + id, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    const data = await response.json()
+    return data
+  } catch (err) {
+    return console.log(err)
+  }
+}
+
 async function patchStation(id, body) {
   try {
     const response = await fetch(baseURI + 'station?id=' + id, {

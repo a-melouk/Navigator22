@@ -31,3 +31,5 @@ get http://localhost:4000/segment/to?id=61eb2de817e57cb86cb3f8fa
 get http://localhost:4000/lines/tramway?from=61eb2de817e57cb86cb3f8f9&to=61eb2de817e57cb86cb3f8fa
 ### Get segment by FROM and TO stations ID
 
+DELETE http://localhost:4000/stations/61f9dccc556a8b2128d1ed26
+###
