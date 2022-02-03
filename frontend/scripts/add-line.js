@@ -22,6 +22,10 @@ function deleteStation(id) {
   return deleteStationByID(id)
 }
 
+function deleteStationFromSegment(id) {
+  return deleteSegmentByStationID(id)
+}
+
 function newSegment(layer, choice) {
   let polyline = layer.getLatLngs()
   let path = []

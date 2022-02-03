@@ -80,7 +80,14 @@ function addStationToMap(station, layer, line) {
         station.name +
         '</b>' +
         '<div class="operations">' +
-        '<button onClick="deleteStation(station.id);">Delete</button>' +
+        '<button onClick=' +
+        'deleteStation("' +
+        station.id +
+        '");' +
+        'deleteStationFromSegment("' +
+        station.id +
+        '");' +
+        '>Delete</button>' +
         '</div>' +
         '</div>'
     )
@@ -98,10 +105,14 @@ function addStationToMap(station, layer, line) {
         'deleteStation("' +
         station.id +
         '");' +
+        'deleteStationFromSegment("' +
+        station.id +
+        '");' +
         '>Delete</button>' +
         '</div>' +
         '</div>'
     )
+  //deleteStationFromSegment
   if (layer === 'segment') marker.addTo(segmentLayer)
   else if (layer === 'line') marker.addTo(linelayer)
   else if (layer === 'markers') marker.addTo(markersLayer)
@@ -114,6 +125,7 @@ function addPolylineToMap(path, color, layer) {
   let poly = L.polyline(pathArray, { color: color, item: path })
 
   if (layer === 'segment') {
+    poly.bindPopup('<b>' + layer.options + '</b>')
     poly.addTo(segmentLayer)
     map.fitBounds(poly.getBounds())
   } else if (layer === 'line') poly.addTo(linelayer)

@@ -137,6 +137,7 @@ getsegment.addEventListener('click', () => {
       segmentLayer.options = {
         id: data.id,
       }
+      segmentLayer.bindPopup('<b>' + segmentLayer.options.id + '</b>')
       segmentLayer.addTo(map)
     } else {
       console.warn('Inexistant segment')

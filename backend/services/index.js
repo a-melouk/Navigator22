@@ -2,6 +2,7 @@ process.stdout.write('\x1Bc')
 
 const express = require('express')
 const mongoose = require('mongoose')
+const axios = require('axios')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const Models = require('./Models/line')
@@ -264,8 +265,7 @@ app.patch('/line', (request, response) => {
 app.delete('/stations/:id', (request, response) => {
   let id = request.params.id
   stationExists(id).then((data) => {
-    if (data) {
-      console.log('Station exists')
+    if (data)
       Station.findByIdAndDelete(id)
         .then(() =>
           response.status(200).json({
@@ -274,7 +274,7 @@ app.delete('/stations/:id', (request, response) => {
           })
         )
         .catch((err) => response.json(err))
-    } else {
+    else {
       response.status(404).json({
         status: 404,
         message: 'Station does not exists',
@@ -282,6 +282,68 @@ app.delete('/stations/:id', (request, response) => {
     }
   })
 })
+
+app.delete('/lines/station/:id', (request, response) => {
+  let id = request.params.id
+  Line.aggregate([
+    {
+      $match: {
+        $or: [{ 'route.from.id': id }, { 'route.to.id': id }],
+      },
+    },
+    { $unwind: '$route' },
+    {
+      $match: {
+        $or: [{ 'route.from.id': id }, { 'route.to.id': id }],
+      },
+    },
+  ]).then((data) => {
+    if (data.length === 1) {
+      Line.updateOne(
+        { _id: data[0]._id },
+        { $pull: { route: { _id: data[0].route._id } } }
+      )
+        .then(() =>
+          response.status(200).json({
+            status: 200,
+            message: 'Deleted station from the line correctly',
+          })
+        )
+        .catch((err) => response.json(err))
+    } else if (data.length === 2) {
+      let newPath = []
+      let firstPath = [...data[0].route.path]
+      let secondPath = [...data[1].route.path]
+      secondPath.shift()
+      newPath = [...firstPath, ...secondPath]
+
+      let newSegment = {
+        from: data[0].route.from,
+        to: data[1].route.to,
+        path: newPath,
+      }
+      Line.updateOne(
+        { _id: data[1]._id },
+        { $pull: { route: { _id: data[1].route._id } } }
+      ).then(() => {
+        Line.updateOne(
+          { 'route._id': data[0].route._id },
+          { $set: { 'route.$': newSegment } }
+        )
+          .then(() =>
+            response.json({
+              status: 200,
+              message: 'Patched the line successfully',
+            })
+          )
+          .catch((err) => response.json(err))
+      })
+
+      console.log(newSegment)
+    }
+  })
+})
+
 /*
 db.lines.aggregate(
   {$match: {$or:[
@@ -296,3 +358,9 @@ db.lines.aggregate(
 // stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
 "_id": "+[a-zA-Z0-9]+"
 */
+
+// setTimeout(() => {
+//   axios
+//     .delete('http://localhost:4000/lines/station/61fc5a0b04d429af36a7973b')
+//     .then((data) => console.log(data))
+// }, 3000)
