@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const Models = require('./Models/line')
+const { response } = require('express')
 const Line = Models.Line
 const Station = Models.Station
 
@@ -25,16 +26,52 @@ mongoose
 
 //---------------------------------------------------------------------//
 
+async function trueIfExistsStation(line, name) {
+  const request = await Station.find({ line: line, name: name })
+  if (request.length > 0) return true
+  else return false
+}
+
+async function trueIfExistsSegment(lineID, fromID, toID) {
+  const request = await Line.find(
+    {
+      _id: lineID,
+      'route.from.id': fromID,
+      'route.to.id': toID,
+    },
+    {
+      route: {
+        $elemMatch: {
+          'from.id': fromID,
+          'to.id': toID,
+        },
+      },
+    }
+  )
+  if (request.length > 0) return true
+  else return false
+}
+
+// let a = trueIfExistsSegment()
+// a.then((data) => console.log(data))
+
 //Add new station to db
 app.post('/stations', (request, response) => {
-  const station = new Station(request.body)
-  station
-    .save()
-    .then((data) => {
-      response.json(data)
-      console.log('Station added successfully')
+  const body = request.body
+  const station = new Station(body)
+  if (!trueIfExistsStation(body.line, body.name))
+    station
+      .save()
+      .then((data) => {
+        response.json(data)
+        console.log('Station added successfully')
+      })
+      .catch((err) => response.json(err))
+  else
+    response.status(409).json({
+      status: 409,
+      message: 'Station already exists in this line',
     })
-    .catch((err) => response.json(err))
 })
 
 //Add new line to db
@@ -162,15 +199,21 @@ app.get('/lines/:line', (request, response) => {
       },
     }
   )
-    .then((data) =>
-      response.json({
-        from: data[0].route[0].from,
-        to: data[0].route[0].to,
-        path: data[0].route[0].path,
-        id: data[0].route[0]._id,
-        line: line,
-      })
-    )
+    .then((data) => {
+      if (data.length > 0)
+        response.json({
+          from: data[0].route[0].from,
+          to: data[0].route[0].to,
+          path: data[0].route[0].path,
+          id: data[0].route[0]._id,
+          line: line,
+        })
+      else
+        response.json({
+          status: 404,
+          message: 'Inexistant segment',
+        })
+    })
     .catch((err) => response.json(err))
 })
 
@@ -178,6 +221,7 @@ app.get('/lines/:line', (request, response) => {
 app.patch('/station', (request, response) => {
   let id = request.query.id
   let body = request.body
+
   Station.findByIdAndUpdate(id, body)
     .then((data) => response.json(data))
     .catch((err) => response.json(err))
@@ -197,9 +241,33 @@ app.patch('/line', (request, response) => {
   console.log('Attempt to patch a line')
   let id = request.query.id
   let body = request.body
-  Line.updateOne({ _id: id }, { $push: { route: body } })
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+  let fromID = body.from.id
+  let toID = body.to.id
+  Line.find(
+    {
+      _id: id,
+      'route.from.id': fromID,
+      'route.to.id': toID,
+    },
+    {
+      route: {
+        $elemMatch: {
+          'from.id': fromID,
+          'to.id': toID,
+        },
+      },
+    }
+  ).then((data) => {
+    if (data.length === 0) {
+      Line.updateOne({ _id: id }, { $push: { route: body } })
+        .then((data) => response.json(data))
+        .catch((err) => response.json(err))
+    } else
+      response.status(409).json({
+        status: 409,
+        message: 'Segment exists already',
+      })
+  })
 })
 
 /*

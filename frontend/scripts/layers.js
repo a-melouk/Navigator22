@@ -1,6 +1,7 @@
 let linelayer = L.featureGroup() //Contains markers and polyline of a line
 let segmentLayer = L.featureGroup() //Contains markers and polyline of a segment
 let markersLayer = L.featureGroup() //Contains markers of stations that are goind to be added to a line
+let drawsLayer = L.featureGroup() //Contains markers of stations that are goind to be added to a line
 
 let map = L.map('map', {
   center: [35.20118653849822, -0.6343081902114373],
@@ -33,6 +34,18 @@ clearMap = () => {
   linelayer.clearLayers()
   segmentLayer.clearLayers()
   markersLayer.clearLayers()
+  drawsLayer.clearLayers()
+}
+
+clearMapWithoutDrawControl = () => {
+  map.eachLayer((layer) => {
+    if (layer instanceof L.Polyline || layer instanceof L.Marker) map.removeLayer(layer)
+  })
+  // map.removeControl(drawControl)
+  linelayer.clearLayers()
+  segmentLayer.clearLayers()
+  markersLayer.clearLayers()
+  drawsLayer.clearLayers()
 }
 
 function centerMap() {
@@ -146,12 +159,10 @@ map.on('draw:edited', function () {
     if (trueIfDifferent(from.coordinates, originalSegment.from.coordinates)) {
       modifiedFrom = true
       modifiedPath = true
-      console.log(1)
     }
     if (trueIfDifferent(to.coordinates, originalSegment.to.coordinates)) {
       modifiedTo = true
       modifiedPath = true
-      console.log(2)
     }
 
     if (path.length === originalSegment.path.length) {

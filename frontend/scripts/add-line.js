@@ -67,6 +67,11 @@ function newSegment(layer, choice) {
   }
 
   if (choice === 'Patch line segment')
-    patchLine(JSON.parse(document.getElementById('line').value)._id, segment)
+    patchLine(JSON.parse(document.getElementById('line').value)._id, segment).then(
+      (response) => {
+        if (response.status === 409)
+          displayNotification('Patch segment of a line', 'Segment already exists')
+      }
+    )
   else if (choice === 'New line segment') routeLine.push(segment)
 }

@@ -195,4 +195,32 @@
     color: #666666;
     top: 0;
   }
+
+  .notification {
+    min-width: 20%;
+    height: 6vh;
+    transform-origin: right;
+    margin-right: 2px;
+    background-image: linear-gradient(
+      to top,
+      rgba(213, 102, 102, 1) 0%,
+      rgba(245, 170, 170, 1) 53%,
+      rgba(230, 168, 168, 1) 99%
+    );
+    background-size: auto;
+    background-position: 0% 0%;
+    background-repeat: repeat;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 10px;
+  }
+
+  .identifier {
+    font-weight: bold;
+    margin-left: 5px;
+  }
+
+  .text {
+    margin-left: 5px;
+    font-size: 0.8rem;
+  }
 }

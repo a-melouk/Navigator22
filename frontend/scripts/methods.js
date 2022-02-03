@@ -84,6 +84,34 @@ function trueIfDifferent(a, b) {
   return true
 }
 
+function displayNotification(identifier, text) {
+  let notification = document.getElementById('notification')
+  let notificationIdentifier = document.getElementById('notification-identifier')
+  let notificationText = document.getElementById('notification-text')
+  const myPromise = new Promise((resolve, reject) => {
+    notification.hidden = false
+    notification.classList.remove('fadeOut')
+
+    notificationIdentifier.innerHTML = identifier
+    notificationText.innerHTML = text
+    notification.classList.add('shake-top')
+    notificationIdentifier.classList.add('focus-in-expand')
+    notificationText.classList.add('focus-in-expand')
+
+    clearMapWithoutDrawControl()
+    resolve('foo')
+  })
+  myPromise.then(() => {
+    setTimeout(() => {
+      notification.classList.remove('shake-top')
+      notificationIdentifier.classList.remove('focus-in-expand')
+      notificationText.classList.remove('focus-in-expand')
+      notification.classList.add('fadeOut')
+      // notification.hidden = true
+    }, 5000)
+  })
+}
+
 function cleanPath(line) {
   console.log(line)
   getLineByName(line).then((data) => {

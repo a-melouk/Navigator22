@@ -12,40 +12,52 @@
 
     <link href="screen-big.css" rel="stylesheet" />
     <link href="screen-small.css" rel="stylesheet" />
+    <link href="./static/wickedcss.min.css" rel="stylesheet" />
     <link href="./content.html" rel="import" />
   </head>
   <body>
     <div class="container">
       <div class="nav">
         <div class="navigation">
-          <div class="div-line">
+          <div class="div-line slideDown">
             <label for="line">Line</label>
             <select name="line" id="line">
               <option disabled selected value>--Select a line --</option>
             </select>
           </div>
 
-          <div class="div-from">
+          <div class="div-from slideDown">
             <label for="from">From</label>
             <select name="from" id="from">
               <option disabled selected value>-- --</option>
             </select>
           </div>
 
-          <div class="div-to">
+          <div class="div-to slideDown">
             <label for="to">To</label>
             <select name="to" id="to">
               <option disabled selected value>-- --</option>
             </select>
           </div>
 
-          <button class="btn-modification get" id="getsegment" style="margin-left: 10px">
+          <button
+            class="btn-modification get slideLeft"
+            id="getsegment"
+            style="margin-left: 10px"
+            disabled
+          >
             Get segment
           </button>
         </div>
+        <div class="notification" id="notification" hidden>
+          <div class="content">
+            <div class="identifier" id="notification-identifier"></div>
+            <div class="text" id="notification-text"></div>
+          </div>
+        </div>
       </div>
       <div id="map"></div>
-      <div class="right">
+      <div class="right fadeIn">
         <div class="form">
           <div class="manipulations">
             <label for="manipulations">What to do ?</label>
@@ -56,7 +68,7 @@
               <option value="add-line">Add a new line</option>
             </select>
           </div>
-          <button class="btn add-line" id="addline">Add</button>
+          <button class="btn add-line" id="addline" disabled>Add</button>
         </div>
         <div class="Lines">
           <button class="lines tramway" onclick="addLineToMap('tramway');">

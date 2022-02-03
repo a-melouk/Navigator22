@@ -114,15 +114,19 @@ async function patchSegment(id, body) {
 }
 
 async function patchLine(id, body) {
-  await fetch(baseURI + 'line?id=' + id, {
-    method: 'PATCH',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-    .then((data) => data.json())
-    .catch((err) => console.log(err))
+  try {
+    const response = await fetch(baseURI + 'line?id=' + id, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    const data = await response.json()
+    return data
+  } catch (err) {
+    return console.log(err)
+  }
 }
 //-------------------------------------------------------------------------//

@@ -50,10 +50,13 @@ manipulationsElement.addEventListener('change', (event) => {
       drawControl.addTo(map)
       map.on('draw:created', function (e) {
         let layer = e.layer
-        layer.addTo(map)
+        layer.addTo(drawsLayer)
+        drawsLayer.addTo(map)
         if (layer instanceof L.Marker)
-          newStation(layer, JSON.parse(lineElement.value).name).then(() => {
-            populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
+          newStation(layer, JSON.parse(lineElement.value).name).then((data) => {
+            if (data.status === 409)
+              displayNotification('Adding new station', 'Station already exists')
+            else populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
           })
         else if (layer instanceof L.Polyline) newSegment(layer, 'Patch line segment')
       })
@@ -103,7 +106,6 @@ fromElement.addEventListener('change', (event) => {
       toElement.value = JSON.stringify(data.to)
     })
   else {
-    console.log(from, lineElement.value)
     addStationToMap(JSON.parse(from), 'markers', JSON.parse(lineElement.value).name)
     markersLayer.addTo(map)
   }
@@ -117,7 +119,6 @@ toElement.addEventListener('change', (event) => {
       fromElement.value = JSON.stringify(data.from)
     })
   else {
-    console.log(to, lineElement.value)
     addStationToMap(JSON.parse(to), 'markers', JSON.parse(lineElement.value).name)
     markersLayer.addTo(map)
   }
