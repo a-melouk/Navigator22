@@ -338,8 +338,6 @@ app.delete('/lines/station/:id', (request, response) => {
           )
           .catch((err) => response.json(err))
       })
-
-      console.log(newSegment)
     }
   })
 })

@@ -40,14 +40,7 @@
             </select>
           </div>
 
-          <button
-            class="btn-modification get slideLeft"
-            id="getsegment"
-            style="margin-left: 10px"
-            disabled
-          >
-            Get segment
-          </button>
+          <button class="btn-modification get slideLeft" id="getsegment" style="margin-left: 10px" disabled>Get segment</button>
         </div>
         <div class="notification" id="notification" hidden>
           <div class="content">
@@ -71,35 +64,26 @@
           <button class="btn add-line" id="addline" disabled>Add</button>
         </div>
         <div class="Lines">
-          <button class="lines tramway" onclick="addLineToMap('tramway');">
-            Tramway
-          </button>
-          <button
-            class="lines bus"
-            onclick="addLineToMap('Ligne 03');addLineToMap('Ligne 03 bis');"
-          >
-            Bus 03
-          </button>
+          <button class="lines tramway" onclick="addLineToMap('tramway');">Tramway</button>
+          <button class="lines bus" onclick="addLineToMap('Ligne 03');addLineToMap('Ligne 03 bis');">Bus 03</button>
           <button class="lines bus" onclick="addLineToMap('Ligne 11');">Bus 11</button>
           <button class="lines bus" onclick="addLineToMap('Ligne 16');">Bus 16</button>
           <button class="lines bus" onclick="addLineToMap('Ligne 17');">Bus 17</button>
           <button class="lines bus" onclick="addLineToMap('Ligne 22');">Bus 22</button>
           <button class="lines bus" onclick="addLineToMap('Ligne 25');">Bus 25</button>
-          <button class="lines bus" onclick="addLineToMap('tramway retour');">
-            Bus 27
-          </button>
+          <button class="lines bus" onclick="addLineToMap('tramway retour');">Bus 27</button>
         </div>
         <div class="buttons">
           <button class="btn center-map" onclick="centerMap()">Center the map</button>
-          <button class="btn clear-map" onclick="clearMap()">Clear the map</button>
+          <button class="btn clear-map" onclick="clearMap(true)">Clear the map</button>
         </div>
       </div>
     </div>
     <script src="./scripts/layers.js" type="text/javascript"></script>
-    <script src="./scripts/add-line.js" type="text/javascript"></script>
-    <script src="./scripts/api-calls.js" type="text/javascript"></script>
+    <script src="./scripts/line.js" type="text/javascript"></script>
+    <script src="./scripts/api.js" type="text/javascript"></script>
     <script src="./scripts/dom-events.js" type="text/javascript"></script>
-    <script src="./scripts/methods.js" type="text/javascript"></script>
+    <script src="./scripts/utils.js" type="text/javascript"></script>
 
     <script>
       init()

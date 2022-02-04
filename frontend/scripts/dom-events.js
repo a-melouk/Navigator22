@@ -8,91 +8,16 @@ addline.disabled = true
 getsegment.disabled = true
 let routeLine = []
 let nameOfTheLine = ''
+
 manipulationsElement.addEventListener('change', (event) => {
   let manipulation = event.target.value
-
   map.removeEventListener('draw:created') //for creation of new segments of a new line or just adding new segment to a line(add-segment VS add-line)
-
-  if (manipulation.toLowerCase() === 'edit-segment') {
-    if (lineElement.value !== '') {
-      addline.disabled = true
-      getsegment.disabled = false
-      clearMap()
-      getStationsByLine(JSON.parse(lineElement.value).name)
-      drawControl = new L.Control.Draw({
-        position: 'topright',
-        draw: false,
-        edit: {
-          featureGroup: segmentLayer,
-        },
-      })
-      drawControl.addTo(map)
-    } else {
-      manipulationsElement.value = ''
-      alert('Please select a line first')
-    }
-  } else if (manipulation.toLowerCase() === 'add-segment') {
-    if (lineElement.value !== '') {
-      getsegment.disabled = true
-      addline.disabled = true
-      populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
-      clearMap()
-      drawControl = new L.Control.Draw({
-        position: 'topright',
-        draw: {
-          polygon: false,
-          rectangle: false,
-          circle: false,
-          circlemarker: false,
-        },
-        edit: false,
-      })
-      drawControl.addTo(map)
-      map.on('draw:created', function (e) {
-        let layer = e.layer
-        layer.addTo(drawsLayer)
-        drawsLayer.addTo(map)
-        if (layer instanceof L.Marker)
-          newStation(layer, JSON.parse(lineElement.value).name).then((data) => {
-            if (data.status === 409)
-              displayNotification('Adding new station', 'Station already exists')
-            else populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
-          })
-        else if (layer instanceof L.Polyline) newSegment(layer, 'Patch line segment')
-      })
-    } else {
-      manipulationsElement.value = ''
-      alert('Please select a line first')
-    }
-  } else if (manipulation.toLowerCase() === 'add-line') {
-    addline.disabled = false
-    getsegment.disabled = true
-    nameOfTheLine = prompt('Name of the line', 'metro')
-    clearMap()
-    drawControl = new L.Control.Draw({
-      position: 'topright',
-      draw: {
-        polygon: false,
-        rectangle: false,
-        circle: false,
-        circlemarker: false,
-      },
-      edit: false,
-    })
-    drawControl.addTo(map)
-    map.on('draw:created', function (e) {
-      let layer = e.layer
-      layer.addTo(map)
-      if (layer instanceof L.Marker) {
-        newStation(layer, nameOfTheLine).then(() => {
-          populateListsToAddNewSegment(nameOfTheLine)
-        })
-      } else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')
-    })
-  }
+  if (manipulation.toLowerCase() === 'edit-segment') editSegment()
+  else if (manipulation.toLowerCase() === 'add-segment') addSegmentToLine()
+  else if (manipulation.toLowerCase() === 'add-line') newLine()
 })
 
-lineElement.addEventListener('change', (event) => {
+lineElement.addEventListener('change', () => {
   manipulationsElement.value = ''
   fromElement.options.length = 1
   toElement.options.length = 1
@@ -102,11 +27,14 @@ lineElement.addEventListener('change', (event) => {
 fromElement.addEventListener('change', (event) => {
   let from = event.target.value
   if (manipulationsElement.value === 'edit-segment')
-    getRelatedSegment('to', JSON.parse(from).id).then((data) => {
+    getRelatedSegmentDb('to', JSON.parse(from).id).then((data) => {
       toElement.value = JSON.stringify(data.to)
     })
-  else {
+  else if (manipulationsElement.value === 'add-segment') {
     addStationToMap(JSON.parse(from), 'markers', JSON.parse(lineElement.value).name)
+    markersLayer.addTo(map)
+  } else if (manipulationsElement.value === 'add-line') {
+    addStationToMap(JSON.parse(from), 'markers', nameOfTheLine)
     markersLayer.addTo(map)
   }
 })
@@ -115,29 +43,28 @@ fromElement.addEventListener('change', (event) => {
 toElement.addEventListener('change', (event) => {
   let to = event.target.value
   if (manipulationsElement.value === 'edit-segment')
-    getRelatedSegment('from', JSON.parse(to).id).then((data) => {
+    getRelatedSegmentDb('from', JSON.parse(to).id).then((data) => {
       fromElement.value = JSON.stringify(data.from)
     })
-  else {
+  else if (manipulationsElement.value === 'add-segment') {
     addStationToMap(JSON.parse(to), 'markers', JSON.parse(lineElement.value).name)
+    markersLayer.addTo(map)
+  } else if (manipulationsElement.value === 'add-line') {
+    addStationToMap(JSON.parse(to), 'markers', nameOfTheLine)
     markersLayer.addTo(map)
   }
 })
 
 //Button for getting a segment
 getsegment.addEventListener('click', () => {
-  getSegmentHavingFromTo(
-    JSON.parse(lineElement.value).name,
-    JSON.parse(fromElement.value).id,
-    JSON.parse(toElement.value).id
-  ).then((data) => {
+  getSegmentHavingFromToDb(JSON.parse(lineElement.value).name, JSON.parse(fromElement.value).id, JSON.parse(toElement.value).id).then((data) => {
     if (typeof data.from !== 'undefined') {
-      clearMap()
-      addSegment(data, 'blue', 'segment')
+      clearMap(true)
+      addSegmentToMap(data, 'blue', 'segment')
       segmentLayer.options = {
         id: data.id,
       }
-      segmentLayer.bindPopup('<b>' + segmentLayer.options.id + '</b>')
+      // segmentLayer.bindPopup('<b>' + segmentLayer.options.id + '</b>')
       segmentLayer.addTo(map)
     } else {
       console.warn('Inexistant segment')
@@ -155,7 +82,7 @@ addline.addEventListener('click', () => {
   }
   console.log('New line to be added', line)
 
-  postLine(line).then(() => {
+  postLineDb(line).then(() => {
     console.log('Line added with success')
     routeLine = []
     populate()

@@ -1,7 +1,7 @@
 const baseURI = 'http://localhost:4000/'
 
 //-------------------------------GET METHODS-------------------------------//
-async function getRelatedSegment(want, id) {
+async function getRelatedSegmentDb(want, id) {
   let uri = baseURI + 'segment/'
   if (want === 'from') uri += 'to?id=' + id
   if (want === 'to') uri += 'from?id=' + id
@@ -11,14 +11,14 @@ async function getRelatedSegment(want, id) {
   if (typeof data.from !== 'undefined') return data
 }
 
-async function getSegmentHavingFromTo(line, fromID, toID) {
+async function getSegmentHavingFromToDb(line, fromID, toID) {
   let uri = baseURI + 'lines/' + line + '?from=' + fromID + '&to=' + toID
   const response = await fetch(uri)
   const data = await response.json()
   if (typeof data.from !== 'undefined') return data
 }
 
-async function getLineByName(line) {
+async function getLineByNameDb(line) {
   const uri = baseURI + 'lines?name=' + line
   const response = await fetch(uri)
   let data = await response.json()
@@ -26,27 +26,27 @@ async function getLineByName(line) {
   return data
 }
 
-async function getStationsByLineForAdd(line) {
+async function getStationsFrom_StationsDb(line) {
   const response = await fetch(baseURI + 'stations/' + line)
   let data = await response.json()
   return data
 }
 
 //Get stations from Lines collection
-async function getStationsOfLine(line) {
+async function getStationsFrom_LinesDb(line) {
   const response = await fetch(baseURI + 'lines/' + line + '/stations')
   let data = await response.json()
   return data
 }
 
-async function getAllLinesNamesIds() {
+async function getAllLinesNamesIdsDb() {
   const response = await fetch(baseURI + 'lines/all')
   let data = await response.json()
   return data
 }
 
 //-------------------------------POST METHODS------------------------------//
-async function postStation(station) {
+async function postStationDb(station) {
   try {
     const response = await fetch(baseURI + 'stations', {
       method: 'POST',
@@ -63,7 +63,7 @@ async function postStation(station) {
   }
 }
 
-async function postLine(line) {
+async function postLineDb(line) {
   try {
     const response = await fetch(baseURI + 'lines', {
       method: 'POST',
@@ -81,7 +81,7 @@ async function postLine(line) {
 }
 
 //------------------------------UPDATE METHODS------------------------------//
-async function deleteStationByID(id) {
+async function deleteStationByIdDb(id) {
   try {
     const response = await fetch(baseURI + 'stations/' + id, {
       method: 'DELETE',
@@ -97,7 +97,7 @@ async function deleteStationByID(id) {
   }
 }
 
-async function deleteSegmentByStationID(id) {
+async function deleteSegmentByStationIdDb(id) {
   try {
     const response = await fetch(baseURI + 'lines/station/' + id, {
       method: 'DELETE',
@@ -113,7 +113,7 @@ async function deleteSegmentByStationID(id) {
   }
 }
 
-async function patchStation(id, body) {
+async function patchStationDb(id, body) {
   try {
     const response = await fetch(baseURI + 'station?id=' + id, {
       method: 'PATCH',
@@ -130,7 +130,7 @@ async function patchStation(id, body) {
   }
 }
 
-async function patchSegment(id, body) {
+async function patchSegmentDb(id, body) {
   await fetch(baseURI + 'segment?id=' + id, {
     method: 'PATCH',
     headers: {
@@ -143,7 +143,7 @@ async function patchSegment(id, body) {
     .catch((err) => console.log(err))
 }
 
-async function patchLine(id, body) {
+async function patchLineDb(id, body) {
   try {
     const response = await fetch(baseURI + 'line?id=' + id, {
       method: 'PATCH',
