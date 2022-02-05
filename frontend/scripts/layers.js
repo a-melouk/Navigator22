@@ -26,7 +26,7 @@ function init() {
   console.log('Map initialized')
 }
 
-clearMap = draw => {
+function clearMap(draw) {
   map.eachLayer(layer => {
     if (layer instanceof L.Polyline || layer instanceof L.Marker) map.removeLayer(layer)
   })

@@ -12,7 +12,7 @@ let nameOfTheLine = ''
 manipulationsElement.addEventListener('change', event => {
   let manipulation = event.target.value
   map.removeEventListener('draw:created') //for creation of new segments of a new line or just adding new segment to a line(add-segment VS add-line)
-  if (manipulation.toLowerCase() === 'edit-segment') editSegment()
+  if (manipulation.toLowerCase() === 'edit-segment') patchSegment()
   else if (manipulation.toLowerCase() === 'add-segment') addSegmentToLine()
   else if (manipulation.toLowerCase() === 'add-line') newLine()
 })
@@ -23,7 +23,6 @@ lineElement.addEventListener('change', () => {
   toElement.options.length = 1
 })
 
-//Automatically fill TO select after picking FROM station
 fromElement.addEventListener('change', event => {
   let from = event.target.value
   if (manipulationsElement.value === 'edit-segment')
@@ -131,7 +130,6 @@ getsegment.addEventListener('click', () => {
             })
           }
         )
-        // TODO: Delete the old segment and push the new two segments
       })
     } else {
       console.warn('Inexistant segment')

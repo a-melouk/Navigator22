@@ -1,10 +1,3 @@
-//Fetching all available lines
-let populate = () => {
-  getAllLinesNamesIdsDb().then(data => {
-    populateList(data, 'line')
-  })
-}
-
 let emptyList = id => {
   document.getElementById(id).replaceChildren()
 }
@@ -61,6 +54,37 @@ function trueIfDifferent(a, b) {
   )
     return false
   return true
+}
+
+function middlePolyline(path) {
+  let distance = 0
+  let result = {}
+  let firstHalf = []
+  let secondHalf = []
+  for (let i = 0; i < path.length - 1; i++)
+    distance += map.distance(
+      [path[i].latitude, path[i].longitude],
+      [path[i + 1].latitude, path[i + 1].longitude]
+    )
+
+  let initDistance = 0
+  for (let i = 0; i < path.length - 1; i++) {
+    if (initDistance > distance / 2) {
+      result.middlepoint = path[i]
+      path.splice(i, 1)
+      break
+    } else {
+      initDistance += map.distance(
+        [path[i].latitude, path[i].longitude],
+        [path[i + 1].latitude, path[i + 1].longitude]
+      )
+      firstHalf.push(path[i])
+    }
+  }
+  secondHalf = path.filter(x => !firstHalf.includes(x))
+  result.firstHalf = firstHalf
+  result.secondHalf = secondHalf
+  return result
 }
 
 function displayNotification(identifier, text) {
