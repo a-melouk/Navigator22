@@ -57,6 +57,10 @@ toElement.addEventListener('change', event => {
 
 //Button for getting a segment
 getsegment.addEventListener('click', () => {
+  map.removeEventListener('draw:created')
+  clearMap(true)
+
+  addDrawControlToMap('both')
   getSegmentHavingFromToDb(
     JSON.parse(lineElement.value).name,
     JSON.parse(fromElement.value).id,
@@ -67,6 +71,7 @@ getsegment.addEventListener('click', () => {
       segmentLayer.options = {
         id: data.id,
       }
+      console.log(data)
       segmentLayer.addTo(map)
       map.on('draw:created', function () {
         let tempLayers = segmentLayer.getLayers()
@@ -108,6 +113,22 @@ getsegment.addEventListener('click', () => {
             }
             console.log(firstSegment)
             console.log(secondSegment)
+            deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
+              patchLineDb(JSON.parse(choosenLine)._id, firstSegment).then(response => {
+                if (response.status === 409)
+                  displayNotification('Patch segment of a line', 'Segment already exists')
+                else
+                  patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(
+                    response => {
+                      if (response.status === 409)
+                        displayNotification(
+                          'Patch segment of a line',
+                          'Segment already exists'
+                        )
+                    }
+                  )
+              })
+            })
           }
         )
         // TODO: Delete the old segment and push the new two segments

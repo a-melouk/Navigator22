@@ -97,6 +97,22 @@ async function deleteStationByIdDb(id) {
   }
 }
 
+async function deleteSegmentIdDb(lineID, segmentID) {
+  try {
+    const response = await fetch(baseURI + 'segment/' + lineID + '/' + segmentID, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    const data = await response.json()
+    return data
+  } catch (err) {
+    return console.log(err)
+  }
+}
+
 async function deleteSegmentByStationIdDb(id) {
   try {
     const response = await fetch(baseURI + 'lines/station/' + id, {
@@ -143,9 +159,9 @@ async function patchSegmentDb(id, body) {
     .catch(err => console.log(err))
 }
 
-async function patchLineDb(id, body) {
+async function patchLineDb(lineID, body) {
   try {
-    const response = await fetch(baseURI + 'line?id=' + id, {
+    const response = await fetch(baseURI + 'line?id=' + lineID, {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',

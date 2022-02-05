@@ -61,15 +61,15 @@ async function segmentAlreadyExistsLine(lineID, fromID, toID) {
 app.post('/stations', (request, response) => {
   const body = request.body
   const station = new Station(body)
-  stationAlreadyExistsLine(body.line, body.name).then((data) => {
+  stationAlreadyExistsLine(body.line, body.name).then(data => {
     if (!data)
       station
         .save()
-        .then((data) => {
+        .then(data => {
           response.json(data)
           console.log('Station added successfully')
         })
-        .catch((err) => response.json(err))
+        .catch(err => response.json(err))
     else
       response.status(409).json({
         status: 409,
@@ -83,61 +83,61 @@ app.post('/lines', (request, response) => {
   const line = new Line(request.body)
   line
     .save()
-    .then((data) => {
+    .then(data => {
       response.json(data)
       console.log('Line added successfully')
     })
-    .catch((err) => response.json(err))
+    .catch(err => response.json(err))
 })
 
 //Get station by ID
 app.get('/station', (request, response) => {
   let id = request.query.id
   Station.findById(id)
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+    .then(data => response.json(data))
+    .catch(err => response.json(err))
 })
 
 //Get station by ID
 app.get('/station/:name', (request, response) => {
   let name = request.params.name
   Station.find({ name: name })
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+    .then(data => response.json(data))
+    .catch(err => response.json(err))
 })
 
 //Get the stations of a line (no duplicates)
 app.get('/stations/:line', (request, response) => {
   let line = request.params.line
   Station.find({ line: line })
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+    .then(data => response.json(data))
+    .catch(err => response.json(err))
 })
 
 //Get all the stations
 app.get('/stations', (request, response) => {
   Station.find({})
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+    .then(data => response.json(data))
+    .catch(err => response.json(err))
 })
 
 //Get a line by name
 app.get('/lines', (request, response) => {
   let name = request.query.name
   Line.find({ name: name })
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+    .then(data => response.json(data))
+    .catch(err => response.json(err))
 })
 
 //Get stations of a line
 app.get('/lines/:line/stations', (request, response) => {
   let line = request.params.line
   Line.find({ name: line }, { route: 1, _id: 0 })
-    .then((data) => {
+    .then(data => {
       raw = data[0].route
       let fromStations = [],
         toStations = []
-      raw.forEach((item) => {
+      raw.forEach(item => {
         fromStations.push(item.from)
         toStations.push(item.to)
       })
@@ -147,37 +147,40 @@ app.get('/lines/:line/stations', (request, response) => {
       }
       response.json(result)
     })
-    .catch((err) => response.json(err))
+    .catch(err => response.json(err))
 })
 
 app.get('/lines/all', (request, response) => {
   Line.find({}, { _id: 1, name: 1 })
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+    .then(data => response.json(data))
+    .catch(err => response.json(err))
 })
 
 //Get segment by ID
 app.get('/segment', (request, response) => {
   let id = request.query.id
   Line.find({ 'route._id': id }, { route: { $elemMatch: { _id: id } } })
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+    .then(data => response.json(data))
+    .catch(err => response.json(err))
 })
 
 //Get segment by FROM station ID
 app.get('/segment/from', (request, response) => {
   let id = request.query.id
-  Line.findOne({ 'route.from.id': id }, { route: { $elemMatch: { 'from.id': id } }, _id: 0 })
-    .then((data) => response.json(data.route[0]))
-    .catch((err) => response.json(err))
+  Line.findOne(
+    { 'route.from.id': id },
+    { route: { $elemMatch: { 'from.id': id } }, _id: 0 }
+  )
+    .then(data => response.json(data.route[0]))
+    .catch(err => response.json(err))
 })
 
 //Get segment by TO station ID
 app.get('/segment/to', (request, response) => {
   let id = request.query.id
   Line.findOne({ 'route.to.id': id }, { route: { $elemMatch: { 'to.id': id } }, _id: 0 })
-    .then((data) => response.json(data.route[0]))
-    .catch((err) => response.json(err))
+    .then(data => response.json(data.route[0]))
+    .catch(err => response.json(err))
 })
 
 //Get a segment that includes FROM & TO stations
@@ -200,7 +203,7 @@ app.get('/lines/:line', (request, response) => {
       },
     }
   )
-    .then((data) => {
+    .then(data => {
       if (data.length > 0)
         response.json({
           from: data[0].route[0].from,
@@ -215,7 +218,7 @@ app.get('/lines/:line', (request, response) => {
           message: 'Inexistant segment',
         })
     })
-    .catch((err) => response.json(err))
+    .catch(err => response.json(err))
 })
 
 //Update station by id
@@ -224,8 +227,8 @@ app.patch('/station', (request, response) => {
   let body = request.body
 
   Station.findByIdAndUpdate(id, body)
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+    .then(data => response.json(data))
+    .catch(err => response.json(err))
 })
 
 //Update segment by id
@@ -233,21 +236,21 @@ app.patch('/segment', (request, response) => {
   let id = request.query.id
   let body = request.body
   Line.updateOne({ 'route._id': id }, { $set: { 'route.$': body } })
-    .then((data) => response.json(data))
-    .catch((err) => response.json(err))
+    .then(data => response.json(data))
+    .catch(err => response.json(err))
 })
 
 app.patch('/line', (request, response) => {
-  let id = request.query.id
+  let lineID = request.query.id
   let body = request.body
   let fromID = body.from.id
   let toID = body.to.id
 
-  segmentAlreadyExistsLine(id, fromID, toID).then((data) => {
+  segmentAlreadyExistsLine(lineID, fromID, toID).then(data => {
     if (!data) {
-      Line.updateOne({ _id: id }, { $push: { route: body } })
-        .then((data) => response.json(data))
-        .catch((err) => response.json(err))
+      Line.updateOne({ _id: lineID }, { $push: { route: body } })
+        .then(data => response.json(data))
+        .catch(err => response.json(err))
     } else
       response.status(409).json({
         status: 409,
@@ -259,7 +262,7 @@ app.patch('/line', (request, response) => {
 // Delete a station by ID
 app.delete('/stations/:id', (request, response) => {
   let id = request.params.id
-  stationExists(id).then((data) => {
+  stationExists(id).then(data => {
     if (data)
       Station.findByIdAndDelete(id)
         .then(() =>
@@ -268,7 +271,7 @@ app.delete('/stations/:id', (request, response) => {
             message: 'Station deleted successfully',
           })
         )
-        .catch((err) => response.json(err))
+        .catch(err => response.json(err))
     else {
       response.status(404).json({
         status: 404,
@@ -278,6 +281,24 @@ app.delete('/stations/:id', (request, response) => {
   })
 })
 
+//Delete a segment
+app.delete('/segment/:lineID/:segmentID', (request, response) => {
+  let lineID = request.params.lineID
+  let segmentID = request.params.segmentID
+  Line.updateOne(
+    {
+      _id: lineID,
+    },
+    { $pull: { route: { _id: segmentID } } }
+  )
+    .then(data => response.json(data))
+    .catch(err => {
+      response.json(err)
+      console.log(err)
+    })
+})
+
+//Delete station of a segment
 app.delete('/lines/station/:id', (request, response) => {
   let id = request.params.id
   Line.aggregate([
@@ -292,16 +313,19 @@ app.delete('/lines/station/:id', (request, response) => {
         $or: [{ 'route.from.id': id }, { 'route.to.id': id }],
       },
     },
-  ]).then((data) => {
+  ]).then(data => {
     if (data.length === 1) {
-      Line.updateOne({ _id: data[0]._id }, { $pull: { route: { _id: data[0].route._id } } })
+      Line.updateOne(
+        { _id: data[0]._id },
+        { $pull: { route: { _id: data[0].route._id } } }
+      )
         .then(() =>
           response.status(200).json({
             status: 200,
             message: 'Deleted station from the line correctly',
           })
         )
-        .catch((err) => response.json(err))
+        .catch(err => response.json(err))
     } else if (data.length === 2) {
       let newPath = []
       let firstPath = [...data[0].route.path]
@@ -314,15 +338,21 @@ app.delete('/lines/station/:id', (request, response) => {
         to: data[1].route.to,
         path: newPath,
       }
-      Line.updateOne({ _id: data[1]._id }, { $pull: { route: { _id: data[1].route._id } } }).then(() => {
-        Line.updateOne({ 'route._id': data[0].route._id }, { $set: { 'route.$': newSegment } })
+      Line.updateOne(
+        { _id: data[1]._id },
+        { $pull: { route: { _id: data[1].route._id } } }
+      ).then(() => {
+        Line.updateOne(
+          { 'route._id': data[0].route._id },
+          { $set: { 'route.$': newSegment } }
+        )
           .then(() =>
             response.json({
               status: 200,
               message: 'Patched the line successfully',
             })
           )
-          .catch((err) => response.json(err))
+          .catch(err => response.json(err))
       })
     }
   })

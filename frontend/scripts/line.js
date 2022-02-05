@@ -67,10 +67,7 @@ function editSegment() {
   if (lineElement.value !== '') {
     addline.disabled = true
     getsegment.disabled = false
-    clearMap(true)
     getStationsByLine(JSON.parse(lineElement.value).name)
-    addDrawControlToMap('both')
-
     map.on('draw:edited', function () {
       map.removeControl(drawControl)
       let choosenLine = lineElement.value
@@ -259,6 +256,10 @@ function middlePolyline(path) {
 
 function deleteStation(id) {
   return deleteStationByIdDb(id)
+}
+
+function deleteSegmentById(lineID, segmentID) {
+  return deleteSegmentIdDb(lineID, segmentID)
 }
 
 function deleteStationFromSegment(id) {
