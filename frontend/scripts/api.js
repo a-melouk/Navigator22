@@ -139,8 +139,8 @@ async function patchSegmentDb(id, body) {
     },
     body: JSON.stringify(body),
   })
-    .then((data) => data.json())
-    .catch((err) => console.log(err))
+    .then(data => data.json())
+    .catch(err => console.log(err))
 }
 
 async function patchLineDb(id, body) {

@@ -9,7 +9,7 @@ getsegment.disabled = true
 let routeLine = []
 let nameOfTheLine = ''
 
-manipulationsElement.addEventListener('change', (event) => {
+manipulationsElement.addEventListener('change', event => {
   let manipulation = event.target.value
   map.removeEventListener('draw:created') //for creation of new segments of a new line or just adding new segment to a line(add-segment VS add-line)
   if (manipulation.toLowerCase() === 'edit-segment') editSegment()
@@ -24,10 +24,10 @@ lineElement.addEventListener('change', () => {
 })
 
 //Automatically fill TO select after picking FROM station
-fromElement.addEventListener('change', (event) => {
+fromElement.addEventListener('change', event => {
   let from = event.target.value
   if (manipulationsElement.value === 'edit-segment')
-    getRelatedSegmentDb('to', JSON.parse(from).id).then((data) => {
+    getRelatedSegmentDb('to', JSON.parse(from).id).then(data => {
       toElement.value = JSON.stringify(data.to)
     })
   else if (manipulationsElement.value === 'add-segment') {
@@ -40,10 +40,10 @@ fromElement.addEventListener('change', (event) => {
 })
 
 //Automatically fill FROM select after picking TO station
-toElement.addEventListener('change', (event) => {
+toElement.addEventListener('change', event => {
   let to = event.target.value
   if (manipulationsElement.value === 'edit-segment')
-    getRelatedSegmentDb('from', JSON.parse(to).id).then((data) => {
+    getRelatedSegmentDb('from', JSON.parse(to).id).then(data => {
       fromElement.value = JSON.stringify(data.from)
     })
   else if (manipulationsElement.value === 'add-segment') {
@@ -57,15 +57,61 @@ toElement.addEventListener('change', (event) => {
 
 //Button for getting a segment
 getsegment.addEventListener('click', () => {
-  getSegmentHavingFromToDb(JSON.parse(lineElement.value).name, JSON.parse(fromElement.value).id, JSON.parse(toElement.value).id).then((data) => {
+  getSegmentHavingFromToDb(
+    JSON.parse(lineElement.value).name,
+    JSON.parse(fromElement.value).id,
+    JSON.parse(toElement.value).id
+  ).then(data => {
     if (typeof data.from !== 'undefined') {
-      clearMap(true)
       addSegmentToMap(data, 'blue', 'segment')
       segmentLayer.options = {
         id: data.id,
       }
-      // segmentLayer.bindPopup('<b>' + segmentLayer.options.id + '</b>')
       segmentLayer.addTo(map)
+      map.on('draw:created', function () {
+        let tempLayers = segmentLayer.getLayers()
+        let choosenLine = lineElement.value
+        let path = []
+        tempLayers[2]._latlngs.forEach(item => {
+          let point = {
+            latitude: item.lat,
+            longitude: item.lng,
+          }
+          path.push(point)
+        })
+        let middle = middlePolyline(path)
+        console.log(middle)
+        newMiddleStation(middle.middlepoint, JSON.parse(choosenLine).name).then(
+          donnee => {
+            middle.firstHalf.push(middle.middlepoint)
+            middle.secondHalf.unshift(middle.middlepoint)
+            let from = data.from
+            let to = data.to
+            let middleStation = {
+              name: donnee.name,
+              coordinates: {
+                latitude: middle.middlepoint.latitude,
+                longitude: middle.middlepoint.longitude,
+              },
+              id: donnee._id,
+            }
+            let firstSegment = {
+              from: from,
+              to: middleStation,
+              path: middle.firstHalf,
+            }
+
+            let secondSegment = {
+              from: middleStation,
+              to: to,
+              path: middle.secondHalf,
+            }
+            console.log(firstSegment)
+            console.log(secondSegment)
+          }
+        )
+        // TODO: Delete the old segment and push the new two segments
+      })
     } else {
       console.warn('Inexistant segment')
       alert('Inexistant segment')

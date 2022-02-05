@@ -1,6 +1,6 @@
 //Fill with FROMs and TOs
 function getStationsByLine(line) {
-  getStationsFrom_LinesDb(line).then((data) => {
+  getStationsFrom_LinesDb(line).then(data => {
     populateList(data.from, 'from')
     populateList(data.to, 'to')
   })
@@ -8,16 +8,16 @@ function getStationsByLine(line) {
 
 //Needed when you want to add a new line
 function populateListsToAddNewSegment(line) {
-  getStationsFrom_StationsDb(line).then((data) => {
+  getStationsFrom_StationsDb(line).then(data => {
     populateList(data, 'from')
     populateList(data, 'to')
   })
 }
 
 function addLineToMap(number) {
-  clearMap()
-  getLineByNameDb(number).then((data) => {
-    data.forEach((item) => {
+  clearMap(true)
+  getLineByNameDb(number).then(data => {
+    data.forEach(item => {
       addStationToMap(item.from, 'line', number)
       addStationToMap(item.to, 'line', number)
       addPolylineToMap(item.path, 'black', 'line')
@@ -33,14 +33,8 @@ function addSegmentToMap(segment, color, layer) {
   addStationToMap(segment.from, layer, segment.line)
   addStationToMap(segment.to, layer, segment.line)
   addPolylineToMap(segment.path, color, layer)
-  drawControl = new L.Control.Draw({
-    position: 'topright',
-    draw: false,
-    edit: {
-      featureGroup: segmentLayer,
-    },
-  })
-  drawControl.addTo(map)
+  if (layer === 'segment') addDrawControlToMap('both')
+  else if (layer === 'draw') addDrawControlToMap('only-draw')
   originalSegment = segment
 }
 
@@ -56,8 +50,9 @@ function addSegmentToLine() {
       layer.addTo(drawsLayer)
       drawsLayer.addTo(map)
       if (layer instanceof L.Marker)
-        newStation(layer, JSON.parse(lineElement.value).name).then((data) => {
-          if (data.status === 409) displayNotification('Adding new station', 'Station already exists')
+        newStation(layer, JSON.parse(lineElement.value).name).then(data => {
+          if (data.status === 409)
+            displayNotification('Adding new station', 'Station already exists')
           else populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
         })
       else if (layer instanceof L.Polyline) newSegment(layer, 'Patch line segment')
@@ -74,10 +69,11 @@ function editSegment() {
     getsegment.disabled = false
     clearMap(true)
     getStationsByLine(JSON.parse(lineElement.value).name)
-    addDrawControlToMap('only-edit', 'segment')
+    addDrawControlToMap('both')
+
     map.on('draw:edited', function () {
       map.removeControl(drawControl)
-      let choosenLine = document.getElementById('line').value
+      let choosenLine = lineElement.value
 
       if (segmentLayer.getLayers().length > 0) {
         let tempLayers = segmentLayer.getLayers()
@@ -109,7 +105,7 @@ function editSegment() {
         //New segment's path
         let path = []
         let tempPath = tempLayers[2]._latlngs
-        tempPath.forEach((item) => {
+        tempPath.forEach(item => {
           let coordinates = {
             latitude: item.lat,
             longitude: item.lng,
@@ -138,7 +134,7 @@ function editSegment() {
 
         if (modifiedFrom) {
           patchStationDb(from.id, from)
-          getRelatedSegmentDb('from', from.id).then((data) => {
+          getRelatedSegmentDb('from', from.id).then(data => {
             if (typeof data !== 'undefined') {
               let tempPath = data.path
               tempPath.pop()
@@ -149,14 +145,16 @@ function editSegment() {
                 to: from,
                 path: tempPath,
               }
-              patchSegmentDb(data._id, temp).then(() => console.log('Related segment patched successfully'))
+              patchSegmentDb(data._id, temp).then(() =>
+                console.log('Related segment patched successfully')
+              )
             }
           })
         }
 
         if (modifiedTo) {
           patchStationDb(to.id, to)
-          getRelatedSegmentDb('to', to.id).then((data) => {
+          getRelatedSegmentDb('to', to.id).then(data => {
             if (typeof data !== 'undefined') {
               let tempPath = data.path
               tempPath.shift()
@@ -167,7 +165,9 @@ function editSegment() {
                 to: data.to,
                 path: tempPath,
               }
-              patchSegmentDb(data._id, temp).then(() => console.log('Related segment patched successfully'))
+              patchSegmentDb(data._id, temp).then(() =>
+                console.log('Related segment patched successfully')
+              )
             }
           })
         }
@@ -183,12 +183,22 @@ function editSegment() {
         }
 
         for (let i = 0; i < path.length - 2; i++)
-          if (map.distance([path[i].latitude, path[i].longitude], [path[i + 1].latitude, path[i + 1].longitude]) < 4.5) {
+          if (
+            map.distance(
+              [path[i].latitude, path[i].longitude],
+              [path[i + 1].latitude, path[i + 1].longitude]
+            ) < 4.5
+          ) {
             path.splice(i + 1, 1)
             modifiedPath = true
           }
 
-        if (map.distance([path[path.length - 2].latitude, path[path.length - 2].longitude], [path[path.length - 1].latitude, path[path.length - 1].longitude]) < 4.5) {
+        if (
+          map.distance(
+            [path[path.length - 2].latitude, path[path.length - 2].longitude],
+            [path[path.length - 1].latitude, path[path.length - 1].longitude]
+          ) < 4.5
+        ) {
           path.splice(path.length - 2, 1)
           modifiedPath = true
         }
@@ -216,6 +226,37 @@ function editSegment() {
   }
 }
 
+function middlePolyline(path) {
+  let distance = 0
+  let result = {}
+  let firstHalf = []
+  let secondHalf = []
+  for (let i = 0; i < path.length - 1; i++)
+    distance += map.distance(
+      [path[i].latitude, path[i].longitude],
+      [path[i + 1].latitude, path[i + 1].longitude]
+    )
+
+  let initDistance = 0
+  for (let i = 0; i < path.length - 1; i++) {
+    if (initDistance > distance / 2) {
+      result.middlepoint = path[i]
+      path.splice(i, 1)
+      break
+    } else {
+      initDistance += map.distance(
+        [path[i].latitude, path[i].longitude],
+        [path[i + 1].latitude, path[i + 1].longitude]
+      )
+      firstHalf.push(path[i])
+    }
+  }
+  secondHalf = path.filter(x => !firstHalf.includes(x))
+  result.firstHalf = firstHalf
+  result.secondHalf = secondHalf
+  return result
+}
+
 function deleteStation(id) {
   return deleteStationByIdDb(id)
 }
@@ -236,11 +277,23 @@ function newStation(layer, line) {
   return postStationDb(station)
 }
 
+function newMiddleStation(coordinates, line) {
+  let station = {
+    name: toTitleCase(prompt('Name of the station', '')),
+    coordinates: {
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+    },
+    line: line,
+  }
+  return postStationDb(station)
+}
+
 function newSegment(layer, choice) {
   let polyline = layer.getLatLngs()
   let path = []
   let point = {}
-  polyline.forEach((item) => {
+  polyline.forEach(item => {
     point = {
       latitude: item.lat,
       longitude: item.lng,
@@ -284,9 +337,12 @@ function newSegment(layer, choice) {
   }
 
   if (choice === 'Patch line segment')
-    patchLineDb(JSON.parse(document.getElementById('line').value)._id, segment).then((response) => {
-      if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
-    })
+    patchLineDb(JSON.parse(document.getElementById('line').value)._id, segment).then(
+      response => {
+        if (response.status === 409)
+          displayNotification('Patch segment of a line', 'Segment already exists')
+      }
+    )
   else if (choice === 'New line segment') routeLine.push(segment)
 }
 

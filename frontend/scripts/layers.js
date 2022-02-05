@@ -26,8 +26,8 @@ function init() {
   console.log('Map initialized')
 }
 
-clearMap = (draw) => {
-  map.eachLayer((layer) => {
+clearMap = draw => {
+  map.eachLayer(layer => {
     if (layer instanceof L.Polyline || layer instanceof L.Marker) map.removeLayer(layer)
   })
   if (draw) map.removeControl(drawControl)
@@ -39,6 +39,12 @@ clearMap = (draw) => {
 
 function centerMap() {
   map.flyTo(new L.LatLng(35.20118653849822, -0.6343081902114373), 14)
+}
+
+function addMarker(marker) {
+  marker = L.marker([marker.latitude, marker.longitude])
+  marker.addTo(drawsLayer)
+  drawsLayer.addTo(map)
 }
 
 function addStationToMap(station, layer, line) {
@@ -59,23 +65,41 @@ function addStationToMap(station, layer, line) {
     popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
   })
   let marker
+  let popup =
+    '<div class="markerPopup">' +
+    '<b>' +
+    station.name +
+    '</b>' +
+    '<div class="operations">' +
+    '<button onClick=' +
+    'deleteStation("' +
+    station.id +
+    '");' +
+    'deleteStationFromSegment("' +
+    station.id +
+    '");' +
+    '>Delete</button>' +
+    '</div>' +
+    '</div>'
   if (url !== '')
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
       item: station,
       icon: iconOptions,
-    }).bindPopup('<div class="markerPopup">' + '<b>' + station.name + '</b>' + '<div class="operations">' + '<button onClick=' + 'deleteStation("' + station.id + '");' + 'deleteStationFromSegment("' + station.id + '");' + '>Delete</button>' + '</div>' + '</div>')
+    }).bindPopup(popup)
   else
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
       item: station,
-    }).bindPopup('<div class="markerPopup">' + '<b>' + station.name + '</b>' + '<div class="operations">' + '<button onClick=' + 'deleteStation("' + station.id + '");' + 'deleteStationFromSegment("' + station.id + '");' + '>Delete</button>' + '</div>' + '</div>')
+    }).bindPopup(popup)
   if (layer === 'segment') marker.addTo(segmentLayer)
   else if (layer === 'line') marker.addTo(linelayer)
   else if (layer === 'markers') marker.addTo(markersLayer)
+  else if (layer === 'draw') marker.addTo(drawsLayer)
 }
 
 function addPolylineToMap(path, color, layer) {
   let pathArray = []
-  for (let i = 0; i < path.length; i++) pathArray.push([path[i].latitude, path[i].longitude])
+  for (let i = 0; i < path.length; i++)
+    pathArray.push([path[i].latitude, path[i].longitude])
   let poly = L.polyline(pathArray, { color: color, item: path })
 
   if (layer === 'segment') {
@@ -83,18 +107,26 @@ function addPolylineToMap(path, color, layer) {
     poly.addTo(segmentLayer)
     map.fitBounds(poly.getBounds())
   } else if (layer === 'line') poly.addTo(linelayer)
+  else if (layer === 'draw') {
+    poly.addTo(drawsLayer)
+    drawsLayer.addTo(map)
+  }
 }
 
-function addDrawControlToMap(type, layer) {
-  if (type === 'only-edit') {
-    if (layer === 'segment')
-      drawControl = new L.Control.Draw({
-        position: 'topright',
-        draw: false,
-        edit: {
-          featureGroup: segmentLayer,
-        },
-      })
+function addDrawControlToMap(type) {
+  if (type === 'both') {
+    drawControl = new L.Control.Draw({
+      position: 'topright',
+      draw: {
+        polygon: false,
+        rectangle: false,
+        circle: false,
+        circlemarker: false,
+      },
+      edit: {
+        featureGroup: segmentLayer,
+      },
+    })
   } else if (type === 'only-draw') {
     drawControl = new L.Control.Draw({
       position: 'topright',

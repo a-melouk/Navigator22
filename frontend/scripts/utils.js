@@ -1,20 +1,20 @@
 //Fetching all available lines
 let populate = () => {
-  getAllLinesNamesIdsDb().then((data) => {
+  getAllLinesNamesIdsDb().then(data => {
     populateList(data, 'line')
   })
 }
 
-let emptyList = (id) => {
+let emptyList = id => {
   document.getElementById(id).replaceChildren()
 }
 
 //Upper case first letter of every word
-const toTitleCase = (string) => {
+const toTitleCase = string => {
   return string
     .toLowerCase()
     .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
 }
 
@@ -25,7 +25,7 @@ function populateList(data, id) {
   option.disabled = true
   option.selected = true
   list.appendChild(option)
-  data.forEach((item) => {
+  data.forEach(item => {
     option = new Option(item.name, JSON.stringify(item))
     list.appendChild(option)
   })
@@ -33,11 +33,21 @@ function populateList(data, id) {
 
 function removeClosePoints(path) {
   for (let i = 0; i < path.length - 2; i++)
-    if (map.distance([path[i].latitude, path[i].longitude], [path[i + 1].latitude, path[i + 1].longitude]) < 4.5) {
+    if (
+      map.distance(
+        [path[i].latitude, path[i].longitude],
+        [path[i + 1].latitude, path[i + 1].longitude]
+      ) < 4.5
+    ) {
       path.splice(i + 1, 1)
       console.log('Removed points from the beginning')
     }
-  if (map.distance([path[path.length - 2].latitude, path[path.length - 2].longitude], [path[path.length - 1].latitude, path[path.length - 1].longitude]) < 4.5) {
+  if (
+    map.distance(
+      [path[path.length - 2].latitude, path[path.length - 2].longitude],
+      [path[path.length - 1].latitude, path[path.length - 1].longitude]
+    ) < 4.5
+  ) {
     path.splice(path.length - 2, 1)
     console.log('Removed before last point')
   }
@@ -45,7 +55,11 @@ function removeClosePoints(path) {
 }
 
 function trueIfDifferent(a, b) {
-  if (Math.fround(a.latitude) === Math.fround(b.latitude) && Math.fround(a.longitude) === Math.fround(b.longitude)) return false
+  if (
+    Math.fround(a.latitude) === Math.fround(b.latitude) &&
+    Math.fround(a.longitude) === Math.fround(b.longitude)
+  )
+    return false
   return true
 }
 
@@ -79,9 +93,9 @@ function displayNotification(identifier, text) {
 
 function cleanPath(line) {
   console.log(line)
-  getLineByNameDb(line).then((data) => {
+  getLineByNameDb(line).then(data => {
     console.log(data)
-    data.forEach((item) => {
+    data.forEach(item => {
       let toUpdate = false
       // console.log(item)
       let id = item._id
