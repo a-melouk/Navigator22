@@ -59,7 +59,7 @@ async function postStationDb(station) {
     const data = await response.json()
     return data
   } catch (err) {
-    return console.log(err)
+    return err
   }
 }
 
@@ -76,7 +76,7 @@ async function postLineDb(line) {
     const data = await response.json()
     return data
   } catch (err) {
-    return console.log(err)
+    return err
   }
 }
 
@@ -93,7 +93,7 @@ async function deleteStationByIdDb(id) {
     const data = await response.json()
     return data
   } catch (err) {
-    return console.log(err)
+    return err
   }
 }
 
@@ -109,7 +109,7 @@ async function deleteSegmentIdDb(lineID, segmentID) {
     const data = await response.json()
     return data
   } catch (err) {
-    return console.log(err)
+    return err
   }
 }
 
@@ -125,7 +125,7 @@ async function deleteSegmentByStationIdDb(id) {
     const data = await response.json()
     return data
   } catch (err) {
-    return console.log(err)
+    return err
   }
 }
 
@@ -142,7 +142,7 @@ async function patchStationDb(id, body) {
     const data = await response.json()
     return data
   } catch (err) {
-    return console.log(err)
+    return err
   }
 }
 
@@ -172,7 +172,7 @@ async function patchLineDb(lineID, body) {
     const data = await response.json()
     return data
   } catch (err) {
-    return console.log(err)
+    return err
   }
 }
 //-------------------------------------------------------------------------//

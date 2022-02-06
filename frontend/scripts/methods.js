@@ -7,7 +7,16 @@ function deleteSegmentById(lineID, segmentID) {
 }
 
 function deleteStationFromSegment(id) {
+  clearMap(true)
+  getStationsByLine(JSON.parse(lineElement.value).name)
   return deleteSegmentByStationIdDb(id)
+}
+
+async function deletePart(stationID) {
+  await deleteStationByIdDb(stationID)
+  await deleteStationFromSegment(stationID)
+  clearMap(true)
+  getStationsByLine(JSON.parse(lineElement.value).name)
 }
 
 function newStation(layer, line) {
@@ -81,6 +90,10 @@ function newSegment(layer, choice) {
     path: path,
   }
 
+  addStationToMap(segment.from, 'draw', nameOfTheLine)
+  addStationToMap(segment.to, 'draw', nameOfTheLine)
+  addPolylineToMap(segment.path, 'blue', 'draw')
+
   if (choice === 'Patch line segment')
     return patchLineDb(JSON.parse(document.getElementById('line').value)._id, segment)
   else if (choice === 'New line segment') routeLine.push(segment)
@@ -94,8 +107,9 @@ function newLine() {
   addDrawControlToMap('only-draw')
   map.on('draw:created', function (e) {
     let layer = e.layer
-    layer.addTo(map)
+    // layer.addTo(map)
     if (layer instanceof L.Marker) {
+      layer.addTo(map)
       newStation(layer, nameOfTheLine).then(() => {
         populateListsToAddNewSegment(nameOfTheLine)
       })

@@ -35,6 +35,7 @@ function clearMap(draw) {
   segmentLayer.clearLayers()
   markersLayer.clearLayers()
   drawsLayer.clearLayers()
+  // populate()
 }
 
 function centerMap() {
@@ -65,22 +66,12 @@ function addStationToMap(station, layer, line) {
     popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
   })
   let marker
-  let popup =
-    '<div class="markerPopup">' +
-    '<b>' +
-    station.name +
-    '</b>' +
-    '<div class="operations">' +
-    '<button onClick=' +
-    'deleteStation("' +
-    station.id +
-    '");' +
-    'deleteStationFromSegment("' +
-    station.id +
-    '");' +
-    '>Delete</button>' +
-    '</div>' +
-    '</div>'
+  let popup = '<div class="markerPopup">'
+  popup += '<b>' + station.name + '</b>'
+  popup += '<div class="operations">'
+  popup += '<button onClick=' + 'deletePart("' + station.id + '");>' + 'Delete</button>'
+  popup += '</div>' + '</div>'
+
   if (url !== '')
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
       item: station,
@@ -98,8 +89,7 @@ function addStationToMap(station, layer, line) {
 
 function addPolylineToMap(path, color, layer) {
   let pathArray = []
-  for (let i = 0; i < path.length; i++)
-    pathArray.push([path[i].latitude, path[i].longitude])
+  for (let i = 0; i < path.length; i++) pathArray.push([path[i].latitude, path[i].longitude])
   let poly = L.polyline(pathArray, { color: color, item: path })
 
   if (layer === 'segment') {

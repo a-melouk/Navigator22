@@ -21,6 +21,7 @@ lineElement.addEventListener('change', () => {
   manipulationsElement.value = ''
   fromElement.options.length = 1
   toElement.options.length = 1
+  clearMap(true)
 })
 
 fromElement.addEventListener('change', event => {
@@ -70,7 +71,6 @@ getsegment.addEventListener('click', () => {
       segmentLayer.options = {
         id: data.id,
       }
-      console.log(data)
       segmentLayer.addTo(map)
       map.on('draw:created', function () {
         let tempLayers = segmentLayer.getLayers()
@@ -84,52 +84,45 @@ getsegment.addEventListener('click', () => {
           path.push(point)
         })
         let middle = middlePolyline(path)
-        console.log(middle)
-        newMiddleStation(middle.middlepoint, JSON.parse(choosenLine).name).then(
-          donnee => {
-            middle.firstHalf.push(middle.middlepoint)
-            middle.secondHalf.unshift(middle.middlepoint)
-            let from = data.from
-            let to = data.to
-            let middleStation = {
-              name: donnee.name,
-              coordinates: {
-                latitude: middle.middlepoint.latitude,
-                longitude: middle.middlepoint.longitude,
-              },
-              id: donnee._id,
-            }
-            let firstSegment = {
-              from: from,
-              to: middleStation,
-              path: middle.firstHalf,
-            }
+        newMiddleStation(middle.middlepoint, JSON.parse(choosenLine).name).then(donnee => {
+          middle.firstHalf.push(middle.middlepoint)
+          middle.secondHalf.unshift(middle.middlepoint)
+          let from = data.from
+          let to = data.to
+          let middleStation = {
+            name: donnee.name,
+            coordinates: {
+              latitude: middle.middlepoint.latitude,
+              longitude: middle.middlepoint.longitude,
+            },
+            id: donnee._id,
+          }
+          let firstSegment = {
+            from: from,
+            to: middleStation,
+            path: middle.firstHalf,
+          }
 
-            let secondSegment = {
-              from: middleStation,
-              to: to,
-              path: middle.secondHalf,
-            }
-            console.log(firstSegment)
-            console.log(secondSegment)
-            deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
-              patchLineDb(JSON.parse(choosenLine)._id, firstSegment).then(response => {
+          let secondSegment = {
+            from: middleStation,
+            to: to,
+            path: middle.secondHalf,
+          }
+          deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
+            patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
+              .then(response => {
                 if (response.status === 409)
                   displayNotification('Patch segment of a line', 'Segment already exists')
-                else
-                  patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(
-                    response => {
-                      if (response.status === 409)
-                        displayNotification(
-                          'Patch segment of a line',
-                          'Segment already exists'
-                        )
-                    }
-                  )
               })
-            })
-          }
-        )
+              .then(() => {
+                patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(response => {
+                  if (response.status === 409)
+                    displayNotification('Patch segment of a line', 'Segment already exists')
+                  else getStationsByLine(JSON.parse(choosenLine).name)
+                })
+              })
+          })
+        })
       })
     } else {
       console.warn('Inexistant segment')
@@ -145,11 +138,39 @@ addline.addEventListener('click', () => {
     type: nameOfTheLine === 'tramway' ? 'tramway' : 'bus',
     route: routeLine,
   }
-  console.log('New line to be added', line)
 
   postLineDb(line).then(() => {
-    console.log('Line added with success')
+    clearMap(true)
+    fromElement.options.length = 1
+    to.options.length = 1
+    populate()
     routeLine = []
     populate()
   })
 })
+
+const right = document.getElementsByClassName('Lines')
+getAllLinesNamesIdsDb().then(data => {
+  populateList(data, 'line')
+  data.forEach(item => {
+    let line = document.createElement('button')
+    line.innerText = item.name
+    if (item.name === 'tramway') line.classList.add('lines', 'tramway')
+    else line.classList.add('lines', 'bus')
+    line.onclick = function () {
+      addLineToMap.call(this, item.name)
+      manipulationsElement.value = ''
+      lineElement.value = JSON.stringify(item)
+      fromElement.options.length = 1
+      to.options.length = 1
+    }
+    right[0].appendChild(line)
+  })
+})
+
+/*
+
+getAllLinesNamesIdsDb().then(data => {
+    populateList(data, 'line')
+  })
+*/

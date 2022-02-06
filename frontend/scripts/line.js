@@ -21,7 +21,7 @@ function populateListsToAddNewSegment(line) {
     populateList(data, 'to')
   })
 }
-//----------------------------------------------- -----------------------------------------------//
+//----------------------------------------------------------------------------------------------//
 
 //--------------------------------------Adding data to map--------------------------------------//
 function addLineToMap(number) {
@@ -47,7 +47,7 @@ function addSegmentToMap(segment, color, layer) {
   else if (layer === 'draw') addDrawControlToMap('only-draw')
   originalSegment = segment
 }
-//----------------------------------------------- -----------------------------------------------//
+//----------------------------------------------------------------------------------------------//
 
 //---------------------------------------Proccing events----------------------------------------//
 function patchSegment() {
@@ -138,6 +138,7 @@ function patchSegment() {
 
         if (modifiedTo) {
           patchStationDb(to.id, to)
+
           getRelatedSegmentDb('to', to.id).then(data => {
             if (typeof data !== 'undefined') {
               let tempPath = data.path
@@ -219,18 +220,26 @@ function addSegmentToLine() {
     populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
     map.on('draw:created', function (e) {
       let layer = e.layer
-      layer.addTo(drawsLayer)
-      drawsLayer.addTo(map)
+      // layer.addTo(drawsLayer)
+      // drawsLayer.addTo(map)
       if (layer instanceof L.Marker)
         newStation(layer, JSON.parse(lineElement.value).name).then(response => {
           if (response.status === 409)
             displayNotification('Adding new station', 'Station already exists')
-          else populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
+          else {
+            clearMap(false)
+            populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
+          }
         })
       else if (layer instanceof L.Polyline)
         newSegment(layer, 'Patch line segment').then(response => {
           if (response.status === 409)
             displayNotification('Patch segment of a line', 'Segment already exists')
+          else {
+            fromElement.options.length = 1
+            toElement.options.length = 1
+            populate()
+          }
         })
     })
   } else {
