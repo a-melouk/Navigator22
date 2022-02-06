@@ -569,9 +569,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* div icon */
 
 .leaflet-div-icon {
-  background: rgb(255, 255, 255);
-  border: 1px solid #666;
-  opacity: 0.75;
+  background: rgb(0, 0, 0);
+  border: 1px solid rgb(255, 255, 255);
+  opacity: 0.9;
+  margin: 8px !important;
 }
 
 /* Tooltip */

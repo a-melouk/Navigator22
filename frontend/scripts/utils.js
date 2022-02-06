@@ -56,16 +56,26 @@ function trueIfDifferent(a, b) {
   return true
 }
 
-function middlePolyline(path) {
-  let distance = 0
-  let result = {}
+function middlePolyline(point, path) {
+  let distance = Infinity
   let firstHalf = []
   let secondHalf = []
-  for (let i = 0; i < path.length - 1; i++)
-    distance += map.distance(
-      [path[i].latitude, path[i].longitude],
-      [path[i + 1].latitude, path[i + 1].longitude]
+  let temp = {
+    latitude: point.getLatLng().lat,
+    longitude: point.getLatLng().lng,
+  }
+
+  for (let i = 0; i < path.length; i++) {
+    let tempDistance = map.distance(
+      [temp.latitude, temp.longitude],
+      [path[i].latitude, path[i].longitude]
     )
+    if (tempDistance < distance) {
+      distance = tempDistance
+      firstHalf.push(path[i])
+    }
+  }
+  /*  secondHalf = path.filter(x => !firstHalf.includes(x))
 
   let initDistance = 0
   for (let i = 0; i < path.length - 1; i++) {
@@ -80,10 +90,14 @@ function middlePolyline(path) {
       )
       firstHalf.push(path[i])
     }
-  }
+  } */
+  firstHalf.push(temp)
   secondHalf = path.filter(x => !firstHalf.includes(x))
-  result.firstHalf = firstHalf
-  result.secondHalf = secondHalf
+  secondHalf.unshift(temp)
+  let result = {
+    firstHalf: firstHalf,
+    secondHalf: secondHalf,
+  }
   return result
 }
 

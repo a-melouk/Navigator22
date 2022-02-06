@@ -72,7 +72,7 @@ getsegment.addEventListener('click', () => {
         id: data.id,
       }
       segmentLayer.addTo(map)
-      map.on('draw:created', function () {
+      map.on('draw:created', function (e) {
         let tempLayers = segmentLayer.getLayers()
         let choosenLine = lineElement.value
         let path = []
@@ -83,18 +83,14 @@ getsegment.addEventListener('click', () => {
           }
           path.push(point)
         })
-        let middle = middlePolyline(path)
-        newMiddleStation(middle.middlepoint, JSON.parse(choosenLine).name).then(donnee => {
-          middle.firstHalf.push(middle.middlepoint)
-          middle.secondHalf.unshift(middle.middlepoint)
+        let middle = middlePolyline(e.layer, path)
+        newStation(e.layer, JSON.parse(choosenLine).name).then(donnee => {
+          console.log(donnee)
           let from = data.from
           let to = data.to
           let middleStation = {
             name: donnee.name,
-            coordinates: {
-              latitude: middle.middlepoint.latitude,
-              longitude: middle.middlepoint.longitude,
-            },
+            coordinates: donnee.coordinates,
             id: donnee._id,
           }
           let firstSegment = {
@@ -108,6 +104,8 @@ getsegment.addEventListener('click', () => {
             to: to,
             path: middle.secondHalf,
           }
+          console.log(firstSegment)
+          console.log(secondSegment)
           deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
             patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
               .then(response => {
@@ -174,3 +172,40 @@ getAllLinesNamesIdsDb().then(data => {
     populateList(data, 'line')
   })
 */
+
+/* let rawData = {
+  from: {
+    coordinates: { latitude: 35.20902474807825, longitude: -0.6162750701035336 },
+    name: 'Les Cascades',
+    id: '61eb2de817e57cb86cb3f8f9',
+  },
+  to: {
+    coordinates: { latitude: 35.21326746334253, longitude: -0.615711808204651 },
+    name: 'Ghalmi Gare Routiere Est',
+    id: '61eb2de817e57cb86cb3f8fa',
+  },
+  path: [
+    { latitude: 35.20902474807825, longitude: -0.6162750701035336 },
+    { latitude: 35.20939341424022, longitude: -0.6163941064212765 },
+    { latitude: 35.20979151211425, longitude: -0.6165156382485183 },
+    { latitude: 35.209996414580225, longitude: -0.6165513826533343 },
+    { latitude: 35.2102958160374, longitude: -0.6165802622981499 },
+    { latitude: 35.210992688241426, longitude: -0.6165647506713868 },
+    { latitude: 35.211336126394364, longitude: -0.6165659596379137 },
+    { latitude: 35.21171016752006, longitude: -0.6165516569776774 },
+    { latitude: 35.21186796552786, longitude: -0.6165516569776774 },
+    { latitude: 35.21215433881761, longitude: -0.6164872940245303 },
+    { latitude: 35.212481621531516, longitude: -0.6163299621429875 },
+    { latitude: 35.21259249882857, longitude: -0.6162475747845321 },
+    { latitude: 35.21277367223473, longitude: -0.6161116975480896 },
+    { latitude: 35.21319287137555, longitude: -0.6157702803415234 },
+    { latitude: 35.21326746334253, longitude: -0.615711808204651 },
+  ],
+  id: '61f73c8708774aa5b12b373b',
+  line: 'tramway',
+}
+let point = {
+  latitude: 35.21147529599303,
+  longitude: -0.616071544409317,
+}
+console.log(middlePolyline(point, rawData.path)) */
