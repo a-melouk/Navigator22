@@ -22,7 +22,6 @@ async function getLineByNameDb(line) {
   const uri = baseURI + 'lines?name=' + line
   const response = await fetch(uri)
   let data = await response.json()
-  data = data[0].route
   return data
 }
 

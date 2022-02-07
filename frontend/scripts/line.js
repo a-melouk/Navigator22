@@ -27,11 +27,8 @@ function populateListsToAddNewSegment(line) {
 function addLineToMap(number) {
   clearMap(true)
   getLineByNameDb(number).then(data => {
-    data.forEach(item => {
-      addStationToMap(item.from, 'line', number)
-      addStationToMap(item.to, 'line', number)
-      addPolylineToMap(item.path, 'black', 'line')
-    })
+    data.stations.forEach(item => addStationToMap(item, 'line', number))
+    data.route.forEach(item => addPolylineToMap(item, 'black', 'line'))
     linelayer.addTo(map)
     map.fitBounds(linelayer.getBounds())
   })
@@ -220,8 +217,6 @@ function addSegmentToLine() {
     populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
     map.on('draw:created', function (e) {
       let layer = e.layer
-      // layer.addTo(drawsLayer)
-      // drawsLayer.addTo(map)
       if (layer instanceof L.Marker)
         newStation(layer, JSON.parse(lineElement.value).name).then(response => {
           if (response.status === 409)

@@ -125,7 +125,22 @@ app.get('/stations', (request, response) => {
 app.get('/lines', (request, response) => {
   let name = request.query.name
   Line.find({ name: name })
-    .then(data => response.json(data))
+    // .then(data => response.json(data))
+    .then(data => {
+      let stations = []
+      let route = []
+      data[0].route.forEach(item => {
+        stations.push(item.from)
+        stations.push(item.to)
+        route.push(item.path)
+      })
+      stations = stations.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i)
+
+      response.json({
+        stations: stations,
+        route: route,
+      })
+    })
     .catch(err => response.json(err))
 })
 
@@ -167,10 +182,7 @@ app.get('/segment', (request, response) => {
 //Get segment by FROM station ID
 app.get('/segment/from', (request, response) => {
   let id = request.query.id
-  Line.findOne(
-    { 'route.from.id': id },
-    { route: { $elemMatch: { 'from.id': id } }, _id: 0 }
-  )
+  Line.findOne({ 'route.from.id': id }, { route: { $elemMatch: { 'from.id': id } }, _id: 0 })
     .then(data => response.json(data.route[0]))
     .catch(err => response.json(err))
 })
@@ -315,10 +327,7 @@ app.delete('/lines/station/:id', (request, response) => {
     },
   ]).then(data => {
     if (data.length === 1) {
-      Line.updateOne(
-        { _id: data[0]._id },
-        { $pull: { route: { _id: data[0].route._id } } }
-      )
+      Line.updateOne({ _id: data[0]._id }, { $pull: { route: { _id: data[0].route._id } } })
         .then(() =>
           response.status(200).json({
             status: 200,
@@ -338,22 +347,18 @@ app.delete('/lines/station/:id', (request, response) => {
         to: data[1].route.to,
         path: newPath,
       }
-      Line.updateOne(
-        { _id: data[1]._id },
-        { $pull: { route: { _id: data[1].route._id } } }
-      ).then(() => {
-        Line.updateOne(
-          { 'route._id': data[0].route._id },
-          { $set: { 'route.$': newSegment } }
-        )
-          .then(() =>
-            response.json({
-              status: 200,
-              message: 'Patched the line successfully',
-            })
-          )
-          .catch(err => response.json(err))
-      })
+      Line.updateOne({ _id: data[1]._id }, { $pull: { route: { _id: data[1].route._id } } }).then(
+        () => {
+          Line.updateOne({ 'route._id': data[0].route._id }, { $set: { 'route.$': newSegment } })
+            .then(() =>
+              response.json({
+                status: 200,
+                message: 'Patched the line successfully',
+              })
+            )
+            .catch(err => response.json(err))
+        }
+      )
     }
   })
 })
