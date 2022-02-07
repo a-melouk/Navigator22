@@ -37,7 +37,7 @@ async function stationExists(id) {
   else return false
 }
 
-async function segmentAlreadyExistsLine(lineID, fromID, toID) {
+async function segmentFromToExists(lineID, fromID, toID) {
   const request = await Line.find(
     {
       _id: lineID,
@@ -49,6 +49,24 @@ async function segmentAlreadyExistsLine(lineID, fromID, toID) {
         $elemMatch: {
           'from.id': fromID,
           'to.id': toID,
+        },
+      },
+    }
+  )
+  if (request.length > 0) return true
+  else return false
+}
+
+async function segmentIdExists(lineID, segmentID) {
+  const request = await Line.find(
+    {
+      _id: lineID,
+      'route._id': segmentID,
+    },
+    {
+      route: {
+        $elemMatch: {
+          _id: segmentID,
         },
       },
     }
@@ -239,7 +257,18 @@ app.patch('/station', (request, response) => {
   let body = request.body
 
   Station.findByIdAndUpdate(id, body)
-    .then(data => response.json(data))
+    .then(data => {
+      if (!!data)
+        response.json({
+          status: 200,
+          message: 'Station updated successfully',
+        })
+      else
+        response.status(404).json({
+          status: 404,
+          message: 'Station not found',
+        })
+    })
     .catch(err => response.json(err))
 })
 
@@ -248,7 +277,23 @@ app.patch('/segment', (request, response) => {
   let id = request.query.id
   let body = request.body
   Line.updateOne({ 'route._id': id }, { $set: { 'route.$': body } })
-    .then(data => response.json(data))
+    .then(data => {
+      if (data.matchedCount === 0)
+        response.status(404).json({
+          status: 404,
+          message: 'Segment does not exists',
+        })
+      else if (data.modifiedCount === 1)
+        response.json({
+          status: 200,
+          message: 'Segment patched successfully',
+        })
+      else
+        response.status(404).json({
+          status: 404,
+          message: 'There was an error updating the segment',
+        })
+    })
     .catch(err => response.json(err))
 })
 
@@ -258,10 +303,26 @@ app.patch('/line', (request, response) => {
   let fromID = body.from.id
   let toID = body.to.id
 
-  segmentAlreadyExistsLine(lineID, fromID, toID).then(data => {
-    if (!data) {
+  segmentFromToExists(lineID, fromID, toID).then(exists => {
+    if (!exists) {
       Line.updateOne({ _id: lineID }, { $push: { route: body } })
-        .then(data => response.json(data))
+        .then(data => {
+          if (data.matchedCount === 0)
+            response.status(404).json({
+              status: 404,
+              message: 'Line does not exists',
+            })
+          else if (data.modifiedCount === 1)
+            response.json({
+              status: 200,
+              message: 'Line patched successfully',
+            })
+          else
+            response.status(404).json({
+              status: 404,
+              message: 'There was an error updating the line',
+            })
+        })
         .catch(err => response.json(err))
     } else
       response.status(409).json({
@@ -274,11 +335,11 @@ app.patch('/line', (request, response) => {
 // Delete a station by ID
 app.delete('/stations/:id', (request, response) => {
   let id = request.params.id
-  stationExists(id).then(data => {
-    if (data)
+  stationExists(id).then(exists => {
+    if (exists)
       Station.findByIdAndDelete(id)
-        .then(() =>
-          response.status(200).json({
+        .then(data =>
+          response.json({
             status: 200,
             message: 'Station deleted successfully',
           })
@@ -297,17 +358,36 @@ app.delete('/stations/:id', (request, response) => {
 app.delete('/segment/:lineID/:segmentID', (request, response) => {
   let lineID = request.params.lineID
   let segmentID = request.params.segmentID
-  Line.updateOne(
-    {
-      _id: lineID,
-    },
-    { $pull: { route: { _id: segmentID } } }
-  )
-    .then(data => response.json(data))
-    .catch(err => {
-      response.json(err)
-      console.log(err)
-    })
+  segmentIdExists(lineID, segmentID).then(exists => {
+    if (exists) {
+      Line.updateOne(
+        {
+          _id: lineID,
+        },
+        { $pull: { route: { _id: segmentID } } }
+      )
+        .then(data => {
+          if (data.modifiedCount === 1)
+            response.json({
+              status: 200,
+              message: 'Segment deleted successfully',
+            })
+          else
+            response.status(404).json({
+              status: 404,
+              message: 'There was an error deleting the segment',
+            })
+        })
+        .catch(err => {
+          response.json(err)
+          console.log(err)
+        })
+    } else
+      response.status(404).json({
+        status: 404,
+        message: 'Segment does not exists',
+      })
+  })
 })
 
 //Delete station of a segment
@@ -329,9 +409,9 @@ app.delete('/lines/station/:id', (request, response) => {
     if (data.length === 1) {
       Line.updateOne({ _id: data[0]._id }, { $pull: { route: { _id: data[0].route._id } } })
         .then(() =>
-          response.status(200).json({
+          response.json({
             status: 200,
-            message: 'Deleted station from the line correctly',
+            message: 'The segment that had the station was deleted successfully',
           })
         )
         .catch(err => response.json(err))
@@ -353,13 +433,17 @@ app.delete('/lines/station/:id', (request, response) => {
             .then(() =>
               response.json({
                 status: 200,
-                message: 'Patched the line successfully',
+                message: 'Both segments that had the station were deleted successfully',
               })
             )
             .catch(err => response.json(err))
         }
       )
-    }
+    } else if (data.length === 0)
+      response.status(404).json({
+        status: 404,
+        message: 'No segment has that station as FROM or TO',
+      })
   })
 })
 
