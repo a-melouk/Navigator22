@@ -62,68 +62,8 @@ Case 3-   Updated the path (Ghalmi & Adnane)
       Update the segment that have TO_STATION as a FROM_STATION if exists (Gare Routiere Sud only in TO, not in FROM) (Adnane => Benhamouda)
           Replace the first point of the segment with the new coordinates          
           
-                
+//Sort a line per the order of the segment
+db.lines.aggregate([{"$match":{"name":"tramway retour","route.order":{$gt:15}}},{$unwind:"$route"},{$sort:{"route.order":1}},{"$group": {"_id": "$_id","route": {"$push": "$route"}}}]).pretty()
 
-
-db.lines.aggregate(
-  { $set:
-    { "route":
-      { $function: {
-          body: function(route) { return route.sort((a, b) => a.order > b.order); },
-          args: ["$route"],
-          lang: "js"
-      }}
-    }
-  }
-).pretty()
-
-
-db.lines.aggregate([
-    { 
-        "$match" : { 
-            "name" : "tramway retour"
-        }
-    },
-    {  
-        "$unwind : "$route"
-    }, 
-    {
-        $sort : {
-            "route.order" : 1
-        }
-    } , 
-    {
-        $group : {
-            route : {
-                        $push : { 
-                            $route"
-                        }
-                    }
-        }
-    }
-]).pretty()
-
-db.lines.aggregate([{"$match":{"name":"tramway retour"}},{$unwind:"$route"},{$sort:{"route.order":1}},{"$group": {"_id": "$_id","route": {"$push": "$route"}}}])
-[
-        {
-            "$match": {
-                "name": "tramway retour"
-            }
-        }, 
-        {
-            "$unwind": "$route"
-        }, 
-        {
-            "$sort": {
-                "route.order": 1.0
-            }
-        }, 
-        {
-            "$group": {
-                "_id": "$_id",
-                "route": {
-                    "$push": "$route"
-                }
-            }
-        }
-    ];
+//Get segment with order > 15
+db.lines.aggregate([{"$match": {"name": "tramway retour"}},{"$unwind": "$route"},{"$match": {"route.order": {"$gt": 15.0}}},{"$group": {"_id":"$_id","route": {"$push": "$route"}}}]).pretty()

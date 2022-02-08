@@ -357,7 +357,7 @@ app.delete('/stations/:id', (request, response) => {
     }
   })
 })
-
+//TODO: Decrement the order of the segments with higher order ($gt)
 //Delete a segment
 app.delete('/segment/:lineID/:segmentID', (request, response) => {
   let lineID = request.params.lineID
