@@ -65,3 +65,65 @@ Case 3-   Updated the path (Ghalmi & Adnane)
                 
 
 
+db.lines.aggregate(
+  { $set:
+    { "route":
+      { $function: {
+          body: function(route) { return route.sort((a, b) => a.order > b.order); },
+          args: ["$route"],
+          lang: "js"
+      }}
+    }
+  }
+).pretty()
+
+
+db.lines.aggregate([
+    { 
+        "$match" : { 
+            "name" : "tramway retour"
+        }
+    },
+    {  
+        "$unwind : "$route"
+    }, 
+    {
+        $sort : {
+            "route.order" : 1
+        }
+    } , 
+    {
+        $group : {
+            route : {
+                        $push : { 
+                            $route"
+                        }
+                    }
+        }
+    }
+]).pretty()
+
+db.lines.aggregate([{"$match":{"name":"tramway retour"}},{$unwind:"$route"},{$sort:{"route.order":1}},{"$group": {"_id": "$_id","route": {"$push": "$route"}}}])
+[
+        {
+            "$match": {
+                "name": "tramway retour"
+            }
+        }, 
+        {
+            "$unwind": "$route"
+        }, 
+        {
+            "$sort": {
+                "route.order": 1.0
+            }
+        }, 
+        {
+            "$group": {
+                "_id": "$_id",
+                "route": {
+                    "$push": "$route"
+                }
+            }
+        }
+    ];

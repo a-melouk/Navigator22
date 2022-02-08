@@ -142,8 +142,12 @@ app.get('/stations', (request, response) => {
 //Get a line by name
 app.get('/lines', (request, response) => {
   let name = request.query.name
-  Line.find({ name: name })
-    // .then(data => response.json(data))
+  Line.aggregate([
+    { $match: { name: name } },
+    { $unwind: '$route' },
+    { $sort: { 'route.order': 1 } },
+    { $group: { _id: '$_id', route: { $push: '$route' } } },
+  ])
     .then(data => {
       let stations = []
       let route = []
@@ -450,13 +454,13 @@ app.delete('/lines/station/:id', (request, response) => {
 /*
 db.lines.aggregate(
   {$match: {$or:[
-    {"route.from.id":"61eb2de817e57cb86cb3f8fa"},
-    {"route.to.id":"61eb2de817e57cb86cb3f8fa"}]}},
+    {"route.from.id":"61eb2de817e57cb86cb3f8fe"},
+    {"route.to.id":"61eb2de817e57cb86cb3f8fe"}]}},
   {$unwind: "$route"},
   {$match: {$or:[
-    {"route.from.id":"61eb2de817e57cb86cb3f8fa"},
-    {"route.to.id":"61eb2de817e57cb86cb3f8fa"}]}}
-)
+    {"route.from.id":"61eb2de817e57cb86cb3f8fe"},
+    {"route.to.id":"61eb2de817e57cb86cb3f8fe"}]}}
+).pretty()
 
 // stations = stations.filter((v, i, a) => a.findIndex((t) => t.order === v.order) === i)
 "_id": "+[a-zA-Z0-9]+"
