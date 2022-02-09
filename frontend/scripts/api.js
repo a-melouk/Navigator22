@@ -146,16 +146,22 @@ async function patchStationDb(id, body) {
 }
 
 async function patchSegmentDb(id, body) {
-  await fetch(baseURI + 'segment?id=' + id, {
-    method: 'PATCH',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-    .then(data => data.json())
-    .catch(err => console.log(err))
+  try {
+    const response = await fetch(baseURI + 'segment?id=' + id, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    const data = await response.json()
+    return data
+  } catch (err) {
+    return err
+  }
+  // .then(data => data.json())
+  // .catch(err => console.log(err))
 }
 
 async function patchLineDb(lineID, body) {

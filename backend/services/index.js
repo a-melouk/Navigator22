@@ -162,6 +162,7 @@ app.get('/lines', (request, response) => {
         stations: stations,
         route: route,
       })
+      // response.json(data)
     })
     .catch(err => response.json(err))
 })
@@ -357,6 +358,7 @@ app.delete('/stations/:id', (request, response) => {
     }
   })
 })
+
 //TODO: Decrement the order of the segments with higher order ($gt)
 //Delete a segment
 app.delete('/segment/:lineID/:segmentID', (request, response) => {

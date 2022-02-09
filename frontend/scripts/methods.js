@@ -7,15 +7,15 @@ function deleteSegmentById(lineID, segmentID) {
 }
 
 function deleteStationFromSegment(id) {
-  clearMap(true)
-  getStationsByLine(JSON.parse(lineElement.value).name)
+  // clearMap(true)
+  // getStationsByLine(JSON.parse(lineElement.value).name)
   return deleteSegmentByStationIdDb(id)
 }
 
 async function deletePart(stationID) {
   await deleteStationByIdDb(stationID)
   await deleteStationFromSegment(stationID)
-  clearMap(true)
+  // clearMap(true)
   getStationsByLine(JSON.parse(lineElement.value).name)
 }
 

@@ -60,6 +60,7 @@ function middlePolyline(point, path) {
   let distance = Infinity
   let firstHalf = []
   let secondHalf = []
+  let index = Infinity
   let temp = {
     latitude: point.getLatLng().lat,
     longitude: point.getLatLng().lng,
@@ -70,11 +71,16 @@ function middlePolyline(point, path) {
       [temp.latitude, temp.longitude],
       [path[i].latitude, path[i].longitude]
     )
+    console.log(tempDistance, i, path[i])
     if (tempDistance < distance) {
       distance = tempDistance
-      firstHalf.push(path[i])
+      index = i
     }
   }
+  if (index !== Infinity)
+    for (let i = 0; i < index; i++) {
+      firstHalf.push(path[i])
+    }
   /*  secondHalf = path.filter(x => !firstHalf.includes(x))
 
   let initDistance = 0
@@ -91,6 +97,7 @@ function middlePolyline(point, path) {
       firstHalf.push(path[i])
     }
   } */
+  console.log(distance)
   firstHalf.push(temp)
   secondHalf = path.filter(x => !firstHalf.includes(x))
   secondHalf.unshift(temp)
