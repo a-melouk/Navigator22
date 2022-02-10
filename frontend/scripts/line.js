@@ -64,9 +64,9 @@ map.on('draw:edited', function () {
       name: tempLayers[0].options.item.name,
       coordinates: {
         latitude: tempLayers[0]._latlng.lat,
-        longitude: tempLayers[0]._latlng.lng,
+        longitude: tempLayers[0]._latlng.lng
       },
-      id: tempLayers[0].options.item.id,
+      id: tempLayers[0].options.item.id
     }
 
     //New segment's to
@@ -74,9 +74,9 @@ map.on('draw:edited', function () {
       name: tempLayers[1].options.item.name,
       coordinates: {
         latitude: tempLayers[1]._latlng.lat,
-        longitude: tempLayers[1]._latlng.lng,
+        longitude: tempLayers[1]._latlng.lng
       },
-      id: tempLayers[1].options.item.id,
+      id: tempLayers[1].options.item.id
     }
 
     //New segment's path
@@ -85,7 +85,7 @@ map.on('draw:edited', function () {
     tempPath.forEach(item => {
       let coordinates = {
         latitude: item.lat,
-        longitude: item.lng,
+        longitude: item.lng
       }
       path.push(coordinates)
     })
@@ -139,7 +139,7 @@ map.on('draw:edited', function () {
       from: from,
       to: to,
       path: path,
-      line: originalSegment.line,
+      line: originalSegment.line
     }
 
     if (modifiedPath) {
@@ -164,11 +164,11 @@ map.on('draw:edited', function () {
                 let tempPath = data.path
                 tempPath.pop()
                 tempPath.push(from.coordinates)
-                removeClosePoints(tempPath)
+                removeClosePointsFront(tempPath)
                 let temp = {
                   from: data.from,
                   to: from,
-                  path: tempPath,
+                  path: tempPath
                 }
                 patchSegmentDb(data._id, temp).then(() =>
                   console.log('Segment that ends with ' + from.name + ' patched')
@@ -182,11 +182,11 @@ map.on('draw:edited', function () {
                 let tempPath = data.path
                 tempPath.shift()
                 tempPath.unshift(to.coordinates)
-                removeClosePoints(tempPath)
+                removeClosePointsFront(tempPath)
                 let temp = {
                   from: to,
                   to: data.to,
-                  path: tempPath,
+                  path: tempPath
                 }
                 patchSegmentDb(data._id, temp).then(() =>
                   console.log('Segment that starts with ' + to.name + ' patched')
@@ -235,5 +235,31 @@ function addSegmentToLine() {
     manipulationsElement.value = ''
     alert('Please select a line first')
   }
+}
+
+function cleanPath(line) {
+  console.log(line)
+  getLineByNameDb(line).then(data => {
+    console.log(data)
+    data.forEach(item => {
+      let toUpdate = false
+      let id = item._id
+      let from = item.from
+      let to = item.to
+      if (removeClosePointsFront(item.path).length < item.path) {
+        toUpdate = true
+        item.path = [...removeClosePointsFront]
+      }
+      if (toUpdate) {
+        const finalResult = {
+          from: from,
+          to: to,
+          path: item.path,
+          _id: id
+        }
+        patchSegmentDb(id, finalResult).then(() => console.log('Removed tight points'))
+      }
+    })
+  })
 }
 //----------------------------------------------- -----------------------------------------------//

@@ -24,7 +24,8 @@ function populateList(data, id) {
   })
 }
 
-function removeClosePoints(path) {
+function removeClosePointsFront(path) {
+  let initLength = path.length
   for (let i = 0; i < path.length - 2; i++)
     if (
       map.distance(
@@ -44,6 +45,7 @@ function removeClosePoints(path) {
     path.splice(path.length - 2, 1)
     console.log('Removed before last point')
   }
+  if (initLength > path.length) console.log('Removed close points')
   return path
 }
 
@@ -63,7 +65,7 @@ function middlePolyline(point, path) {
   let index = Infinity
   let temp = {
     latitude: point.getLatLng().lat,
-    longitude: point.getLatLng().lng,
+    longitude: point.getLatLng().lng
   }
 
   for (let i = 0; i < path.length; i++) {
@@ -71,39 +73,19 @@ function middlePolyline(point, path) {
       [temp.latitude, temp.longitude],
       [path[i].latitude, path[i].longitude]
     )
-    console.log(tempDistance, i, path[i])
     if (tempDistance < distance) {
       distance = tempDistance
       index = i
     }
   }
-  if (index !== Infinity)
-    for (let i = 0; i < index; i++) {
-      firstHalf.push(path[i])
-    }
-  /*  secondHalf = path.filter(x => !firstHalf.includes(x))
-
-  let initDistance = 0
-  for (let i = 0; i < path.length - 1; i++) {
-    if (initDistance > distance / 2) {
-      result.middlepoint = path[i]
-      path.splice(i, 1)
-      break
-    } else {
-      initDistance += map.distance(
-        [path[i].latitude, path[i].longitude],
-        [path[i + 1].latitude, path[i + 1].longitude]
-      )
-      firstHalf.push(path[i])
-    }
-  } */
-  console.log(distance)
+  if (index !== Infinity) for (let i = 0; i < index; i++) firstHalf.push(path[i])
   firstHalf.push(temp)
+
   secondHalf = path.filter(x => !firstHalf.includes(x))
   secondHalf.unshift(temp)
   let result = {
     firstHalf: firstHalf,
-    secondHalf: secondHalf,
+    secondHalf: secondHalf
   }
   return result
 }
@@ -133,32 +115,5 @@ function displayNotification(identifier, text) {
       notification.classList.add('fadeOut')
       // notification.hidden = true
     }, 5000)
-  })
-}
-
-function cleanPath(line) {
-  console.log(line)
-  getLineByNameDb(line).then(data => {
-    console.log(data)
-    data.forEach(item => {
-      let toUpdate = false
-      // console.log(item)
-      let id = item._id
-      let from = item.from
-      let to = item.to
-      if (removeClosePoints(item.path).length < item.path) {
-        toUpdate = true
-        item.path = [...removeClosePoints]
-      }
-      if (toUpdate) {
-        const finalResult = {
-          from: from,
-          to: to,
-          path: item.path,
-          _id: id,
-        }
-        patchSegmentDb(id, finalResult).then(() => console.log('Removed tight points'))
-      }
-    })
   })
 }

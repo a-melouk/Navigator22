@@ -67,3 +67,13 @@ db.lines.aggregate([{"$match":{"name":"tramway retour","route.order":{$gt:15}}},
 
 //Get segment with order > 15
 db.lines.aggregate([{"$match": {"name": "tramway retour"}},{"$unwind": "$route"},{"$match": {"route.order": {"$gt": 15.0}}},{"$group": {"_id":"$_id","route": {"$push": "$route"}}}]).pretty()
+
+1- Add new segment to a line:       
+    segmentOrder = line.route.length+1                          DONE
+
+2- Add middle station:              
+    - {1stOrder=oldOrder; 2ndOrder=oldOrder+1}                  DONE 
+    - increment order of all segments with order=(oldOrder+1)   WORKING
+    
+3- Delete segment                   
+    decrease order of all segments with higher order            WORKING 

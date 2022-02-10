@@ -7,15 +7,13 @@ function deleteSegmentById(lineID, segmentID) {
 }
 
 function deleteStationFromSegment(id) {
-  // clearMap(true)
-  // getStationsByLine(JSON.parse(lineElement.value).name)
   return deleteSegmentByStationIdDb(id)
 }
 
 async function deletePart(stationID) {
   await deleteStationByIdDb(stationID)
   await deleteStationFromSegment(stationID)
-  // clearMap(true)
+  clearMap(true)
   getStationsByLine(JSON.parse(lineElement.value).name)
 }
 
@@ -24,21 +22,9 @@ function newStation(layer, line) {
     name: toTitleCase(prompt('Name of the station', '')),
     coordinates: {
       latitude: layer.getLatLng().lat,
-      longitude: layer.getLatLng().lng,
+      longitude: layer.getLatLng().lng
     },
-    line: line,
-  }
-  return postStationDb(station)
-}
-
-function newMiddleStation(coordinates, line) {
-  let station = {
-    name: toTitleCase(prompt('Name of the station', '')),
-    coordinates: {
-      latitude: coordinates.latitude,
-      longitude: coordinates.longitude,
-    },
-    line: line,
+    line: line
   }
   return postStationDb(station)
 }
@@ -50,7 +36,7 @@ function newSegment(layer, choice) {
   polyline.forEach(item => {
     point = {
       latitude: item.lat,
-      longitude: item.lng,
+      longitude: item.lng
     }
     path.push(point)
   })
@@ -61,33 +47,33 @@ function newSegment(layer, choice) {
   //Put FROM station at the beginning of the path
   point = {
     latitude: fromValue.coordinates.latitude,
-    longitude: fromValue.coordinates.longitude,
+    longitude: fromValue.coordinates.longitude
   }
   path.unshift(point)
 
   //Put TO station at the end of the path
   point = {
     latitude: toValue.coordinates.latitude,
-    longitude: toValue.coordinates.longitude,
+    longitude: toValue.coordinates.longitude
   }
   path.push(point)
 
   let from = {
     name: fromValue.name,
     coordinates: fromValue.coordinates,
-    id: fromValue._id,
+    id: fromValue._id
   }
 
   let to = {
     name: toValue.name,
     coordinates: toValue.coordinates,
-    id: toValue._id,
+    id: toValue._id
   }
 
   let segment = {
     from: from,
     to: to,
-    path: path,
+    path: path
   }
 
   addStationToMap(segment.from, 'draw', nameOfTheLine)
@@ -107,12 +93,11 @@ function newLine() {
   addDrawControlToMap('only-draw')
   map.on('draw:created', function (e) {
     let layer = e.layer
-    // layer.addTo(map)
     if (layer instanceof L.Marker) {
       layer.addTo(map)
-      newStation(layer, nameOfTheLine).then(() => {
-        populateListsToAddNewSegment(nameOfTheLine)
-      })
-    } else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')
+      newStation(layer, nameOfTheLine).then(() => populateListsToAddNewSegment(nameOfTheLine))
+    }
+    //
+    else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')
   })
 }
