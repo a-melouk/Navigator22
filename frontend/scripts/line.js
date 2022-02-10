@@ -238,9 +238,7 @@ function addSegmentToLine() {
 }
 
 function cleanPath(line) {
-  console.log(line)
   getLineByNameDb(line).then(data => {
-    console.log(data)
     data.forEach(item => {
       let toUpdate = false
       let id = item._id

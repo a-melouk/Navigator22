@@ -32,19 +32,17 @@ function removeClosePointsFront(path) {
         [path[i].latitude, path[i].longitude],
         [path[i + 1].latitude, path[i + 1].longitude]
       ) < 4.5
-    ) {
+    )
       path.splice(i + 1, 1)
-      console.log('Removed points from the beginning')
-    }
+
   if (
     map.distance(
       [path[path.length - 2].latitude, path[path.length - 2].longitude],
       [path[path.length - 1].latitude, path[path.length - 1].longitude]
     ) < 4.5
-  ) {
+  )
     path.splice(path.length - 2, 1)
-    console.log('Removed before last point')
-  }
+
   if (initLength > path.length) console.log('Removed close points')
   return path
 }

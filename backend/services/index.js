@@ -56,7 +56,6 @@ async function segmentExists(lineID, fromID, toID) {
       _id: 0
     }
   )
-  // console.log(JSON.stringify(request))
   if (request[0]?.route[0]?._id)
     return {
       segmentID: request[0].route[0]._id,
@@ -116,10 +115,9 @@ function removeClosePointsBack(path) {
     if (
       distance(path[i].latitude, path[i].longitude, path[i + 1].latitude, path[i + 1].longitude) <
       4.5
-    ) {
+    )
       path.splice(i + 1, 1)
-      console.log('Removed points from the beginning')
-    }
+
   if (
     distance(
       path[path.length - 2].latitude,
@@ -127,10 +125,9 @@ function removeClosePointsBack(path) {
       path[path.length - 1].latitude,
       path[path.length - 1].longitude
     ) < 4.5
-  ) {
+  )
     path.splice(path.length - 2, 1)
-    console.log('Removed before last point')
-  }
+
   if (initLength > path.length) console.log('Removed close points')
   return path
 }
@@ -389,13 +386,9 @@ app.patch('/line', (request, response) => {
         if (typeof body.order === 'undefined')
           findLengthOfLine(lineID).then(data => {
             body.order = data + 1
-            console.log('Given order is ' + body.order)
             resolve('foo')
           })
-        else {
-          console.log('Already given order is ' + body.order)
-          resolve('foo')
-        }
+        else resolve('foo')
       })
       attributeOrder.then(() => {
         if (typeof body.order !== 'undefined') {
