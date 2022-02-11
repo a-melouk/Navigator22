@@ -26,7 +26,7 @@ async function getLineByNameDb(line) {
 }
 
 async function getStationsFrom_StationsDb(line) {
-  const response = await fetch(baseURI + 'stations/' + line)
+  const response = await fetch(baseURI + 'lines/' + line + '/stations')
   let data = await response.json()
   return data
 }

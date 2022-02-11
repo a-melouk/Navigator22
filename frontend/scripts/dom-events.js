@@ -36,6 +36,8 @@ fromElement.addEventListener('change', event => {
   let from = event.target.value
   if (manipulationsElement.value === 'edit-segment')
     getRelatedSegmentDb('to', JSON.parse(from).id).then(data => {
+      // console.log(from)
+      console.log(JSON.stringify(data.to))
       toElement.value = JSON.stringify(data.to)
     })
   else if (manipulationsElement.value === 'add-segment') {
@@ -52,6 +54,8 @@ toElement.addEventListener('change', event => {
   let to = event.target.value
   if (manipulationsElement.value === 'edit-segment')
     getRelatedSegmentDb('from', JSON.parse(to).id).then(data => {
+      console.log(to)
+      // console.log(data.from)
       fromElement.value = JSON.stringify(data.from)
     })
   else if (manipulationsElement.value === 'add-segment') {
@@ -69,11 +73,7 @@ getsegment.addEventListener('click', () => {
   clearMap(true)
 
   addDrawControlToMap('both')
-  getSegmentHavingFromToDb(
-    JSON.parse(lineElement.value).name,
-    JSON.parse(fromElement.value).id,
-    JSON.parse(toElement.value).id
-  ).then(data => {
+  getSegmentHavingFromToDb(JSON.parse(lineElement.value).name, JSON.parse(fromElement.value).id, JSON.parse(toElement.value).id).then(data => {
     if (typeof data.from !== 'undefined') {
       addSegmentToMap(data, 'blue', 'segment')
       segmentLayer.options = {
@@ -119,14 +119,12 @@ getsegment.addEventListener('click', () => {
             patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
               .then(response => {
                 // console.log('Pushed first segment')
-                if (response.status === 409)
-                  displayNotification('Patch segment of a line', 'Segment already exists')
+                if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
               })
               .then(() => {
                 patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(response => {
                   // console.log('Pushed second segment')
-                  if (response.status === 409)
-                    displayNotification('Patch segment of a line', 'Segment already exists')
+                  if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
                   else getStationsByLine(JSON.parse(choosenLine).name)
                 })
               })

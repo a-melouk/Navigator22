@@ -110,7 +110,7 @@ async function updateOrder(lineID, order, value) {
       multi: true,
       arrayFilters: [{ 'elem.order': { $gt: order } }]
     }
-  ).then(data => console.log(data))
+  )
 }
 
 function distance(latitude1, longitude1, latitude2, longitude2) {
@@ -228,19 +228,31 @@ app.get('/lines', (request, response) => {
     .catch(err => response.json(err))
 })
 
-app.get('/lines/order', (request, response) => {
-  let name = request.query.name
+app.get('/lines/:line/stations', (request, response) => {
+  let name = request.params.line
   Line.aggregate([{ $match: { name: name } }, { $unwind: '$route' }, { $sort: { 'route.order': 1 } }, { $group: { _id: '$_id', route: { $push: '$route' } } }])
     .then(data => {
-      let result = []
+      let line = []
+      let fromStations = []
+      let toStations = []
       data[0].route.forEach(item => {
+        let from = { coordinates: item.from.coordinates, name: item.from.name, id: item.from.id }
+        let to = { coordinates: item.to.coordinates, name: item.to.name, id: item.to.id }
+        let order = item.order
+        fromStations.push(from)
+        toStations.push(to)
         let segment = {
-          from: item.from,
-          to: item.to,
-          order: item.order
+          from: from,
+          to: to,
+          order: order
         }
-        result.push(segment)
+        line.push(segment)
       })
+      let result = {
+        from: fromStations,
+        to: toStations,
+        line: line
+      }
 
       response.json(result)
     })
@@ -248,25 +260,25 @@ app.get('/lines/order', (request, response) => {
 })
 
 //Get stations of a line
-app.get('/lines/:line/stations', (request, response) => {
-  let line = request.params.line
-  Line.find({ name: line }, { route: 1, _id: 0 })
-    .then(data => {
-      raw = data[0].route
-      let fromStations = [],
-        toStations = []
-      raw.forEach(item => {
-        fromStations.push(item.from)
-        toStations.push(item.to)
-      })
-      let result = {
-        from: fromStations,
-        to: toStations
-      }
-      response.json(result)
-    })
-    .catch(err => response.json(err))
-})
+// app.get('/lines/:line/stations', (request, response) => {
+//   let line = request.params.line
+//   Line.find({ name: line }, { route: 1, _id: 0 })
+//     .then(data => {
+//       raw = data[0].route
+//       let fromStations = [],
+//         toStations = []
+//       raw.forEach(item => {
+//         fromStations.push(item.from)
+//         toStations.push(item.to)
+//       })
+//       let result = {
+//         from: fromStations,
+//         to: toStations
+//       }
+//       response.json(result)
+//     })
+//     .catch(err => response.json(err))
+// })
 
 app.get('/lines/all', (request, response) => {
   Line.find({}, { _id: 1, name: 1 })
@@ -392,13 +404,12 @@ app.patch('/line', (request, response) => {
   body.path = removeClosePointsBack(body.path)
 
   segmentFromToExists(lineID, fromID, toID).then(data => {
-    if (typeof data !== 'undefined') {
-      console.log('Segment exists already')
+    if (typeof data !== 'undefined')
       response.status(409).json({
         status: 409,
         message: 'Segment exists already'
       })
-    } else {
+    else {
       const attributeOrder = new Promise((resolve, reject) => {
         if (typeof body.order === 'undefined')
           findLengthOfLine(lineID).then(data => {
@@ -459,10 +470,8 @@ app.delete('/stations/:id', (request, response) => {
   })
 })
 
-//TODO: Decrement the order of the segments with higher order ($gt)
 //Delete a segment
 app.delete('/segment/:lineID/:segmentID', (request, response) => {
-  console.log()
   let lineID = request.params.lineID
   let segmentID = request.params.segmentID
   orderOfSegment(lineID, segmentID).then(exists => {
@@ -512,8 +521,6 @@ app.delete('/lines/:lineID/station/:stationID', (request, response) => {
     }
   ]).then(data => {
     if (data.length === 1) {
-      //Remove the only segment related to the station (i.e: Terminus stations)
-      // order
       updateOrder(lineID, data[0].route.order, -1).then(() =>
         Line.updateOne({ _id: data[0]._id }, { $pull: { route: { _id: data[0].route._id } } })
           .then(() =>
@@ -562,66 +569,3 @@ app.delete('/lines/:lineID/station/:stationID', (request, response) => {
       })
   })
 })
-
-orderOfSegment('6205c62aacb463efa2ddbb8c', '620528fe6c1362fb33a8ecb7').then(data => console.log(data))
-
-// Line.aggregate([
-//   {
-//     $match: {
-//       _id: ObjectId('6205c1f2acb463efa2ddbb8a'),
-//       $or: [{ 'route.from.id': '620448275c3062240b924b95' }, { 'route.to.id': '620448275c3062240b924b95' }]
-//     }
-//   },
-//   { $unwind: '$route' },
-//   {
-//     $match: {
-//       $or: [{ 'route.from.id': '620448275c3062240b924b95' }, { 'route.to.id': '620448275c3062240b924b95' }]
-//     }
-//   }
-// ]).then(data => {
-//   console.log(data)
-// })
-
-// Line.find(
-//   { _id: '61eb346037662c08a15b852f', 'route.order': 2 },
-//   { route: { $elemMatch: { order: 2 } } }
-// ).then(data => console.log(data))
-
-// async function getHigherOrderSegments(lineID, order) {
-//   // Line.aggregate([
-//   //   { $match: { _id: lineID } },
-//   //   { $unwind: '$route' },
-//   //   { $match: { 'route.order': { $gt: order } } },
-//   //   { $group: { _id: '$_id', route: { $push: '$route' } } }
-//   // ])
-
-//   let pipeline = [
-//     {
-//       $match: {
-//         _id: ObjectId(lineID)
-//       }
-//     },
-//     {
-//       $unwind: '$route'
-//     },
-//     {
-//       $match: {
-//         'route.order': {
-//           $gt: order
-//         }
-//       }
-//     },
-//     {
-//       $group: {
-//         _id: '$id',
-//         route: {
-//           $push: '$route'
-//         }
-//       }
-//     }
-//   ]
-//   const response = await Line.aggregate(pipeline)
-//   response[0].route.forEach(item => console.log(item))
-//   return response
-// }
-// let a = getHigherOrderSegments('62044e699f5e3c1f32cdf755', 2)

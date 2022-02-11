@@ -32,7 +32,7 @@ function addLineToMap(number) {
     linelayer.addTo(map)
     map.fitBounds(linelayer.getBounds())
   })
-  console.log('http://localhost:4000/lines/order?name=' + encodeURIComponent(number.trim()) + '\n')
+  console.log('http://localhost:4000/lines/' + encodeURIComponent(number.trim()) + '/stations')
 }
 
 let originalSegment = {}
@@ -125,7 +125,7 @@ map.on('draw:edited', function () {
       path.splice(path.length - 2, 1)
       modifiedPath = true
     }
-    console.log(originalSegment)
+    console.log(modifiedFrom, modifiedTo, modifiedPath)
 
     let temp = {
       from: from,
@@ -151,43 +151,55 @@ map.on('draw:edited', function () {
           }
         })
         .then(() => {
-          if (modifiedFrom)
-            getRelatedSegmentDb('from', from.id).then(data => {
-              if (typeof data !== 'undefined') {
-                let tempPath = data.path
-                tempPath.pop()
-                tempPath.push(from.coordinates)
-                removeClosePointsFront(tempPath)
-                let temp = {
-                  from: data.from,
-                  to: from,
-                  path: tempPath,
-                  order: originalSegment.order - 1
+          const promiseFrom = new Promise((resolve, reject) => {
+            if (modifiedFrom) {
+              getRelatedSegmentDb('from', from.id).then(data => {
+                if (typeof data !== 'undefined') {
+                  let tempPath = data.path
+                  tempPath.pop()
+                  tempPath.push(from.coordinates)
+                  removeClosePointsFront(tempPath)
+                  let temp = {
+                    from: data.from,
+                    to: from,
+                    path: tempPath,
+                    order: originalSegment.order - 1
+                  }
+                  patchSegmentDb(data._id, temp).then(() => {
+                    resolve('from')
+                    console.log('Segment that ends with ' + from.name + ' patched')
+                  })
                 }
-                patchSegmentDb(data._id, temp).then(() => console.log('Segment that ends with ' + from.name + ' patched'))
-              }
-            })
+              })
+            } else resolve('from')
+          })
 
-          if (modifiedTo)
-            getRelatedSegmentDb('to', to.id).then(data => {
-              if (typeof data !== 'undefined') {
-                let tempPath = data.path
-                tempPath.shift()
-                tempPath.unshift(to.coordinates)
-                removeClosePointsFront(tempPath)
-                let temp = {
-                  from: to,
-                  to: data.to,
-                  path: tempPath,
-                  order: originalSegment + 1
+          const promiseTo = new Promise((resolve, reject) => {
+            if (modifiedTo) {
+              getRelatedSegmentDb('to', to.id).then(data => {
+                if (typeof data !== 'undefined') {
+                  let tempPath = data.path
+                  tempPath.shift()
+                  tempPath.unshift(to.coordinates)
+                  removeClosePointsFront(tempPath)
+                  let temp = {
+                    from: to,
+                    to: data.to,
+                    path: tempPath,
+                    order: originalSegment.order + 1
+                  }
+                  patchSegmentDb(data._id, temp).then(() => {
+                    resolve('to')
+                    console.log('Segment that starts with ' + to.name + ' patched')
+                  })
                 }
-                patchSegmentDb(data._id, temp).then(() => console.log('Segment that starts with ' + to.name + ' patched'))
-              }
-            })
-        })
-        .then(() => {
-          getStationsByLine(JSON.parse(choosenLine).name)
-          clearMap(true)
+              })
+            } else resolve('to')
+          })
+          Promise.all([promiseFrom, promiseTo]).then(() => {
+            getStationsByLine(JSON.parse(choosenLine).name)
+            clearMap(true)
+          })
         })
     }
   }
