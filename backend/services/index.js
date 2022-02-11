@@ -7,6 +7,7 @@ const cors = require('cors')
 const Models = require('./Models/line')
 const { ObjectId } = require('mongodb')
 const Line = Models.Line
+const Test = Models.Test
 const Station = Models.Station
 
 //express app
@@ -39,7 +40,7 @@ async function stationExists(id) {
   else return false
 }
 
-async function segmentExists(lineID, fromID, toID) {
+async function segmentFromToExists(lineID, fromID, toID) {
   const request = await Line.find(
     {
       _id: lineID,
@@ -56,7 +57,8 @@ async function segmentExists(lineID, fromID, toID) {
       _id: 0
     }
   )
-  if (request[0]?.route[0]?._id)
+  // console.log(request)
+  if (request.length > 0)
     return {
       segmentID: request[0].route[0]._id,
       order: request[0]?.route[0]?.order
@@ -64,23 +66,23 @@ async function segmentExists(lineID, fromID, toID) {
   return undefined
 }
 
-async function segmentIdExists(lineID, segmentID) {
-  const request = await Line.find(
-    {
-      _id: lineID,
-      'route._id': segmentID
-    },
-    {
-      route: {
-        $elemMatch: {
-          _id: segmentID
-        }
-      }
-    }
-  )
-  if (request.length > 0) return true
-  else return false
-}
+// async function segmentIdExists(lineID, segmentID) {
+//   const request = await Line.find(
+//     {
+//       _id: lineID,
+//       'route._id': segmentID
+//     },
+//     {
+//       route: {
+//         $elemMatch: {
+//           _id: segmentID
+//         }
+//       }
+//     }
+//   )
+//   if (request.length > 0) return true
+//   else return false
+// }
 
 async function findLengthOfLine(lineID) {
   const response = await Line.find({ _id: lineID })
@@ -88,13 +90,27 @@ async function findLengthOfLine(lineID) {
   return data
 }
 
-async function findOrderOfSegment(segmentID) {
-  const response = await Line.find(
-    { 'route._id': segmentID },
-    { route: { $elemMatch: { _id: segmentID } } }
-  )
-  const data = response[0].route[0].order
-  return data
+async function segmentWithSameOrder(lineID, order) {
+  const response = await Line.find({ _id: lineID, 'route.order': order })
+  if (response.length > 0) return true
+  return false
+}
+
+async function orderOfSegment(lineID, segmentID) {
+  const response = await Line.find({ _id: ObjectId(lineID), 'route._id': ObjectId(segmentID) }, { route: { $elemMatch: { _id: ObjectId(segmentID) } } })
+  if (response.length > 0) return response[0].route[0].order
+  return false
+}
+
+async function updateOrder(lineID, order, value) {
+  Line.updateOne(
+    { _id: ObjectId(lineID) },
+    { $inc: { 'route.$[elem].order': value } },
+    {
+      multi: true,
+      arrayFilters: [{ 'elem.order': { $gt: order } }]
+    }
+  ).then(data => console.log(data))
 }
 
 function distance(latitude1, longitude1, latitude2, longitude2) {
@@ -111,22 +127,9 @@ function distance(latitude1, longitude1, latitude2, longitude2) {
 
 function removeClosePointsBack(path) {
   let initLength = path.length
-  for (let i = 0; i < path.length - 2; i++)
-    if (
-      distance(path[i].latitude, path[i].longitude, path[i + 1].latitude, path[i + 1].longitude) <
-      4.5
-    )
-      path.splice(i + 1, 1)
+  for (let i = 0; i < path.length - 2; i++) if (distance(path[i].latitude, path[i].longitude, path[i + 1].latitude, path[i + 1].longitude) < 4.5) path.splice(i + 1, 1)
 
-  if (
-    distance(
-      path[path.length - 2].latitude,
-      path[path.length - 2].longitude,
-      path[path.length - 1].latitude,
-      path[path.length - 1].longitude
-    ) < 4.5
-  )
-    path.splice(path.length - 2, 1)
+  if (distance(path[path.length - 2].latitude, path[path.length - 2].longitude, path[path.length - 1].latitude, path[path.length - 1].longitude) < 4.5) path.splice(path.length - 2, 1)
 
   if (initLength > path.length) console.log('Removed close points')
   return path
@@ -206,12 +209,7 @@ app.get('/stations', (request, response) => {
 //Get a line by name
 app.get('/lines', (request, response) => {
   let name = request.query.name
-  Line.aggregate([
-    { $match: { name: name } },
-    { $unwind: '$route' },
-    { $sort: { 'route.order': 1 } },
-    { $group: { _id: '$_id', route: { $push: '$route' } } }
-  ])
+  Line.aggregate([{ $match: { name: name } }, { $unwind: '$route' }, { $sort: { 'route.order': 1 } }, { $group: { _id: '$_id', route: { $push: '$route' } } }])
     .then(data => {
       let stations = []
       let route = []
@@ -226,7 +224,25 @@ app.get('/lines', (request, response) => {
         stations: stations,
         route: route
       })
-      // response.json(data)
+    })
+    .catch(err => response.json(err))
+})
+
+app.get('/lines/order', (request, response) => {
+  let name = request.query.name
+  Line.aggregate([{ $match: { name: name } }, { $unwind: '$route' }, { $sort: { 'route.order': 1 } }, { $group: { _id: '$_id', route: { $push: '$route' } } }])
+    .then(data => {
+      let result = []
+      data[0].route.forEach(item => {
+        let segment = {
+          from: item.from,
+          to: item.to,
+          order: item.order
+        }
+        result.push(segment)
+      })
+
+      response.json(result)
     })
     .catch(err => response.json(err))
 })
@@ -375,13 +391,14 @@ app.patch('/line', (request, response) => {
   let toID = body.to.id
   body.path = removeClosePointsBack(body.path)
 
-  segmentExists(lineID, fromID, toID).then(data => {
-    if (typeof data !== 'undefined')
+  segmentFromToExists(lineID, fromID, toID).then(data => {
+    if (typeof data !== 'undefined') {
+      console.log('Segment exists already')
       response.status(409).json({
         status: 409,
         message: 'Segment exists already'
       })
-    else {
+    } else {
       const attributeOrder = new Promise((resolve, reject) => {
         if (typeof body.order === 'undefined')
           findLengthOfLine(lineID).then(data => {
@@ -391,18 +408,30 @@ app.patch('/line', (request, response) => {
         else resolve('foo')
       })
       attributeOrder.then(() => {
-        if (typeof body.order !== 'undefined') {
-          console.log(body)
-          Line.updateOne({ _id: lineID }, { $push: { route: body } })
-            .then(data => {
-              if (data.modifiedCount === 1)
-                response.json({
-                  status: 200,
-                  message: 'Segment pushed successfully'
+        segmentWithSameOrder(lineID, body.order).then(data => {
+          if (data)
+            updateOrder(lineID, body.order - 1, 1).then(() => {
+              Line.updateOne({ _id: lineID }, { $push: { route: body } })
+                .then(data => {
+                  if (data.modifiedCount === 1)
+                    response.json({
+                      status: 200,
+                      message: 'Segment pushed successfully 1'
+                    })
                 })
+                .catch(err => response.json(err))
             })
-            .catch(err => response.json(err))
-        }
+          else
+            Line.updateOne({ _id: lineID }, { $push: { route: body } })
+              .then(data => {
+                if (data.modifiedCount === 1)
+                  response.json({
+                    status: 200,
+                    message: 'Segment pushed successfully 2'
+                  })
+              })
+              .catch(err => response.json(err))
+        })
       })
     }
   })
@@ -433,16 +462,13 @@ app.delete('/stations/:id', (request, response) => {
 //TODO: Decrement the order of the segments with higher order ($gt)
 //Delete a segment
 app.delete('/segment/:lineID/:segmentID', (request, response) => {
+  console.log()
   let lineID = request.params.lineID
   let segmentID = request.params.segmentID
-  segmentIdExists(lineID, segmentID).then(exists => {
+  orderOfSegment(lineID, segmentID).then(exists => {
     if (exists) {
-      Line.updateOne(
-        {
-          _id: lineID
-        },
-        { $pull: { route: { _id: segmentID } } }
-      )
+      updateOrder(lineID, exists, -1)
+        .then(() => Line.updateOne({ _id: lineID }, { $pull: { route: { _id: segmentID } } }))
         .then(data => {
           if (data.modifiedCount === 1)
             response.json({
@@ -468,31 +494,36 @@ app.delete('/segment/:lineID/:segmentID', (request, response) => {
 })
 
 //Delete station of a segment
-app.delete('/lines/station/:id', (request, response) => {
-  let id = request.params.id
+app.delete('/lines/:lineID/station/:stationID', (request, response) => {
+  let lineID = request.params.lineID
+  let stationID = request.params.stationID
   Line.aggregate([
     {
       $match: {
-        $or: [{ 'route.from.id': id }, { 'route.to.id': id }]
+        _id: ObjectId(lineID),
+        $or: [{ 'route.from.id': stationID }, { 'route.to.id': stationID }]
       }
     },
     { $unwind: '$route' },
     {
       $match: {
-        $or: [{ 'route.from.id': id }, { 'route.to.id': id }]
+        $or: [{ 'route.from.id': stationID }, { 'route.to.id': stationID }]
       }
     }
   ]).then(data => {
     if (data.length === 1) {
       //Remove the only segment related to the station (i.e: Terminus stations)
-      Line.updateOne({ _id: data[0]._id }, { $pull: { route: { _id: data[0].route._id } } })
-        .then(() =>
-          response.json({
-            status: 200,
-            message: 'The segment that had the station was deleted successfully'
-          })
-        )
-        .catch(err => response.json(err))
+      // order
+      updateOrder(lineID, data[0].route.order, -1).then(() =>
+        Line.updateOne({ _id: data[0]._id }, { $pull: { route: { _id: data[0].route._id } } })
+          .then(() =>
+            response.json({
+              status: 200,
+              message: 'The segment that had the station was deleted successfully'
+            })
+          )
+          .catch(err => response.json(err))
+      )
     } else if (data.length === 2) {
       let newPath = []
       let firstPath = [...data[0].route.path]
@@ -507,9 +538,8 @@ app.delete('/lines/station/:id', (request, response) => {
         path: newPath,
         order: data[0].route.order
       }
-      //Remove the second segment and update the first so that: newSegment = oldFirstSegment+oldSecondSegment
-      Line.updateOne({ _id: data[1]._id }, { $pull: { route: { _id: data[1].route._id } } }).then(
-        () => {
+      updateOrder(lineID, newSegment.order, -1).then(() =>
+        Line.updateOne({ _id: data[1]._id }, { $pull: { route: { _id: data[1].route._id } } }).then(() => {
           Line.updateOne({ 'route._id': data[0].route._id }, { $set: { 'route.$': newSegment } })
             .then(() =>
               response.json({
@@ -518,7 +548,7 @@ app.delete('/lines/station/:id', (request, response) => {
               })
             )
             .catch(err => response.json(err))
-        }
+        })
       )
     } else if (data.length === 0)
       response.status(404).json({
@@ -528,10 +558,29 @@ app.delete('/lines/station/:id', (request, response) => {
     else
       response.status(405).json({
         status: 405,
-        message: 'This stationis part of more than 2 segments'
+        message: 'This station is part of more than 2 segments'
       })
   })
 })
+
+orderOfSegment('6205c62aacb463efa2ddbb8c', '620528fe6c1362fb33a8ecb7').then(data => console.log(data))
+
+// Line.aggregate([
+//   {
+//     $match: {
+//       _id: ObjectId('6205c1f2acb463efa2ddbb8a'),
+//       $or: [{ 'route.from.id': '620448275c3062240b924b95' }, { 'route.to.id': '620448275c3062240b924b95' }]
+//     }
+//   },
+//   { $unwind: '$route' },
+//   {
+//     $match: {
+//       $or: [{ 'route.from.id': '620448275c3062240b924b95' }, { 'route.to.id': '620448275c3062240b924b95' }]
+//     }
+//   }
+// ]).then(data => {
+//   console.log(data)
+// })
 
 // Line.find(
 //   { _id: '61eb346037662c08a15b852f', 'route.order': 2 },

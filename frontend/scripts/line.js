@@ -32,6 +32,7 @@ function addLineToMap(number) {
     linelayer.addTo(map)
     map.fitBounds(linelayer.getBounds())
   })
+  console.log('http://localhost:4000/lines/order?name=' + encodeURIComponent(number.trim()) + '\n')
 }
 
 let originalSegment = {}
@@ -115,33 +116,25 @@ map.on('draw:edited', function () {
     }
 
     for (let i = 0; i < path.length - 2; i++)
-      if (
-        map.distance(
-          [path[i].latitude, path[i].longitude],
-          [path[i + 1].latitude, path[i + 1].longitude]
-        ) < 4.5
-      ) {
+      if (map.distance([path[i].latitude, path[i].longitude], [path[i + 1].latitude, path[i + 1].longitude]) < 4.5) {
         path.splice(i + 1, 1)
         modifiedPath = true
       }
 
-    if (
-      map.distance(
-        [path[path.length - 2].latitude, path[path.length - 2].longitude],
-        [path[path.length - 1].latitude, path[path.length - 1].longitude]
-      ) < 4.5
-    ) {
+    if (map.distance([path[path.length - 2].latitude, path[path.length - 2].longitude], [path[path.length - 1].latitude, path[path.length - 1].longitude]) < 4.5) {
       path.splice(path.length - 2, 1)
       modifiedPath = true
     }
+    console.log(originalSegment)
 
     let temp = {
       from: from,
       to: to,
       path: path,
-      line: originalSegment.line
+      line: originalSegment.line,
+      order: originalSegment.order
     }
-
+    //TODO: Update related segments correctly
     if (modifiedPath) {
       patchSegmentDb(segmentLayer.options.id, temp)
         .then(() => {
@@ -168,11 +161,10 @@ map.on('draw:edited', function () {
                 let temp = {
                   from: data.from,
                   to: from,
-                  path: tempPath
+                  path: tempPath,
+                  order: originalSegment.order - 1
                 }
-                patchSegmentDb(data._id, temp).then(() =>
-                  console.log('Segment that ends with ' + from.name + ' patched')
-                )
+                patchSegmentDb(data._id, temp).then(() => console.log('Segment that ends with ' + from.name + ' patched'))
               }
             })
 
@@ -186,11 +178,10 @@ map.on('draw:edited', function () {
                 let temp = {
                   from: to,
                   to: data.to,
-                  path: tempPath
+                  path: tempPath,
+                  order: originalSegment + 1
                 }
-                patchSegmentDb(data._id, temp).then(() =>
-                  console.log('Segment that starts with ' + to.name + ' patched')
-                )
+                patchSegmentDb(data._id, temp).then(() => console.log('Segment that starts with ' + to.name + ' patched'))
               }
             })
         })
@@ -213,8 +204,7 @@ function addSegmentToLine() {
       let layer = e.layer
       if (layer instanceof L.Marker)
         newStation(layer, JSON.parse(lineElement.value).name).then(response => {
-          if (response.status === 409)
-            displayNotification('Adding new station', 'Station already exists')
+          if (response.status === 409) displayNotification('Adding new station', 'Station already exists')
           else {
             clearMap(false)
             populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
@@ -222,8 +212,7 @@ function addSegmentToLine() {
         })
       else if (layer instanceof L.Polyline)
         newSegment(layer, 'Patch line segment').then(response => {
-          if (response.status === 409)
-            displayNotification('Patch segment of a line', 'Segment already exists')
+          if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
           else {
             fromElement.options.length = 1
             toElement.options.length = 1

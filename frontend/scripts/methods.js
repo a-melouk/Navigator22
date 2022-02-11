@@ -11,7 +11,7 @@ function deleteStationFromSegment(id) {
 }
 
 async function deletePart(stationID) {
-  await deleteStationByIdDb(stationID)
+  // await deleteStationByIdDb(stationID)
   await deleteStationFromSegment(stationID)
   clearMap(true)
   getStationsByLine(JSON.parse(lineElement.value).name)
@@ -80,8 +80,7 @@ function newSegment(layer, choice) {
   addStationToMap(segment.to, 'draw', nameOfTheLine)
   addPolylineToMap(segment.path, 'blue', 'draw')
 
-  if (choice === 'Patch line segment')
-    return patchLineDb(JSON.parse(document.getElementById('line').value)._id, segment)
+  if (choice === 'Patch line segment') return patchLineDb(JSON.parse(document.getElementById('line').value)._id, segment)
   else if (choice === 'New line segment') routeLine.push(segment)
 }
 

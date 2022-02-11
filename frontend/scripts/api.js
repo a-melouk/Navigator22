@@ -114,7 +114,7 @@ async function deleteSegmentIdDb(lineID, segmentID) {
 
 async function deleteSegmentByStationIdDb(id) {
   try {
-    const response = await fetch(baseURI + 'lines/station/' + id, {
+    const response = await fetch(baseURI + 'lines/' + JSON.parse(lineElement.value)._id + '/station/' + id, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',

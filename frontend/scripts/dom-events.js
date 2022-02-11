@@ -118,11 +118,13 @@ getsegment.addEventListener('click', () => {
           deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
             patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
               .then(response => {
+                // console.log('Pushed first segment')
                 if (response.status === 409)
                   displayNotification('Patch segment of a line', 'Segment already exists')
               })
               .then(() => {
                 patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(response => {
+                  // console.log('Pushed second segment')
                   if (response.status === 409)
                     displayNotification('Patch segment of a line', 'Segment already exists')
                   else getStationsByLine(JSON.parse(choosenLine).name)
