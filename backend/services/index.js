@@ -66,24 +66,6 @@ async function segmentFromToExists(lineID, fromID, toID) {
   return undefined
 }
 
-// async function segmentIdExists(lineID, segmentID) {
-//   const request = await Line.find(
-//     {
-//       _id: lineID,
-//       'route._id': segmentID
-//     },
-//     {
-//       route: {
-//         $elemMatch: {
-//           _id: segmentID
-//         }
-//       }
-//     }
-//   )
-//   if (request.length > 0) return true
-//   else return false
-// }
-
 async function findLengthOfLine(lineID) {
   const response = await Line.find({ _id: lineID })
   const data = response[0].route.length
@@ -103,7 +85,7 @@ async function orderOfSegment(lineID, segmentID) {
 }
 
 async function updateOrder(lineID, order, value) {
-  Line.updateOne(
+  const request = await Line.updateOne(
     { _id: ObjectId(lineID) },
     { $inc: { 'route.$[elem].order': value } },
     {
@@ -111,6 +93,7 @@ async function updateOrder(lineID, order, value) {
       arrayFilters: [{ 'elem.order': { $gt: order } }]
     }
   )
+  return request
 }
 
 function distance(latitude1, longitude1, latitude2, longitude2) {
@@ -258,27 +241,6 @@ app.get('/lines/:line/stations', (request, response) => {
     })
     .catch(err => response.json(err))
 })
-
-//Get stations of a line
-// app.get('/lines/:line/stations', (request, response) => {
-//   let line = request.params.line
-//   Line.find({ name: line }, { route: 1, _id: 0 })
-//     .then(data => {
-//       raw = data[0].route
-//       let fromStations = [],
-//         toStations = []
-//       raw.forEach(item => {
-//         fromStations.push(item.from)
-//         toStations.push(item.to)
-//       })
-//       let result = {
-//         from: fromStations,
-//         to: toStations
-//       }
-//       response.json(result)
-//     })
-//     .catch(err => response.json(err))
-// })
 
 app.get('/lines/all', (request, response) => {
   Line.find({}, { _id: 1, name: 1 })

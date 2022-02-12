@@ -192,12 +192,7 @@ body {
     transform-origin: right;
     transform-origin: right;
     margin-right: 2px;
-    background-image: linear-gradient(
-      to top,
-      rgba(213, 102, 102, 1) 0%,
-      rgba(245, 170, 170, 1) 53%,
-      rgba(230, 168, 168, 1) 99%
-    );
+    background-image: linear-gradient(to top, rgba(213, 102, 102, 1) 0%, rgba(245, 170, 170, 1) 53%, rgba(230, 168, 168, 1) 99%);
     background-size: auto;
     background-position: 0% 0%;
     background-repeat: repeat;

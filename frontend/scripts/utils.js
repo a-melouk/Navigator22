@@ -26,33 +26,16 @@ function populateList(data, id) {
 
 function removeClosePointsFront(path) {
   let initLength = path.length
-  for (let i = 0; i < path.length - 2; i++)
-    if (
-      map.distance(
-        [path[i].latitude, path[i].longitude],
-        [path[i + 1].latitude, path[i + 1].longitude]
-      ) < 4.5
-    )
-      path.splice(i + 1, 1)
+  for (let i = 0; i < path.length - 2; i++) if (map.distance([path[i].latitude, path[i].longitude], [path[i + 1].latitude, path[i + 1].longitude]) < 4.5) path.splice(i + 1, 1)
 
-  if (
-    map.distance(
-      [path[path.length - 2].latitude, path[path.length - 2].longitude],
-      [path[path.length - 1].latitude, path[path.length - 1].longitude]
-    ) < 4.5
-  )
-    path.splice(path.length - 2, 1)
+  if (map.distance([path[path.length - 2].latitude, path[path.length - 2].longitude], [path[path.length - 1].latitude, path[path.length - 1].longitude]) < 4.5) path.splice(path.length - 2, 1)
 
   if (initLength > path.length) console.log('Removed close points')
   return path
 }
 
 function trueIfDifferent(a, b) {
-  if (
-    Math.fround(a.latitude) === Math.fround(b.latitude) &&
-    Math.fround(a.longitude) === Math.fround(b.longitude)
-  )
-    return false
+  if (Math.fround(a.latitude) === Math.fround(b.latitude) && Math.fround(a.longitude) === Math.fround(b.longitude)) return false
   return true
 }
 
@@ -67,10 +50,7 @@ function middlePolyline(point, path) {
   }
 
   for (let i = 0; i < path.length; i++) {
-    let tempDistance = map.distance(
-      [temp.latitude, temp.longitude],
-      [path[i].latitude, path[i].longitude]
-    )
+    let tempDistance = map.distance([temp.latitude, temp.longitude], [path[i].latitude, path[i].longitude])
     if (tempDistance < distance) {
       distance = tempDistance
       index = i
