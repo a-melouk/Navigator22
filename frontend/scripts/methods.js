@@ -89,6 +89,14 @@ function newLine() {
   addline.disabled = false
   getsegment.disabled = true
   nameOfTheLine = prompt('Name of the line', 'metro')
+  // const newline = document.getElementsByClassName('new-line')[0]
+  // let confirm = document.getElementById('new-line')
+  // document.getElementById('confirm-line').addEventListener('click', () => {
+  //   nameOfTheLine = confirm.value
+  //   newline.style.opacity = '0'
+  // })
+  // newline.style.opacity = '1'
+  // newline.style.zIndex = 5000
   clearMap(true)
   addDrawControlToMap('only-draw')
   map.on('draw:created', function (e) {

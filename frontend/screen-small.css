@@ -219,3 +219,189 @@
     font-size: 0.8rem;
   }
 }
+
+.prompt-new-station {
+  width: 400px;
+  height: 260px;
+  border: 2px solid black;
+  border-radius: 8px;
+  background-color: #000000;
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  transform: translate(-20%, -10%);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  /* z-index: 1000; */
+}
+
+.prompt-title {
+  min-height: 15%;
+  text-align: center;
+  color: white;
+  font-family: Oswald;
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid black;
+}
+
+.prompt-title #station-title {
+  flex-grow: 2;
+  font-family: Oswald;
+}
+
+img {
+  width: 20px;
+  height: 20px;
+  margin-right: 7px;
+}
+
+.prompt-content {
+  height: 68%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.prompt-buttons {
+  min-height: 17%;
+  border-top: 2px solid black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.prompt-buttons button {
+  width: 100px;
+  height: 40px;
+  line-height: 30px;
+  border-radius: 20px;
+  border: 3px solid rgb(255, 255, 255);
+  font-size: 22px;
+  font-family: Oswald;
+  color: black;
+}
+
+.input label {
+  display: inline-block;
+  min-width: 100px;
+  font-size: 22px;
+  height: 30px;
+  line-height: 36px;
+  font-family: Oswald;
+  text-decoration: underline double #140a53 1px;
+  color: black;
+  text-align: justify;
+}
+
+.input input {
+  display: inline-block;
+  min-width: 270px;
+  border: 2px solid black;
+  height: 30px;
+  font-size: 18px;
+  font-family: Oswald;
+  color: black;
+}
+
+.input {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.new-line {
+  width: 350px;
+  height: 180px;
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: rgb(0, 0, 0);
+  position: absolute;
+  top: 25%;
+  left: 40%;
+  transform: translate(-25%, -40%);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  /* z-index: 5000; */
+}
+.new-line .title {
+  text-align: center;
+  color: white;
+  font-family: Oswald;
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid black;
+  height: 25%;
+}
+
+.new-line .title #line-title {
+  flex-grow: 2;
+  font-family: Oswald;
+}
+
+.new-line .line-name {
+  height: 50%;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid black;
+  background-color: white;
+}
+
+.new-line .line-name label {
+  color: black;
+  font-family: Oswald;
+  font-size: 22px;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.new-line .line-name input {
+  color: black;
+  font-family: Oswald;
+  font-size: 18px;
+  min-width: 270px;
+  display: inline-block;
+  border: 2px solid black;
+}
+
+.new-line .buttons {
+  height: 25%;
+  color: #000000;
+  border: 0;
+}
+
+.new-line .buttons button {
+  width: 118px;
+  height: 40px;
+  border-radius: 20px;
+  border: 3px solid black;
+  font-size: 22px;
+  font-family: Oswald;
+  color: black;
+}
+
+.prompt-add {
+  background-color: #1df266;
+}
+
+.prompt-add:hover {
+  background-color: white;
+}
+
+.prompt-cancel {
+  background-color: #dc2e2e;
+}
+.prompt-cancel:hover {
+  background-color: white;
+}
