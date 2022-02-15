@@ -4,6 +4,9 @@ let toElement = document.getElementById('to')
 let manipulationsElement = document.getElementById('manipulations')
 let getsegment = document.getElementById('getsegment')
 let addline = document.getElementById('addline')
+let newLineName = document.getElementById('new-line')
+const newLinePrompt = document.getElementsByClassName('new-line')[0]
+const newStationPrompt = document.getElementsByClassName('prompt-new-station')[0]
 addline.disabled = true
 getsegment.disabled = true
 let routeLine = []
@@ -34,12 +37,7 @@ lineElement.addEventListener('change', () => {
 
 fromElement.addEventListener('change', event => {
   let from = event.target.value
-  if (manipulationsElement.value === 'edit-segment')
-    getRelatedSegmentDb('to', JSON.parse(from).id).then(data => {
-      // console.log(from)
-      console.log(JSON.stringify(data.to))
-      toElement.value = JSON.stringify(data.to)
-    })
+  if (manipulationsElement.value === 'edit-segment') getRelatedSegmentDb('to', JSON.parse(from).id).then(data => (toElement.value = JSON.stringify(data.to)))
   else if (manipulationsElement.value === 'add-segment') {
     addStationToMap(JSON.parse(from), 'markers', JSON.parse(lineElement.value).name)
     markersLayer.addTo(map)
@@ -52,12 +50,7 @@ fromElement.addEventListener('change', event => {
 //Automatically fill FROM select after picking TO station
 toElement.addEventListener('change', event => {
   let to = event.target.value
-  if (manipulationsElement.value === 'edit-segment')
-    getRelatedSegmentDb('from', JSON.parse(to).id).then(data => {
-      console.log(to)
-      // console.log(data.from)
-      fromElement.value = JSON.stringify(data.from)
-    })
+  if (manipulationsElement.value === 'edit-segment') getRelatedSegmentDb('from', JSON.parse(to).id).then(data => (fromElement.value = JSON.stringify(data.from)))
   else if (manipulationsElement.value === 'add-segment') {
     addStationToMap(JSON.parse(to), 'markers', JSON.parse(lineElement.value).name)
     markersLayer.addTo(map)
@@ -93,8 +86,13 @@ getsegment.addEventListener('click', () => {
           }
           path.push(point)
         })
+
+        newStationPrompt.style.opacity = 1
+        newStationPrompt.style.zIndex = 5000
         let middle = middlePolyline(e.layer, path)
         newStation(e.layer, JSON.parse(choosenLine).name).then(donnee => {
+          newStationPrompt.style.opacity = 0
+          newStationPrompt.style.zIndex = 0
           let from = data.from
           let to = data.to
           let middleStation = {

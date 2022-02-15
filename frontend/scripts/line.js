@@ -214,15 +214,19 @@ function addSegmentToLine() {
     populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
     map.on('draw:created', function (e) {
       let layer = e.layer
-      if (layer instanceof L.Marker)
+      if (layer instanceof L.Marker) {
+        newStationPrompt.style.opacity = 1
+        newStationPrompt.style.zIndex = 5000
         newStation(layer, JSON.parse(lineElement.value).name).then(response => {
           if (response.status === 409) displayNotification('Adding new station', 'Station already exists')
           else {
             clearMap(false)
+            newStationPrompt.style.opacity = 0
+            newStationPrompt.style.zIndex = 0
             populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
           }
         })
-      else if (layer instanceof L.Polyline)
+      } else if (layer instanceof L.Polyline)
         newSegment(layer, 'Patch line segment').then(response => {
           if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
           else {

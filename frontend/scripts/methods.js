@@ -11,23 +11,47 @@ function deleteStationFromSegment(id) {
 }
 
 async function deletePart(stationID) {
-  await deleteStationByIdDb(stationID)
-  await deleteStationFromSegment(stationID)
-  clearMap(true)
-  console.log(JSON.parse(lineElement.value).name)
-  getStationsByLine(JSON.parse(lineElement.value).name)
+  const promise = new Promise(async (resolve, reject) => {
+    if (lineElement.value !== '') {
+      await deleteStationByIdDb(stationID)
+      await deleteStationFromSegment(stationID)
+      resolve(true)
+    } else reject(false)
+  })
+  promise
+    .then(data => {
+      if (data) {
+        clearMap(true)
+        getStationsByLine(JSON.parse(lineElement.value).name)
+      }
+    })
+    .catch(() => alert('Please give name of the line'))
 }
 
 function newStation(layer, line) {
-  let station = {
-    name: toTitleCase(prompt('Name of the station', '')),
-    coordinates: {
-      latitude: layer.getLatLng().lat,
-      longitude: layer.getLatLng().lng
-    },
-    line: line
-  }
-  return postStationDb(station)
+  return new Promise((resolve, reject) => {
+    let station = {}
+    document.getElementById('name').focus()
+    document.getElementById('name').value = ''
+    document.getElementById('latitude').value = layer.getLatLng().lat
+    document.getElementById('longitude').value = layer.getLatLng().lng
+    document.getElementById('existant-line').value = line
+    document.getElementById('add-station').addEventListener(
+      'click',
+      () => {
+        station = {
+          name: toTitleCase(document.getElementById('name').value),
+          coordinates: {
+            latitude: document.getElementById('latitude').value,
+            longitude: document.getElementById('longitude').value
+          },
+          line: line
+        }
+        postStationDb(station).then(data => resolve(data))
+      },
+      { once: true }
+    )
+  })
 }
 
 function newSegment(layer, choice) {
@@ -88,24 +112,32 @@ function newSegment(layer, choice) {
 function newLine() {
   addline.disabled = false
   getsegment.disabled = true
-  nameOfTheLine = prompt('Name of the line', 'metro')
-  // const newline = document.getElementsByClassName('new-line')[0]
-  // let confirm = document.getElementById('new-line')
-  // document.getElementById('confirm-line').addEventListener('click', () => {
-  //   nameOfTheLine = confirm.value
-  //   newline.style.opacity = '0'
-  // })
-  // newline.style.opacity = '1'
-  // newline.style.zIndex = 5000
-  clearMap(true)
-  addDrawControlToMap('only-draw')
-  map.on('draw:created', function (e) {
-    let layer = e.layer
-    if (layer instanceof L.Marker) {
-      layer.addTo(map)
-      newStation(layer, nameOfTheLine).then(() => populateListsToAddNewSegment(nameOfTheLine))
-    }
-    //
-    else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')
+
+  newLinePrompt.style.opacity = '1'
+  newLinePrompt.style.zIndex = 5000
+  newLinePrompt.classList.add('fadeIn')
+  document.getElementById('confirm-line').addEventListener('click', () => {
+    nameOfTheLine = newLineName.value
+    newLinePrompt.style.opacity = '0'
+    newLineName.value = ''
+    newLinePrompt.style.zIndex = 0
+    clearMap(true)
+    addDrawControlToMap('only-draw')
+    map.on('draw:created', function (e) {
+      let layer = e.layer
+      if (layer instanceof L.Marker) {
+        layer.addTo(map)
+
+        newStationPrompt.style.opacity = 1
+        newStationPrompt.style.zIndex = 5000
+        newStation(layer, nameOfTheLine).then(() => {
+          populateListsToAddNewSegment(nameOfTheLine)
+          newStationPrompt.style.opacity = 0
+          newStationPrompt.style.zIndex = 0
+        })
+      }
+      //
+      else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')
+    })
   })
 }

@@ -40,31 +40,15 @@ async function stationExists(id) {
   else return false
 }
 
-async function segmentFromToExists(lineID, fromID, toID) {
-  const request = await Line.find(
-    {
-      _id: lineID,
-      'route.from.id': fromID,
-      'route.to.id': toID
-    },
-    {
-      route: {
-        $elemMatch: {
-          'from.id': fromID,
-          'to.id': toID
-        }
-      },
-      _id: 0
-    }
-  )
-  // console.log(request)
-  if (request.length > 0)
-    return {
-      segmentID: request[0].route[0]._id,
-      order: request[0]?.route[0]?.order
-    }
-  return undefined
+async function From_or_ToExists(lineID, fromID, toID) {
+  const request = await Line.aggregate([{ $match: { _id: ObjectId(lineID), $or: [{ 'route.from.id': fromID }, { 'route.to.id': toID }] } }, { $unwind: '$route' }, { $match: { $or: [{ 'route.from.id': fromID }, { 'route.to.id': toID }] } }, { $group: { _id: '$_id', route: { $push: '$route' } } }])
+  if (request.length > 0) return true
+  return false
 }
+
+// db.lines.aggregate([{$match:{_id:ObjectId('61eb3a340ea98782be559c2d'),$or:[{'route.from.id': '61eb2de817e57cb86cb3f917'},{'route.to.id': '61eb2de817e57cb86cb3f911'}]}},{$unwind: '$route'},{"$match": {"$or": [{"route.from.id": "61eb2de817e57cb86cb3f917"},{"route.to.id": "61eb2de817e57cb86cb3f911"}]}}, {$group:{_id:'$_id',route:{$push: '$route'}}}])
+
+From_or_ToExists('61eb346037662c08a15b852f', '620ac0676dbcee914dd28c1a', '620ac08b6dbcee914dd28c2c')
 
 async function findLengthOfLine(lineID) {
   const response = await Line.find({ _id: lineID })
@@ -93,6 +77,7 @@ async function updateOrder(lineID, order, value) {
       arrayFilters: [{ 'elem.order': { $gt: order } }]
     }
   )
+  console.log(request)
   return request
 }
 
@@ -365,8 +350,8 @@ app.patch('/line', (request, response) => {
   let toID = body.to.id
   body.path = removeClosePointsBack(body.path)
 
-  segmentFromToExists(lineID, fromID, toID).then(data => {
-    if (typeof data !== 'undefined')
+  From_or_ToExists(lineID, fromID, toID).then(exists => {
+    if (exists)
       response.status(409).json({
         status: 409,
         message: 'Segment exists already'
