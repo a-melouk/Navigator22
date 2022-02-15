@@ -90,44 +90,46 @@ getsegment.addEventListener('click', () => {
         newStationPrompt.style.opacity = 1
         newStationPrompt.style.zIndex = 5000
         let middle = middlePolyline(e.layer, path)
-        newStation(e.layer, JSON.parse(choosenLine).name).then(donnee => {
-          newStationPrompt.style.opacity = 0
-          newStationPrompt.style.zIndex = 0
-          let from = data.from
-          let to = data.to
-          let middleStation = {
-            name: donnee.name,
-            coordinates: donnee.coordinates,
-            id: donnee._id
-          }
-          let firstSegment = {
-            from: from,
-            to: middleStation,
-            path: middle.firstHalf,
-            order: data.order
-          }
+        newStation(e.layer, JSON.parse(choosenLine).name)
+          .then(donnee => {
+            newStationPrompt.style.opacity = 0
+            newStationPrompt.style.zIndex = 0
+            let from = data.from
+            let to = data.to
+            let middleStation = {
+              name: donnee.name,
+              coordinates: donnee.coordinates,
+              id: donnee._id
+            }
+            let firstSegment = {
+              from: from,
+              to: middleStation,
+              path: middle.firstHalf,
+              order: data.order
+            }
 
-          let secondSegment = {
-            from: middleStation,
-            to: to,
-            path: middle.secondHalf,
-            order: data.order + 1
-          }
-          deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
-            patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
-              .then(response => {
-                // console.log('Pushed first segment')
-                if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
-              })
-              .then(() => {
-                patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(response => {
-                  // console.log('Pushed second segment')
+            let secondSegment = {
+              from: middleStation,
+              to: to,
+              path: middle.secondHalf,
+              order: data.order + 1
+            }
+            deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
+              patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
+                .then(response => {
+                  // console.log('Pushed first segment')
                   if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
-                  else getStationsByLine(JSON.parse(choosenLine).name)
                 })
-              })
+                .then(() => {
+                  patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(response => {
+                    // console.log('Pushed second segment')
+                    if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
+                    else getStationsByLine(JSON.parse(choosenLine).name)
+                  })
+                })
+            })
           })
-        })
+          .catch(err => console.log(err))
       })
     } else {
       console.warn('Inexistant segment')

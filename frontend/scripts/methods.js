@@ -51,6 +51,20 @@ function newStation(layer, line) {
       },
       { once: true }
     )
+
+    let cancelStation = document.getElementById('cancelStation')
+    cancelStation.addEventListener(
+      'click',
+      () => {
+        if (newStationPrompt.style.opacity === '1') {
+          newStationPrompt.style.opacity = 0
+          newStationPrompt.style.zIndex = 0
+          newStationPrompt.classList.remove('tilt-in-top-1')
+          reject('Canceled')
+        }
+      },
+      { once: true }
+    )
   })
 }
 
@@ -115,8 +129,21 @@ function newLine() {
 
   newLinePrompt.style.opacity = '1'
   newLinePrompt.style.zIndex = 5000
-  newLinePrompt.classList.add('fadeIn')
-  document.getElementById('confirm-line').addEventListener('click', () => {
+  newLinePrompt.classList.add('tilt-in-top-1')
+  // newLinePrompt.classList.add('fadeIn')
+
+  function clickCancel() {
+    if (newLinePrompt.style.opacity === '1') {
+      newLinePrompt.style.opacity = 0
+      newLinePrompt.style.zIndex = 0
+      manipulationsElement.value = ''
+      newLinePrompt.classList.remove('tilt-in-top-1')
+    }
+    document.getElementById('cancel-line').removeEventListener('click', clickCancel, true)
+    document.getElementById('confirm-line').removeEventListener('click', clickConfirm, true)
+  }
+
+  function clickConfirm() {
     nameOfTheLine = newLineName.value
     newLinePrompt.style.opacity = '0'
     newLineName.value = ''
@@ -127,17 +154,24 @@ function newLine() {
       let layer = e.layer
       if (layer instanceof L.Marker) {
         layer.addTo(map)
-
         newStationPrompt.style.opacity = 1
         newStationPrompt.style.zIndex = 5000
-        newStation(layer, nameOfTheLine).then(() => {
-          populateListsToAddNewSegment(nameOfTheLine)
-          newStationPrompt.style.opacity = 0
-          newStationPrompt.style.zIndex = 0
-        })
+        newStationPrompt.classList.add('tilt-in-top-1')
+        newStation(layer, nameOfTheLine)
+          .then(() => {
+            populateListsToAddNewSegment(nameOfTheLine)
+            newStationPrompt.style.opacity = 0
+            newStationPrompt.style.zIndex = 0
+            newStationPrompt.classList.remove('tilt-in-top-1')
+          })
+          .catch(err => console.log(err))
       }
       //
       else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')
     })
-  })
+    document.getElementById('cancel-line').removeEventListener('click', clickCancel, true)
+    document.getElementById('confirm-line').removeEventListener('click', clickConfirm, true)
+  }
+  document.getElementById('cancel-line').addEventListener('click', clickCancel, true)
+  document.getElementById('confirm-line').addEventListener('click', clickConfirm, true)
 }
