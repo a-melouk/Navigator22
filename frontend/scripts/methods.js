@@ -28,6 +28,11 @@ async function deletePart(stationID) {
     .catch(() => alert('Please give name of the line'))
 }
 
+function deleteLine() {
+  if (lineElement.value !== '') return deleteLineDb()
+  else alert('Please select a line')
+}
+
 function newStation(layer, line) {
   return new Promise((resolve, reject) => {
     let station = {}
@@ -36,35 +41,36 @@ function newStation(layer, line) {
     document.getElementById('latitude').value = layer.getLatLng().lat
     document.getElementById('longitude').value = layer.getLatLng().lng
     document.getElementById('existant-line').value = line
-    document.getElementById('add-station').addEventListener(
-      'click',
-      () => {
-        station = {
-          name: toTitleCase(document.getElementById('name').value),
-          coordinates: {
-            latitude: document.getElementById('latitude').value,
-            longitude: document.getElementById('longitude').value
-          },
-          line: line
-        }
-        postStationDb(station).then(data => resolve(data))
-      },
-      { once: true }
-    )
 
-    let cancelStation = document.getElementById('cancelStation')
-    cancelStation.addEventListener(
-      'click',
-      () => {
-        if (newStationPrompt.style.opacity === '1') {
-          newStationPrompt.style.opacity = 0
-          newStationPrompt.style.zIndex = 0
-          newStationPrompt.classList.remove('tilt-in-top-1')
-          reject('Canceled')
-        }
-      },
-      { once: true }
-    )
+    function clickConfirm() {
+      station = {
+        name: toTitleCase(document.getElementById('name').value),
+        coordinates: {
+          latitude: document.getElementById('latitude').value,
+          longitude: document.getElementById('longitude').value
+        },
+        line: line
+      }
+      postStationDb(station).then(data => resolve(data))
+      document.getElementById('add-station').removeEventListener('click', clickConfirm, true)
+      document.getElementById('cancelStation').removeEventListener('click', clickCancel, true)
+      document.getElementById('closeStation').removeEventListener('click', clickCancel, true)
+    }
+
+    function clickCancel() {
+      if (newStationPrompt.style.opacity === '1') {
+        newStationPrompt.style.opacity = 0
+        newStationPrompt.style.zIndex = 0
+        newStationPrompt.classList.remove('tilt-in-top-1')
+        reject('Canceled')
+      }
+      document.getElementById('add-station').removeEventListener('click', clickConfirm, true)
+      document.getElementById('cancelStation').removeEventListener('click', clickCancel, true)
+      document.getElementById('closeStation').removeEventListener('click', clickCancel, true)
+    }
+    document.getElementById('add-station').addEventListener('click', clickConfirm, true)
+    document.getElementById('cancelStation').addEventListener('click', clickCancel, true)
+    document.getElementById('closeStation').addEventListener('click', clickCancel, true)
   })
 }
 
@@ -139,7 +145,9 @@ function newLine() {
       manipulationsElement.value = ''
       newLinePrompt.classList.remove('tilt-in-top-1')
     }
+    //TODO: Add close image eventListener
     document.getElementById('cancel-line').removeEventListener('click', clickCancel, true)
+    document.getElementById('closeLine').removeEventListener('click', clickCancel, true)
     document.getElementById('confirm-line').removeEventListener('click', clickConfirm, true)
   }
 
@@ -170,8 +178,10 @@ function newLine() {
       else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')
     })
     document.getElementById('cancel-line').removeEventListener('click', clickCancel, true)
+    document.getElementById('closeLine').removeEventListener('click', clickCancel, true)
     document.getElementById('confirm-line').removeEventListener('click', clickConfirm, true)
   }
   document.getElementById('cancel-line').addEventListener('click', clickCancel, true)
+  document.getElementById('closeLine').addEventListener('click', clickCancel, true)
   document.getElementById('confirm-line').addEventListener('click', clickConfirm, true)
 }

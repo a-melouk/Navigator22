@@ -410,3 +410,11 @@ img {
 .prompt-cancel:hover {
   background-color: white;
 }
+
+#deleteLine {
+  /* z-index: 10000;
+  position: absolute;
+  top: 150px;
+  right: 20px; */
+  padding: 10px;
+}

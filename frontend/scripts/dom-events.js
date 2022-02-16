@@ -117,12 +117,10 @@ getsegment.addEventListener('click', () => {
             deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
               patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
                 .then(response => {
-                  // console.log('Pushed first segment')
                   if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
                 })
                 .then(() => {
                   patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(response => {
-                    // console.log('Pushed second segment')
                     if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
                     else getStationsByLine(JSON.parse(choosenLine).name)
                   })
@@ -152,25 +150,27 @@ addline.addEventListener('click', () => {
     to.options.length = 1
     populate()
     routeLine = []
-    populate()
   })
 })
 
-const right = document.getElementsByClassName('Lines')
-getAllLinesNamesIdsDb().then(data => {
-  populateList(data, 'line')
-  data.forEach(item => {
-    let line = document.createElement('button')
-    line.innerText = item.name
-    if (item.name === 'tramway') line.classList.add('lines', 'tramway')
-    else line.classList.add('lines', 'bus')
-    line.onclick = function () {
-      addLineToMap.call(this, item.name)
-      manipulationsElement.value = ''
-      lineElement.value = JSON.stringify(item)
-      fromElement.options.length = 1
-      to.options.length = 1
-    }
-    right[0].appendChild(line)
-  })
-})
+// function populateLines() {
+//   const right = document.getElementsByClassName('Lines')
+//   right[0].replaceChildren()
+//   getAllLinesNamesIdsDb().then(data => {
+//     populateList(data, 'line')
+//     data.forEach(item => {
+//       let line = document.createElement('button')
+//       line.innerText = item.name
+//       if (item.name === 'tramway') line.classList.add('lines', 'tramway')
+//       else line.classList.add('lines', 'bus')
+//       line.onclick = function () {
+//         addLineToMap.call(this, item.name)
+//         manipulationsElement.value = ''
+//         lineElement.value = JSON.stringify(item)
+//         fromElement.options.length = 1
+//         to.options.length = 1
+//       }
+//       right[0].appendChild(line)
+//     })
+//   })
+// }

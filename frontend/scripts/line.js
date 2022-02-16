@@ -1,8 +1,24 @@
 //------------------------------------Populating the SELECTs------------------------------------//
 //Fetching all available lines
 let populate = () => {
+  const right = document.getElementsByClassName('Lines')
+  right[0].replaceChildren()
   getAllLinesNamesIdsDb().then(data => {
     populateList(data, 'line')
+    data.forEach(item => {
+      let line = document.createElement('button')
+      line.innerText = item.name
+      if (item.name === 'tramway') line.classList.add('lines', 'tramway')
+      else line.classList.add('lines', 'bus')
+      line.onclick = function () {
+        addLineToMap.call(this, item.name)
+        manipulationsElement.value = ''
+        lineElement.value = JSON.stringify(item)
+        fromElement.options.length = 1
+        to.options.length = 1
+      }
+      right[0].appendChild(line)
+    })
   })
 }
 
@@ -125,7 +141,6 @@ map.on('draw:edited', function () {
       path.splice(path.length - 2, 1)
       modifiedPath = true
     }
-    console.log(modifiedFrom, modifiedTo, modifiedPath)
 
     let temp = {
       from: from,
@@ -140,7 +155,6 @@ map.on('draw:edited', function () {
         .then(() => {
           clearMap(true)
           addSegmentToMap(temp, 'red', 'segment')
-          console.log('Segment : ' + from.name + ' to ' + to.name + ' patched')
         })
         .then(() => {
           if (modifiedFrom) {
@@ -165,10 +179,7 @@ map.on('draw:edited', function () {
                     path: tempPath,
                     order: originalSegment.order - 1
                   }
-                  patchSegmentDb(data._id, temp).then(() => {
-                    resolve('from')
-                    console.log('Segment that ends with ' + from.name + ' patched')
-                  })
+                  patchSegmentDb(data._id, temp).then(() => resolve('from'))
                 }
               })
             } else resolve('from')
@@ -188,10 +199,7 @@ map.on('draw:edited', function () {
                     path: tempPath,
                     order: originalSegment.order + 1
                   }
-                  patchSegmentDb(data._id, temp).then(() => {
-                    resolve('to')
-                    console.log('Segment that starts with ' + to.name + ' patched')
-                  })
+                  patchSegmentDb(data._id, temp).then(() => resolve('to'))
                 }
               })
             } else resolve('to')
@@ -244,27 +252,4 @@ function addSegmentToLine() {
   }
 }
 
-function cleanPath(line) {
-  getLineByNameDb(line).then(data => {
-    data.forEach(item => {
-      let toUpdate = false
-      let id = item._id
-      let from = item.from
-      let to = item.to
-      if (removeClosePointsFront(item.path).length < item.path) {
-        toUpdate = true
-        item.path = [...removeClosePointsFront]
-      }
-      if (toUpdate) {
-        const finalResult = {
-          from: from,
-          to: to,
-          path: item.path,
-          _id: id
-        }
-        patchSegmentDb(id, finalResult).then(() => console.log('Removed tight points'))
-      }
-    })
-  })
-}
 //----------------------------------------------- -----------------------------------------------//

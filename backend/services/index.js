@@ -516,3 +516,13 @@ app.delete('/lines/:lineID/station/:stationID', (request, response) => {
       })
   })
 })
+
+//Delete a line by its name
+app.delete('/line/:name', async (request, response) => {
+  let lineName = request.params.name
+  let [deleteLine, deleteStation] = await Promise.all([Line.deleteOne({ name: lineName }), Station.deleteMany({ line: lineName })])
+  response.json({
+    line: deleteLine,
+    stations: deleteStation
+  })
+})

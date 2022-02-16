@@ -20,7 +20,7 @@
       <div class="new-line new-prompt" style="opacity: 0">
         <div class="title">
           <div id="line-title">Adding new line</div>
-          <img src="./static/close.svg" alt="close" class="closeImg" />
+          <img src="./static/close.svg" alt="Close Line Prompt" id="closeLine" />
         </div>
         <div class="line-name">
           <label for="new-line">Line</label>
@@ -34,7 +34,7 @@
       <div class="prompt-new-station" style="opacity: 0">
         <div class="prompt-title">
           <div id="station-title">Adding new station</div>
-          <img src="./static/close.svg" alt="close" />
+          <img src="./static/close.svg" alt="Close Line Prompt" id="closeStation" />
         </div>
         <div class="prompt-content">
           <div class="input station-name">
@@ -112,6 +112,7 @@
         <div class="buttons">
           <button class="btn center-map" onclick="centerMap()">Center the map</button>
           <button class="btn clear-map" onclick="clearMap(true)">Clear the map</button>
+          <button class="btn deleteLine" onclick="deleteLine()" id="deleteLine">Delete line</button>
         </div>
       </div>
     </div>
@@ -127,7 +128,7 @@
 
     <script>
       init()
-      // populate()
+      populate()
     </script>
   </body>
 </html>
