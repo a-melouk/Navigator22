@@ -29,8 +29,9 @@ async function deletePart(stationID) {
 }
 
 function deleteLine() {
-  if (lineElement.value !== '') return deleteLineDb()
-  else alert('Please select a line')
+  if (lineElement.value !== '') {
+    if (confirm('Confirm deleting the line ?') === true) return deleteLineDb()
+  } else alert('Please select a line')
 }
 
 function newStation(layer, line) {
@@ -137,7 +138,6 @@ function newLine() {
   newLinePrompt.style.opacity = '1'
   newLinePrompt.style.zIndex = 5000
   newLinePrompt.classList.add('tilt-in-top-1')
-  // newLinePrompt.classList.add('fadeIn')
 
   function clickCancel() {
     if (newLinePrompt.style.opacity === '1') {
@@ -146,7 +146,6 @@ function newLine() {
       manipulationsElement.value = ''
       newLinePrompt.classList.remove('tilt-in-top-1')
     }
-    //TODO: Add close image eventListener
     document.getElementById('cancel-line').removeEventListener('click', clickCancel, true)
     document.getElementById('closeLine').removeEventListener('click', clickCancel, true)
     document.getElementById('confirm-line').removeEventListener('click', clickConfirm, true)
@@ -163,17 +162,24 @@ function newLine() {
       let layer = e.layer
       if (layer instanceof L.Marker) {
         layer.addTo(map)
+        console.log('salam1')
         newStationPrompt.style.opacity = 1
         newStationPrompt.style.zIndex = 5000
         newStationPrompt.classList.add('tilt-in-top-1')
         newStation(layer, nameOfTheLine)
           .then(() => {
+            console.log('salam2')
             populateListsToAddNewSegment(nameOfTheLine)
             newStationPrompt.style.opacity = 0
             newStationPrompt.style.zIndex = 0
             newStationPrompt.classList.remove('tilt-in-top-1')
+            map.removeLayer(layer)
           })
-          .catch(err => console.log(err))
+          .catch(err => {
+            console.log('salam3')
+            console.log(err)
+            map.removeLayer(layer)
+          })
       }
       //
       else if (layer instanceof L.Polyline) newSegment(layer, 'New line segment')

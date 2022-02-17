@@ -7,7 +7,7 @@ let populate = () => {
     populateList(data, 'line')
     data.forEach(item => {
       let line = document.createElement('button')
-      line.innerText = item.name
+      line.innerText = toTitleCase(item.name)
       if (item.name === 'tramway') line.classList.add('lines', 'tramway')
       else line.classList.add('lines', 'bus')
       line.onclick = function () {
@@ -222,6 +222,8 @@ function addSegmentToLine() {
     populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
     map.on('draw:created', function (e) {
       let layer = e.layer
+      layer.addTo(drawsLayer)
+      drawsLayer.addTo(map)
       if (layer instanceof L.Marker) {
         newStationPrompt.style.opacity = 1
         newStationPrompt.style.zIndex = 5000
@@ -233,15 +235,20 @@ function addSegmentToLine() {
               newStationPrompt.style.opacity = 0
               newStationPrompt.style.zIndex = 0
               newStationPrompt.classList.remove('tilt-in-top-1')
+              map.removeLayer(layer)
             } else {
               clearMap(false)
               newStationPrompt.style.opacity = 0
               newStationPrompt.style.zIndex = 0
               newStationPrompt.classList.remove('tilt-in-top-1')
+              map.removeLayer(layer)
               populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
             }
           })
-          .catch(err => console.log(err))
+          .catch(err => {
+            console.log(err)
+            map.removeLayer(layer)
+          })
       } else if (layer instanceof L.Polyline)
         newSegment(layer, 'Patch line segment').then(response => {
           if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')

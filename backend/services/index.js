@@ -46,10 +46,6 @@ async function From_or_ToExists(lineID, fromID, toID) {
   return false
 }
 
-// db.lines.aggregate([{$match:{_id:ObjectId('61eb3a340ea98782be559c2d'),$or:[{'route.from.id': '61eb2de817e57cb86cb3f917'},{'route.to.id': '61eb2de817e57cb86cb3f911'}]}},{$unwind: '$route'},{"$match": {"$or": [{"route.from.id": "61eb2de817e57cb86cb3f917"},{"route.to.id": "61eb2de817e57cb86cb3f911"}]}}, {$group:{_id:'$_id',route:{$push: '$route'}}}])
-
-From_or_ToExists('61eb346037662c08a15b852f', '620ac0676dbcee914dd28c1a', '620ac08b6dbcee914dd28c2c')
-
 async function findLengthOfLine(lineID) {
   const response = await Line.find({ _id: lineID })
   const data = response[0].route.length
