@@ -225,13 +225,19 @@ function addSegmentToLine() {
       if (layer instanceof L.Marker) {
         newStationPrompt.style.opacity = 1
         newStationPrompt.style.zIndex = 5000
+        newStationPrompt.classList.add('tilt-in-top-1')
         newStation(layer, JSON.parse(lineElement.value).name)
           .then(response => {
-            if (response.status === 409) displayNotification('Adding new station', 'Station already exists')
-            else {
+            if (response.status === 409) {
+              displayNotification('Adding new station', 'Station already exists')
+              newStationPrompt.style.opacity = 0
+              newStationPrompt.style.zIndex = 0
+              newStationPrompt.classList.remove('tilt-in-top-1')
+            } else {
               clearMap(false)
               newStationPrompt.style.opacity = 0
               newStationPrompt.style.zIndex = 0
+              newStationPrompt.classList.remove('tilt-in-top-1')
               populateListsToAddNewSegment(JSON.parse(lineElement.value).name)
             }
           })

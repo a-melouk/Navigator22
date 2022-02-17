@@ -52,6 +52,7 @@ function newStation(layer, line) {
         line: line
       }
       postStationDb(station).then(data => resolve(data))
+
       document.getElementById('add-station').removeEventListener('click', clickConfirm, true)
       document.getElementById('cancelStation').removeEventListener('click', clickCancel, true)
       document.getElementById('closeStation').removeEventListener('click', clickCancel, true)

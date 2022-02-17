@@ -1,0 +1,163 @@
+.notification {
+  transform-origin: right;
+  margin-right: 10px;
+  background-color: rgb(253, 246, 243);
+  border-radius: 5px;
+  height: 3rem;
+}
+
+.notification-title {
+  font-weight: bold;
+  color: red;
+  margin-left: 5px;
+  text-align: center;
+}
+
+.notification-text {
+  margin-left: 5px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/*----------------common between prompts----------------*/
+input:focus {
+  outline: 2px solid rgb(0, 133, 0);
+  background-color: rgb(250, 250, 250);
+}
+
+.prompt-title {
+  height: 3rem;
+  text-align: center;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prompt-title div {
+  flex-grow: 2;
+  font-size: 1.4rem;
+}
+
+img {
+  width: 20px;
+  height: 20px;
+  margin-right: 7px;
+}
+
+.prompt-buttons {
+  height: 3rem;
+  color: black;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.prompt-buttons button {
+  width: 7rem;
+  height: 2.5rem;
+  border-radius: 20px;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+.prompt-add {
+  background-color: #1df266;
+}
+
+.prompt-cancel {
+  background-color: #dc2e2e;
+}
+
+.prompt-add:hover,
+.prompt-cancel:hover {
+  background-color: white;
+}
+/*-------------------------- --------------------------*/
+
+.new-line {
+  width: 350px;
+  height: 180px;
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: black;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.new-line .line-name {
+  height: 50%;
+  display: flex;
+  align-items: center;
+  background-color: white;
+}
+
+.new-line .line-name label {
+  color: black;
+  display: inline-block;
+  margin-right: 5px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.new-line .line-name input {
+  color: black;
+  min-width: 270px;
+  border: 2px solid black;
+}
+
+.prompt-new-station {
+  width: 25rem;
+  height: 18rem;
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: #000000;
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  transform: translate(-20%, -10%);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
+.prompt-content {
+  height: 68%;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.input {
+  height: 30px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.input label {
+  width: 25%;
+  height: 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: black;
+  display: flex;
+  align-items: center;
+}
+
+.input input {
+  display: inline-block;
+  width: 69%;
+  border: 2px solid black;
+  height: 30px;
+  color: black;
+}

@@ -92,40 +92,46 @@ getsegment.addEventListener('click', () => {
         let middle = middlePolyline(e.layer, path)
         newStation(e.layer, JSON.parse(choosenLine).name)
           .then(donnee => {
-            newStationPrompt.style.opacity = 0
-            newStationPrompt.style.zIndex = 0
-            let from = data.from
-            let to = data.to
-            let middleStation = {
-              name: donnee.name,
-              coordinates: donnee.coordinates,
-              id: donnee._id
-            }
-            let firstSegment = {
-              from: from,
-              to: middleStation,
-              path: middle.firstHalf,
-              order: data.order
-            }
+            if (donnee.status !== 409) {
+              newStationPrompt.style.opacity = 0
+              newStationPrompt.style.zIndex = 0
+              let from = data.from
+              let to = data.to
+              let middleStation = {
+                name: donnee.name,
+                coordinates: donnee.coordinates,
+                id: donnee._id
+              }
+              let firstSegment = {
+                from: from,
+                to: middleStation,
+                path: middle.firstHalf,
+                order: data.order
+              }
 
-            let secondSegment = {
-              from: middleStation,
-              to: to,
-              path: middle.secondHalf,
-              order: data.order + 1
-            }
-            deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
-              patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
-                .then(response => {
-                  if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
-                })
-                .then(() => {
-                  patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(response => {
+              let secondSegment = {
+                from: middleStation,
+                to: to,
+                path: middle.secondHalf,
+                order: data.order + 1
+              }
+              deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
+                patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
+                  .then(response => {
                     if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
-                    else getStationsByLine(JSON.parse(choosenLine).name)
                   })
-                })
-            })
+                  .then(() => {
+                    patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(response => {
+                      if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
+                      else getStationsByLine(JSON.parse(choosenLine).name)
+                    })
+                  })
+              })
+            } else {
+              displayNotification('Adding new station', 'Station already exists')
+              newStationPrompt.style.opacity = 0
+              newStationPrompt.style.zIndex = 0
+            }
           })
           .catch(err => console.log(err))
       })
@@ -152,25 +158,3 @@ addline.addEventListener('click', () => {
     routeLine = []
   })
 })
-
-// function populateLines() {
-//   const right = document.getElementsByClassName('Lines')
-//   right[0].replaceChildren()
-//   getAllLinesNamesIdsDb().then(data => {
-//     populateList(data, 'line')
-//     data.forEach(item => {
-//       let line = document.createElement('button')
-//       line.innerText = item.name
-//       if (item.name === 'tramway') line.classList.add('lines', 'tramway')
-//       else line.classList.add('lines', 'bus')
-//       line.onclick = function () {
-//         addLineToMap.call(this, item.name)
-//         manipulationsElement.value = ''
-//         lineElement.value = JSON.stringify(item)
-//         fromElement.options.length = 1
-//         to.options.length = 1
-//       }
-//       right[0].appendChild(line)
-//     })
-//   })
-// }
