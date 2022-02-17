@@ -1,297 +1,103 @@
-[
-  {
-    "_id": "61eb3a340ea98782be559c2d",
-    "name": "Ligne 03",
-    "type": "bus",
-    "route": [
-      {
-        "from": { "coordinates": { "latitude": 35.193021172500295, "longitude": -0.6322334180443768 }, "name": "La Coupole, Didouche Mourad", "id": "61eb2de817e57cb86cb3f91d" },
-        "to": { "coordinates": { "latitude": 35.19220974340029, "longitude": -0.6279802246804956 }, "name": "Aissat Idir 1", "id": "61eb2de817e57cb86cb3f91c" },
-        "path": [
-          { "latitude": 35.193021172500295, "longitude": -0.6322334180443768 },
-          { "latitude": 35.1930317217679, "longitude": -0.6321376916776034 },
-          { "latitude": 35.1931391314613, "longitude": -0.6311613321304322 },
-          { "latitude": 35.19320050410525, "longitude": -0.630665128404624 },
-          { "latitude": 35.19323338617405, "longitude": -0.6303459341944407 },
-          { "latitude": 35.19321823464708, "longitude": -0.6301895415584192 },
-          { "latitude": 35.19313054899158, "longitude": -0.630010755359154 },
-          { "latitude": 35.192865138077835, "longitude": -0.6299516561554231 },
-          { "latitude": 35.19207246804368, "longitude": -0.6298248181571587 },
-          { "latitude": 35.1917647757852, "longitude": -0.6297585371063508 },
-          { "latitude": 35.191595993286, "longitude": -0.6296780743243335 },
-          { "latitude": 35.191503930066716, "longitude": -0.6296485639204131 },
-          { "latitude": 35.19139213867303, "longitude": -0.6296941623457688 },
-          { "latitude": 35.191297883839034, "longitude": -0.6297075760071703 },
-          { "latitude": 35.19117951558344, "longitude": -0.6296888014161685 },
-          { "latitude": 35.191034843215924, "longitude": -0.6295734649750307 },
-          { "latitude": 35.190938392947245, "longitude": -0.6293964432498722 },
-          { "latitude": 35.19091866435919, "longitude": -0.6292301433839343 },
-          { "latitude": 35.190936202762714, "longitude": -0.6290692085174011 },
-          { "latitude": 35.191032649810154, "longitude": -0.628897547140448 },
-          { "latitude": 35.19112032917459, "longitude": -0.6288143960446791 },
-          { "latitude": 35.1912255475914, "longitude": -0.6287822089550856 },
-          { "latitude": 35.191381176930555, "longitude": -0.6287902593612672 },
-          { "latitude": 35.19149954448941, "longitude": -0.628822445288031 },
-          { "latitude": 35.1916047595943, "longitude": -0.6287875762801499 },
-          { "latitude": 35.191804230530735, "longitude": -0.6285595893859864 },
-          { "latitude": 35.19197958548479, "longitude": -0.6283181905746461 },
-          { "latitude": 35.19214179028361, "longitude": -0.6280714285080857 },
-          { "latitude": 35.19220974340029, "longitude": -0.6279802246804956 }
-        ],
-        "_id": "61f0322321de43144903398d"
+{
+  "name": "metro 1",
+  "type": "bus",
+  "route": [
+    {
+      "from": {
+        "name": "Top Right",
+        "coordinates": { "latitude": 35.221650823248524, "longitude": -0.6065654754638673 },
+        "id": "620448235c3062240b924b91"
       },
-      {
-        "from": { "coordinates": { "latitude": 35.19220974340029, "longitude": -0.6279802246804956 }, "name": "Aissat Idir 1", "id": "61eb2de817e57cb86cb3f91c" },
-        "to": { "coordinates": { "latitude": 35.19524774534109, "longitude": -0.6236028642194303 }, "name": "Casoran", "id": "61eb2de817e57cb86cb3f91b" },
-        "path": [
-          { "latitude": 35.19220974340029, "longitude": -0.6279802246804956 },
-          { "latitude": 35.192421601020236, "longitude": -0.6277042395695311 },
-          { "latitude": 35.1928256838475, "longitude": -0.6271004641934552 },
-          { "latitude": 35.19359943644389, "longitude": -0.6259819862319672 },
-          { "latitude": 35.19408604137558, "longitude": -0.6252846107252853 },
-          { "latitude": 35.1947436138195, "longitude": -0.6243512014067077 },
-          { "latitude": 35.195103083441545, "longitude": -0.623820124021759 },
-          { "latitude": 35.19524774534109, "longitude": -0.6236028642194303 }
-        ],
-        "_id": "61f46717bdcf17ecbdf7950c"
+      "to": {
+        "name": "Top Left",
+        "coordinates": { "latitude": 35.22087900733145, "longitude": -0.6492233276367189 },
+        "id": "620448275c3062240b924b95"
       },
-      {
-        "from": { "coordinates": { "latitude": 35.19524774534109, "longitude": -0.6236028642194303 }, "name": "Casoran", "id": "61eb2de817e57cb86cb3f91b" },
-        "to": { "coordinates": { "latitude": 35.19644450752967, "longitude": -0.621883566205972 }, "name": "Aissat Idir 2", "id": "61eb2de817e57cb86cb3f91a" },
-        "path": [
-          { "latitude": 35.19524774534109, "longitude": -0.6236028642194303 },
-          { "latitude": 35.195377067665476, "longitude": -0.6234312057495117 },
-          { "latitude": 35.19590092626561, "longitude": -0.6226775035628096 },
-          { "latitude": 35.19620778624583, "longitude": -0.6222349399474547 },
-          { "latitude": 35.19637874879886, "longitude": -0.6219828123000549 },
-          { "latitude": 35.19644450752967, "longitude": -0.621883566205972 }
-        ],
-        "_id": "61f0316021de43144903397a"
+      "path": [
+        { "latitude": 35.221650823248524, "longitude": -0.6065654754638673 },
+        { "latitude": 35.22172098796792, "longitude": -0.6112861633300782 },
+        { "latitude": 35.22214197501045, "longitude": -0.6155776977539064 },
+        { "latitude": 35.223393627401485, "longitude": -0.6229591369628907 },
+        { "latitude": 35.22305410611082, "longitude": -0.6223583221435548 },
+        { "latitude": 35.22207181065504, "longitude": -0.6284523010253907 },
+        { "latitude": 35.221931481762155, "longitude": -0.6345462799072266 },
+        { "latitude": 35.22350034908717, "longitude": -0.6395459175109864 },
+        { "latitude": 35.22228230353933, "longitude": -0.6400394439697267 },
+        { "latitude": 35.22172098796792, "longitude": -0.6453609466552735 },
+        { "latitude": 35.22087900733145, "longitude": -0.6492233276367189 }
+      ],
+      "order": 1,
+      "_id": { "$oid": "620528fe6c1362fb33a8ecb7" }
+    },
+    {
+      "from": {
+        "name": "Top Left",
+        "coordinates": { "latitude": 35.22087900733145, "longitude": -0.6492233276367189 },
+        "id": "620448275c3062240b924b95"
       },
-      {
-        "from": { "coordinates": { "latitude": 35.19644450752967, "longitude": -0.621883566205972 }, "name": "Aissat Idir 2", "id": "61eb2de817e57cb86cb3f91a" },
-        "to": { "coordinates": { "latitude": 35.198607831817476, "longitude": -0.6184852105818252 }, "name": "Marche Ofla", "id": "61eb2de817e57cb86cb3f919" },
-        "path": [
-          { "latitude": 35.19644450752967, "longitude": -0.621883566205972 },
-          { "latitude": 35.196567238509246, "longitude": -0.6217065619230012 },
-          { "latitude": 35.19711002529767, "longitude": -0.6209372316993145 },
-          { "latitude": 35.19739795499221, "longitude": -0.6205129588528793 },
-          { "latitude": 35.19766316582243, "longitude": -0.6201320874983841 },
-          { "latitude": 35.197928374980854, "longitude": -0.6197458488188247 },
-          { "latitude": 35.19813878880539, "longitude": -0.6194534889083239 },
-          { "latitude": 35.198325864960005, "longitude": -0.6191851289763074 },
-          { "latitude": 35.198447832731624, "longitude": -0.6189519149504165 },
-          { "latitude": 35.1985486499647, "longitude": -0.6186622381210328 },
-          { "latitude": 35.198607831817476, "longitude": -0.6184852105818252 }
-        ],
-        "_id": "61f2b7449f6c8329d782e205"
+      "to": {
+        "name": "Middle",
+        "coordinates": { "latitude": 35.20863411387504, "longitude": -0.6360268592834473 },
+        "id": "6204623ea8e403944091f27c"
       },
-      {
-        "from": { "coordinates": { "latitude": 35.198607831817476, "longitude": -0.6184852105818252 }, "name": "Marche Ofla", "id": "61eb2de817e57cb86cb3f919" },
-        "to": { "coordinates": { "latitude": 35.19973835373733, "longitude": -0.6148738846293057 }, "name": "Lycee Dar Abid", "id": "61eb2de817e57cb86cb3f918" },
-        "path": [
-          { "latitude": 35.198607831817476, "longitude": -0.6184852105818252 },
-          { "latitude": 35.198631935269105, "longitude": -0.6184262293095588 },
-          { "latitude": 35.198713037313404, "longitude": -0.6181687180577566 },
-          { "latitude": 35.19880947754611, "longitude": -0.6178817103557522 },
-          { "latitude": 35.19917343470138, "longitude": -0.6166964274659349 },
-          { "latitude": 35.199561256305195, "longitude": -0.615467728056398 },
-          { "latitude": 35.199688323918565, "longitude": -0.6150369236502097 },
-          { "latitude": 35.19973835373733, "longitude": -0.6148738846293057 }
-        ],
-        "_id": "61f032e321de4314490339ee"
+      "path": [
+        { "latitude": 35.22087900733145, "longitude": -0.6492233276367189 },
+        { "latitude": 35.22003493490235, "longitude": -0.648021697998047 },
+        { "latitude": 35.21792992320345, "longitude": -0.6413269042968751 },
+        { "latitude": 35.21491264456493, "longitude": -0.6339454650878907 },
+        { "latitude": 35.21287767239015, "longitude": -0.6330013275146485 },
+        { "latitude": 35.20943939196051, "longitude": -0.6312847137451173 },
+        { "latitude": 35.20863411387504, "longitude": -0.6360268592834473 }
+      ],
+      "order": 2,
+      "_id": { "$oid": "620487ad2624e2ce4b673811" }
+    },
+    {
+      "from": {
+        "name": "Middle",
+        "coordinates": { "latitude": 35.20863411387504, "longitude": -0.6360268592834473 },
+        "id": "6204623ea8e403944091f27c"
       },
-      {
-        "from": { "coordinates": { "latitude": 35.19973835373733, "longitude": -0.6148738846293057 }, "name": "Lycee Dar Abid", "id": "61eb2de817e57cb86cb3f918" },
-        "to": { "coordinates": { "latitude": 35.20161773797497, "longitude": -0.6116777658462524 }, "name": "Campo", "id": "61eb2de817e57cb86cb3f917" },
-        "path": [
-          { "latitude": 35.19973835373733, "longitude": -0.6148738846293057 },
-          { "latitude": 35.1998573294277, "longitude": -0.6145438446910867 },
-          { "latitude": 35.200354172590785, "longitude": -0.6130491934533701 },
-          { "latitude": 35.200578229015456, "longitude": -0.612372458853212 },
-          { "latitude": 35.20073603398444, "longitude": -0.6119218477387102 },
-          { "latitude": 35.20078671559494, "longitude": -0.6117333290696348 },
-          { "latitude": 35.20079521217899, "longitude": -0.6115812069031313 },
-          { "latitude": 35.200793020245555, "longitude": -0.6114149128512225 },
-          { "latitude": 35.20077548396998, "longitude": -0.6112620231582367 },
-          { "latitude": 35.20080836055502, "longitude": -0.6111466907869235 },
-          { "latitude": 35.2008806886729, "longitude": -0.6110796323638291 },
-          { "latitude": 35.20095082439427, "longitude": -0.6110447633559281 },
-          { "latitude": 35.20100780929589, "longitude": -0.6110420802748108 },
-          { "latitude": 35.20106479294875, "longitude": -0.6110796323638291 },
-          { "latitude": 35.20112616202244, "longitude": -0.6111520464838694 },
-          { "latitude": 35.20115684493019, "longitude": -0.6112673869948715 },
-          { "latitude": 35.20121821675481, "longitude": -0.6113424946613377 },
-          { "latitude": 35.2013584807043, "longitude": -0.611487326389868 },
-          { "latitude": 35.2014939773658, "longitude": -0.6115831488455782 },
-          { "latitude": 35.201584563907716, "longitude": -0.611633320313938 },
-          { "latitude": 35.20161773797497, "longitude": -0.6116777658462524 }
-        ],
-        "_id": "61f033d921de431449033a4c"
+      "to": {
+        "name": "Bottom Left",
+        "coordinates": { "latitude": 35.186911841409916, "longitude": -0.6505966186523439 },
+        "id": "620448315c3062240b924b9d"
       },
-      {
-        "from": { "coordinates": { "latitude": 35.20161773797497, "longitude": -0.6116777658462524 }, "name": "Campo", "id": "61eb2de817e57cb86cb3f917" },
-        "to": { "coordinates": { "latitude": 35.204409299945645, "longitude": -0.6135374915965498 }, "name": "Protection Civile Cpr", "id": "61eb2de817e57cb86cb3f916" },
-        "path": [
-          { "latitude": 35.20161773797497, "longitude": -0.6116777658462524 },
-          { "latitude": 35.20173545914033, "longitude": -0.6117367744445802 },
-          { "latitude": 35.20250255241807, "longitude": -0.6122356659027651 },
-          { "latitude": 35.2029201722711, "longitude": -0.6125199865131004 },
-          { "latitude": 35.203646604792155, "longitude": -0.6130027747739898 },
-          { "latitude": 35.20407747581387, "longitude": -0.6132851909482963 },
-          { "latitude": 35.204409299945645, "longitude": -0.6135374915965498 }
-        ],
-        "_id": "61f2b7549f6c8329d782e20a"
+      "path": [
+        { "latitude": 35.20863411387504, "longitude": -0.6360268592834473 },
+        { "latitude": 35.20796546042238, "longitude": -0.6362628936767579 },
+        { "latitude": 35.20178968658954, "longitude": -0.6398677825927735 },
+        { "latitude": 35.1961047523975, "longitude": -0.6455326080322267 },
+        { "latitude": 35.19245495531236, "longitude": -0.6475925445556642 },
+        { "latitude": 35.18999826879638, "longitude": -0.6481075286865235 },
+        { "latitude": 35.186911841409916, "longitude": -0.6505966186523439 }
+      ],
+      "order": 3,
+      "_id": { "$oid": "620487cd2624e2ce4b673829" }
+    },
+    {
+      "from": {
+        "name": "Bottom Left",
+        "coordinates": { "latitude": 35.186911841409916, "longitude": -0.6505966186523439 },
+        "id": "620448315c3062240b924b9d"
       },
-      {
-        "from": { "coordinates": { "latitude": 35.204409299945645, "longitude": -0.6135374915965498 }, "name": "Protection Civile Cpr", "id": "61eb2de817e57cb86cb3f916" },
-        "to": { "coordinates": { "latitude": 35.20625028075782, "longitude": -0.6148012034542872 }, "name": "Cite Universitaire 2000", "id": "61eb2de817e57cb86cb3f915" },
-        "path": [
-          { "latitude": 35.204409299945645, "longitude": -0.6135374915965498 },
-          { "latitude": 35.20448965003735, "longitude": -0.6135786014555468 },
-          { "latitude": 35.20476580361076, "longitude": -0.613773455215414 },
-          { "latitude": 35.2051734431378, "longitude": -0.6140506218046338 },
-          { "latitude": 35.20565705831926, "longitude": -0.6143975295101757 },
-          { "latitude": 35.20591274285327, "longitude": -0.614588865410919 },
-          { "latitude": 35.206034743009674, "longitude": -0.6146675410260817 },
-          { "latitude": 35.206160504627675, "longitude": -0.6147341544811536 },
-          { "latitude": 35.20625028075782, "longitude": -0.6148012034542872 }
-        ],
-        "_id": "61f0346821de431449033a7e"
+      "to": {
+        "name": "Bottom Right",
+        "coordinates": { "latitude": 35.191053227342906, "longitude": -0.6116294860839845 },
+        "id": "6204493f3d2200a0683141de"
       },
-      {
-        "from": { "coordinates": { "latitude": 35.20625028075782, "longitude": -0.6148012034542872 }, "name": "Cite Universitaire 2000", "id": "61eb2de817e57cb86cb3f915" },
-        "to": { "coordinates": { "latitude": 35.20904666836053, "longitude": -0.6161858239436114 }, "name": "La Poste Cpr, Les Cascades", "id": "61eb2de817e57cb86cb3f914" },
-        "path": [
-          { "latitude": 35.20625028075782, "longitude": -0.6148012034542872 },
-          { "latitude": 35.206321509860324, "longitude": -0.6148508211949433 },
-          { "latitude": 35.20714460593317, "longitude": -0.6153464756124127 },
-          { "latitude": 35.20745460812537, "longitude": -0.6155495710306159 },
-          { "latitude": 35.20769011286715, "longitude": -0.6156608441492951 },
-          { "latitude": 35.20804154228039, "longitude": -0.615813707138282 },
-          { "latitude": 35.208234691783275, "longitude": -0.6159009091503932 },
-          { "latitude": 35.20840672942829, "longitude": -0.6159558996453908 },
-          { "latitude": 35.20865252581664, "longitude": -0.6160330137794889 },
-          { "latitude": 35.2091011868121, "longitude": -0.6161938407742108 },
-          { "latitude": 35.20904666836053, "longitude": -0.6161858239436114 }
-        ],
-        "_id": "61f0346821de431449033a80"
-      },
-      {
-        "from": { "coordinates": { "latitude": 35.20904666836053, "longitude": -0.6161858239436114 }, "name": "La Poste Cpr, Les Cascades", "id": "61eb2de817e57cb86cb3f914" },
-        "to": { "coordinates": { "latitude": 35.213206165986335, "longitude": -0.6156206130981446 }, "name": "Ghalmi Gare Routiere Est", "id": "61eb2de817e57cb86cb3f913" },
-        "path": [
-          { "latitude": 35.20904666836053, "longitude": -0.6161858239436114 },
-          { "latitude": 35.20919022699797, "longitude": -0.6162261029663285 },
-          { "latitude": 35.20945282176413, "longitude": -0.6163251312855534 },
-          { "latitude": 35.209717262239174, "longitude": -0.6163984499896414 },
-          { "latitude": 35.2099383267634, "longitude": -0.6164692517913829 },
-          { "latitude": 35.2101779511583, "longitude": -0.6165050090966996 },
-          { "latitude": 35.21045848603217, "longitude": -0.6165121604268277 },
-          { "latitude": 35.21052810832488, "longitude": -0.6164092048854353 },
-          { "latitude": 35.21063330037793, "longitude": -0.6163376656886288 },
-          { "latitude": 35.210779930961, "longitude": -0.6163262228974544 },
-          { "latitude": 35.210867597563215, "longitude": -0.6164120401683438 },
-          { "latitude": 35.21101370853492, "longitude": -0.6164477974736605 },
-          { "latitude": 35.211578547288326, "longitude": -0.6164699891864479 },
-          { "latitude": 35.21196634437207, "longitude": -0.6164549488037886 },
-          { "latitude": 35.212123483879914, "longitude": -0.6164234814858373 },
-          { "latitude": 35.21228126641403, "longitude": -0.6163752054463912 },
-          { "latitude": 35.21253839273895, "longitude": -0.6162464482452102 },
-          { "latitude": 35.212814508965444, "longitude": -0.6160157968022252 },
-          { "latitude": 35.21290216635059, "longitude": -0.6159246017775134 },
-          { "latitude": 35.21301320089465, "longitude": -0.6158030033111573 },
-          { "latitude": 35.213206165986335, "longitude": -0.6156206130981446 }
-        ],
-        "_id": "61f31b976ffce81aa0c2f0be"
-      },
-      {
-        "from": { "coordinates": { "latitude": 35.213206165986335, "longitude": -0.6156206130981446 }, "name": "Ghalmi Gare Routiere Est", "id": "61eb2de817e57cb86cb3f913" },
-        "to": { "coordinates": { "latitude": 35.21655345057359, "longitude": -0.6127423658086785 }, "name": "Freres Adnane 1", "id": "61eb2de817e57cb86cb3f912" },
-        "path": [
-          { "latitude": 35.213206165986335, "longitude": -0.6156206130981446 },
-          { "latitude": 35.21328930373694, "longitude": -0.6155723375040423 },
-          { "latitude": 35.2135741998712, "longitude": -0.6153523921966554 },
-          { "latitude": 35.213797706646176, "longitude": -0.6151968240737916 },
-          { "latitude": 35.21424475194265, "longitude": -0.6148213148117065 },
-          { "latitude": 35.214736688656394, "longitude": -0.6144216677525606 },
-          { "latitude": 35.215029263036364, "longitude": -0.614178935130998 },
-          { "latitude": 35.21525058360109, "longitude": -0.614022008188957 },
-          { "latitude": 35.21547410015716, "longitude": -0.6138932746607195 },
-          { "latitude": 35.215776503929895, "longitude": -0.6137524701498687 },
-          { "latitude": 35.21607025899423, "longitude": -0.613617550713006 },
-          { "latitude": 35.21630021376114, "longitude": -0.6135325123380043 },
-          { "latitude": 35.21644920190444, "longitude": -0.6134694898045123 },
-          { "latitude": 35.21648866650055, "longitude": -0.6133460956853498 },
-          { "latitude": 35.21652479415671, "longitude": -0.6132777003975165 },
-          { "latitude": 35.21657385009192, "longitude": -0.6132319123637121 },
-          { "latitude": 35.216570064331854, "longitude": -0.6131621795342612 },
-          { "latitude": 35.216558818971684, "longitude": -0.6129115819931031 },
-          { "latitude": 35.21655345057359, "longitude": -0.6127423658086785 }
-        ],
-        "_id": "61f02c1e5a12930109371534"
-      },
-      {
-        "from": { "coordinates": { "latitude": 35.21655345057359, "longitude": -0.6127423658086785 }, "name": "Freres Adnane 1", "id": "61eb2de817e57cb86cb3f912" },
-        "to": { "coordinates": { "latitude": 35.21605524559706, "longitude": -0.6083192003657257 }, "name": "Freres Adnane 2", "id": "61eb2de817e57cb86cb3f911" },
-        "path": [
-          { "latitude": 35.21655345057359, "longitude": -0.6127423658086785 },
-          { "latitude": 35.21650271841917, "longitude": -0.612537683824217 },
-          { "latitude": 35.21633821777988, "longitude": -0.6119406134500549 },
-          { "latitude": 35.21625933049366, "longitude": -0.6115972951359773 },
-          { "latitude": 35.21618044151239, "longitude": -0.6112593368001008 },
-          { "latitude": 35.21611324146468, "longitude": -0.6106978596209302 },
-          { "latitude": 35.216078181170055, "longitude": -0.6104618295037789 },
-          { "latitude": 35.216035194745714, "longitude": -0.6102492234855484 },
-          { "latitude": 35.215875119680376, "longitude": -0.610150697861549 },
-          { "latitude": 35.215787465016945, "longitude": -0.6099790274412699 },
-          { "latitude": 35.21575094230287, "longitude": -0.609712597693566 },
-          { "latitude": 35.21579558763881, "longitude": -0.6094768680475827 },
-          { "latitude": 35.21584589922271, "longitude": -0.6092852354049684 },
-          { "latitude": 35.21591163573124, "longitude": -0.609120700577286 },
-          { "latitude": 35.21602120522569, "longitude": -0.6089007775247169 },
-          { "latitude": 35.21603435787206, "longitude": -0.6086719074192094 },
-          { "latitude": 35.216041038721286, "longitude": -0.6084756661174407 },
-          { "latitude": 35.21605524559706, "longitude": -0.6083192003657257 }
-        ],
-        "_id": "61f022346922ac74cbec0b5b"
-      },
-      {
-        "from": { "coordinates": { "latitude": 35.21605524559706, "longitude": -0.6083192003657257 }, "name": "Freres Adnane 2", "id": "61eb2de817e57cb86cb3f911" },
-        "to": { "coordinates": { "latitude": 35.21759660484635, "longitude": -0.60683348970215 }, "name": "Lycee Miloua Maachou", "id": "61eb2de817e57cb86cb3f910" },
-        "path": [
-          { "latitude": 35.21605524559706, "longitude": -0.6083192003657257 },
-          { "latitude": 35.21604103845379, "longitude": -0.6080823373957079 },
-          { "latitude": 35.2159942861022, "longitude": -0.6076031907483692 },
-          { "latitude": 35.21598844185572, "longitude": -0.6068808956033346 },
-          { "latitude": 35.21640336973678, "longitude": -0.6068737439458483 },
-          { "latitude": 35.21681245130976, "longitude": -0.6068665929430984 },
-          { "latitude": 35.21715724719872, "longitude": -0.6068308353104036 },
-          { "latitude": 35.217537105371704, "longitude": -0.6068236843076535 },
-          { "latitude": 35.21759660484635, "longitude": -0.60683348970215 }
-        ],
-        "order": 13,
-        "_id": "61eb3a340ea98782be559c3a"
-      },
-      {
-        "from": { "coordinates": { "latitude": 35.21759660484635, "longitude": -0.60683348970215 }, "name": "Lycee Miloua Maachou", "id": "61eb2de817e57cb86cb3f910" },
-        "to": { "coordinates": { "latitude": 35.21983481578884, "longitude": -0.6085910046433507 }, "name": "Rocher Terminus", "id": "61eb2de817e57cb86cb3f90f" },
-        "path": [
-          { "latitude": 35.21759660484635, "longitude": -0.60683348970215 },
-          { "latitude": 35.21780008300375, "longitude": -0.6068308353104036 },
-          { "latitude": 35.21794618123092, "longitude": -0.6068093809927012 },
-          { "latitude": 35.218255908881, "longitude": -0.6068022293352149 },
-          { "latitude": 35.219050675993444, "longitude": -0.6067450180395341 },
-          { "latitude": 35.21941299384193, "longitude": -0.6067235637218116 },
-          { "latitude": 35.219711028205715, "longitude": -0.6066878067438531 },
-          { "latitude": 35.2197636223916, "longitude": -0.6067807750174926 },
-          { "latitude": 35.21982790408348, "longitude": -0.6084899694324132 },
-          { "latitude": 35.21983481578884, "longitude": -0.6085910046433507 }
-        ],
-        "order": 14,
-        "_id": "61eb3a340ea98782be559c3b"
-      }
-    ],
-    "__v": 0
-  }
-]
+      "path": [
+        { "latitude": 35.186911841409916, "longitude": -0.6505966186523439 },
+        { "latitude": 35.18740320331916, "longitude": -0.6487941741943359 },
+        { "latitude": 35.18740320331916, "longitude": -0.6417560577392579 },
+        { "latitude": 35.18810514374976, "longitude": -0.6336021423339845 },
+        { "latitude": 35.189649391353065, "longitude": -0.6251907348632814 },
+        { "latitude": 35.19098303611949, "longitude": -0.6135177612304689 },
+        { "latitude": 35.191053227342906, "longitude": -0.6116294860839845 }
+      ],
+      "order": 4,
+      "_id": { "$oid": "6204548884fc039282ce005c" }
+    }
+  ],
+  "__v": 0
+}

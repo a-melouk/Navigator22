@@ -62,6 +62,18 @@ Case 3-   Updated the path (Ghalmi & Adnane)
       Update the segment that have TO_STATION as a FROM_STATION if exists (Gare Routiere Sud only in TO, not in FROM) (Adnane => Benhamouda)
           Replace the first point of the segment with the new coordinates          
           
-                
+//Sort a line per the order of the segment
+db.lines.aggregate([{"$match":{"name":"tramway retour","route.order":{$gt:15}}},{$unwind:"$route"},{$sort:{"route.order":1}},{"$group": {"_id": "$_id","route": {"$push": "$route"}}}]).pretty()
 
+//Get segment with order > 15
+db.test.aggregate([{"$match": {"name": "metro 1"}},{"$unwind": "$route"},{"$match": {"route.order": {"$gt": 2}}},{"$group": {"_id":"$_id","route": {"$push": "$route"}}}]).pretty()
 
+1- Add new segment to a line:       
+    segmentOrder = line.route.length+1                          DONE
+
+2- Add middle station:              
+    - {1stOrder=oldOrder; 2ndOrder=oldOrder+1}                  DONE 
+    - increment order of all segments with order=(oldOrder+1)   WORKING
+    
+3- Delete segment                   
+    decrease order of all segments with higher order            WORKING 
