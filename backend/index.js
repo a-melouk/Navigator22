@@ -10,10 +10,7 @@ const Line = Models.Line
 const Station = Models.Station
 
 //express app
-console.log(__dirname)
 const app = express()
-app.use('/frontend', express.static('../frontend'))
-
 app.use(bodyParser.json())
 app.use(cors())
 const dbURI = 'mongodb://127.0.0.1/navigator'
@@ -27,9 +24,6 @@ mongoose
     console.log('Running on 4000')
   })
 //---------------------------------------------------------------------//
-
-// distance between two geographical points using spherical law of cosines approximation
-
 async function stationAlreadyExistsLine(line, name) {
   const request = await Station.find({ line: line, name: name })
   if (request.length > 0) return true

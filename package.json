@@ -2,10 +2,10 @@
   "name": "navigator22",
   "version": "1.0.0",
   "description": "Routing app for the city of Sidi Bel-Abbès",
-  "main": "backend/services/index.js",
+  "main": "backend/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node backend/services/index.js"
+    "start": "node backend/index.js"
   },
   "keywords": [
     "routing",
