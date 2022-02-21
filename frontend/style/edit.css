@@ -1,0 +1,229 @@
+@font-face {
+  font-family: Oswald;
+  src: url(../static/Oswald-Medium.ttf);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Oswald, sans-serif;
+  font-size: 16px;
+  text-align: center;
+}
+
+body {
+  background-color: #1a1a1a;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a1a1a;
+  margin: 2px 0;
+}
+
+.nav .container {
+  width: 30%;
+  height: 8vh;
+  padding: 0 10px;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px 2px 10px;
+  border: 3px solid #27f89a;
+}
+
+.get-line {
+  display: flex;
+  align-items: center;
+}
+
+label {
+  color: #27f89a;
+  padding: 10px;
+  font-size: 1.4rem;
+}
+
+select {
+  text-align: center;
+  color: black;
+  font-size: 1.1rem;
+  text-align: center;
+  height: 40px;
+}
+
+#line_schedule {
+  width: 150px;
+}
+
+#getline {
+  background-color: #ffffff;
+  color: #000;
+}
+
+#getline:hover {
+  box-shadow: 0 3px #27f89a;
+  top: 1px;
+}
+#getline:active {
+  box-shadow: 0 0 #27f89a;
+  top: 5px;
+}
+
+#getline:disabled {
+  box-shadow: 0 0;
+  cursor: not-allowed;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+#getline:disabled:hover {
+  box-shadow: 0 0;
+  cursor: not-allowed;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  top: 0;
+}
+
+button {
+  width: 7rem;
+  height: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 5px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.schedule {
+  grid-column: 1;
+  grid-row: 2;
+  height: 80vh;
+  display: flex;
+  flex-wrap: nowrap;
+  margin-top: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.schedule .table {
+  width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 5px solid rgb(255, 238, 0);
+}
+
+.schedule_header,
+.rows {
+  margin: 5px;
+  display: flex;
+  width: 70rem;
+}
+
+.schedule_header div {
+  font-size: 1.3rem;
+  background-color: wheat;
+  min-width: 10%;
+}
+
+.schedule_header {
+  border: 4px solid black;
+  border-left: 0;
+  border-right: 0;
+}
+
+.schedule_header div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rows {
+  border-top: 4px solid black;
+  border-bottom: 4px solid black;
+  flex-direction: column;
+}
+
+.rows:last-child {
+  border-bottom: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: wheat;
+  border-bottom: 4px solid black;
+}
+
+.row div {
+  height: 3rem;
+}
+
+.row div:nth-child(1),
+.row div:nth-child(2) {
+  min-width: 30%;
+}
+
+.row div {
+  border-left: 4px solid black;
+}
+
+.schedule_header div:last-child,
+.row div:last-child {
+  min-width: 20%;
+}
+.distance,
+.duration {
+  min-width: 10%;
+}
+
+.row .duration {
+  border-left: 0;
+}
+
+.value {
+  width: 100%;
+}
+
+.cell,
+.value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-left: 4px solid black;
+  border-right: 4px solid black;
+  height: 2.8rem;
+}
+
+.actions button {
+  background-color: #000000;
+  max-width: 5rem;
+  color: #27f89a;
+}
+
+.row_duration:focus {
+  background-color: #27f89a;
+}

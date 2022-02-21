@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="widdiv=device-widdiv, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Navigator 22</title>
+    <link rel="stylesheet" href="./static/leaflet.css" />
+    <script src="./static/leaflet.js"></script>
+    <link rel="stylesheet" href="./static/leaflet.draw.css" />
+    <script src="./static/leaflet.draw.js"></script>
+
+    <link href="./style/animations.css" rel="stylesheet" />
+    <link href="./style/edit.css" rel="stylesheet" />
+    <link href="./style/prompts_notification.css" rel="stylesheet" />
+    <link href="./static/wickedcss.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="nav">
+      <div class="container">
+        <div class="get-line slideDown">
+          <label for="line_schedule">Line</label>
+          <select name="line_schedule" id="line_schedule">
+            <option disabled selected value>--Select a line --</option>
+          </select>
+        </div>
+        <button class="get slideLeft" id="getline" style="margin-left: 10px">Get line</button>
+      </div>
+    </div>
+    <div class="schedule">
+      <div class="table">
+        <div class="row schedule_header">
+          <div>From</div>
+          <div>To</div>
+          <div>Distance</div>
+          <div>Duration</div>
+          <div class="actions">Actions</div>
+        </div>
+        <div class="rows">
+          <div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div><div class="row">
+            <div class="cell station">DGARP Direction des services agricoles</div>
+            <div class="cell station">Ghalmi, Gare Routière Est</div>
+            <div class="cell distance">495</div>
+            <div class="cell duration">
+              <div class="value" contenteditable>101</div>
+            </div>
+            <div class="segment_id" hidden>24641264646+6</div>
+            <div class="actions" id="actions">
+              <button id="confirm_schedule">Confirm</button>
+              <button id="cancel_schedule">Cancel</button>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <script src="./scripts/utils.js" type="text/javascript"></script>
+    <script src="./scripts/api.js" type="text/javascript"></script>
+    <script src="./scripts/medivods.js" type="text/javascript"></script>
+    <script src="./scripts/schedule.js" type="text/javascript"></script>
+
+    <script>
+      populate()
+    </script>
+  </body>
+</html>
