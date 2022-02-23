@@ -36,6 +36,7 @@ body {
   align-items: center;
   border-radius: 10px 2px 10px;
   border: 3px solid #27f89a;
+  background-color: #000;
 }
 
 .get-line {
@@ -126,7 +127,8 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 5px solid rgb(255, 238, 0);
+  border: 5px solid black;
+  background-color: orangered;
 }
 
 .schedule_header,
@@ -136,44 +138,30 @@ button {
   width: 70rem;
 }
 
-.schedule_header div {
+.schedule_header > div {
   font-size: 1.3rem;
-  background-color: wheat;
-  min-width: 10%;
-}
-
-.schedule_header {
-  border: 4px solid black;
-  border-left: 0;
-  border-right: 0;
-}
-
-.schedule_header div {
+  background-color: #27f89a;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom: 4px solid black;
 }
 
 .rows {
-  border-top: 4px solid black;
   border-bottom: 4px solid black;
   flex-direction: column;
-}
-
-.rows:last-child {
-  border-bottom: 0;
 }
 
 .row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: wheat;
-  border-bottom: 4px solid black;
+  background-color: white;
+  border-top: 4px solid black;
+  height: 3rem;
 }
 
-.row div {
-  height: 3rem;
+.row > div {
+  height: 100%;
 }
 
 .row div:nth-child(1),
@@ -181,25 +169,31 @@ button {
   min-width: 30%;
 }
 
-.row div {
+.row > div {
+  border-right: 4px solid black;
+}
+
+.row > div:first-child {
   border-left: 4px solid black;
 }
 
-.schedule_header div:last-child,
-.row div:last-child {
-  min-width: 20%;
+.schedule_header > div:last-child,
+.row > div:last-child {
+  min-width: 23%;
 }
-.distance,
+.distance {
+  min-width: 7%;
+}
+
 .duration {
   min-width: 10%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
-.row .duration {
-  border-left: 0;
-}
-
-.value {
-  width: 100%;
+#duration {
+  width: 80%;
 }
 
 .cell,
@@ -213,15 +207,19 @@ button {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-left: 4px solid black;
   border-right: 4px solid black;
-  height: 2.8rem;
+  /* height: 100%; */
 }
 
 .actions button {
   background-color: #000000;
   max-width: 5rem;
   color: #27f89a;
+}
+
+.actions button:hover {
+  box-shadow: 0 3px #27f89a;
+  top: 1px;
 }
 
 .row_duration:focus {
