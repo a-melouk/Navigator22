@@ -198,13 +198,15 @@ app.get('/lines/:line/stations', (request, response) => {
       data[0].route.forEach(item => {
         let from = { coordinates: item.from.coordinates, name: item.from.name, id: item.from.id }
         let to = { coordinates: item.to.coordinates, name: item.to.name, id: item.to.id }
-        let order = item.order
         fromStations.push(from)
         toStations.push(to)
         let segment = {
           from: from,
           to: to,
-          order: order,
+          order: item.order,
+          distance: item.distance,
+          duration: item.duration,
+          id: item._id,
         }
         line.push(segment)
       })
@@ -526,12 +528,12 @@ function calculateDistanceSegment(path) {
 }
 
 /* const speed = (1000 / 3600) * 21
-Line.findOne({ name: 'tramway' }).then(data => {
+Line.findOne({ name: 'tramway retour' }).then(data => {
   data.route.forEach(segment => {
     let distance = Math.ceil(calculateDistanceSegment(segment.path))
     Line.updateOne(
       {
-        name: 'tramway',
+        name: 'tramway retour',
       },
       {
         $set: {

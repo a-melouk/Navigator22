@@ -70,7 +70,7 @@ getsegment.addEventListener('click', () => {
     if (typeof data.from !== 'undefined') {
       addSegmentToMap(data, 'blue', 'segment')
       segmentLayer.options = {
-        id: data.id
+        id: data.id,
       }
       segmentLayer.addTo(map)
 
@@ -82,7 +82,7 @@ getsegment.addEventListener('click', () => {
         tempLayers[2]._latlngs.forEach(item => {
           let point = {
             latitude: item.lat,
-            longitude: item.lng
+            longitude: item.lng,
           }
           path.push(point)
         })
@@ -100,20 +100,20 @@ getsegment.addEventListener('click', () => {
               let middleStation = {
                 name: donnee.name,
                 coordinates: donnee.coordinates,
-                id: donnee._id
+                id: donnee._id,
               }
               let firstSegment = {
                 from: from,
                 to: middleStation,
                 path: middle.firstHalf,
-                order: data.order
+                order: data.order,
               }
 
               let secondSegment = {
                 from: middleStation,
                 to: to,
                 path: middle.secondHalf,
-                order: data.order + 1
+                order: data.order + 1,
               }
               deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
                 patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
@@ -147,7 +147,7 @@ addline.addEventListener('click', () => {
   let line = {
     name: nameOfTheLine,
     type: nameOfTheLine === 'tramway' ? 'tramway' : 'bus',
-    route: routeLine
+    route: routeLine,
   }
 
   postLineDb(line).then(() => {

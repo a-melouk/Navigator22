@@ -21,10 +21,10 @@ body {
   justify-content: center;
   align-items: center;
   background-color: #1a1a1a;
-  margin: 2px 0;
 }
 
 .nav .container {
+  margin: 2px 0;
   width: 30%;
   height: 8vh;
   padding: 0 10px;
@@ -42,6 +42,8 @@ body {
 .get-line {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 300px;
 }
 
 label {
@@ -59,38 +61,7 @@ select {
 }
 
 #line_schedule {
-  width: 150px;
-}
-
-#getline {
-  background-color: #ffffff;
-  color: #000;
-}
-
-#getline:hover {
-  box-shadow: 0 3px #27f89a;
-  top: 1px;
-}
-#getline:active {
-  box-shadow: 0 0 #27f89a;
-  top: 5px;
-}
-
-#getline:disabled {
-  box-shadow: 0 0;
-  cursor: not-allowed;
-  border: 1px solid #999999;
-  background-color: #cccccc;
-  color: #666666;
-}
-
-#getline:disabled:hover {
-  box-shadow: 0 0;
-  cursor: not-allowed;
-  border: 1px solid #999999;
-  background-color: #cccccc;
-  color: #666666;
-  top: 0;
+  width: 250px;
 }
 
 button {
@@ -122,7 +93,7 @@ button {
 
 .schedule .table {
   width: 90%;
-  max-height: 90%;
+  max-height: 95%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -138,26 +109,61 @@ button {
   width: 70rem;
 }
 
+.schedule_header {
+  justify-content: space-between;
+  position: fixed;
+  top: 5.6rem;
+  left: 7.4rem;
+  height: 3rem;
+  border: 4px solid black;
+  border-bottom: 0;
+}
+
 .schedule_header > div {
   font-size: 1.3rem;
   background-color: #27f89a;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 4px solid black;
+  min-height: 100%;
 }
 
 .rows {
-  border-bottom: 4px solid black;
   flex-direction: column;
+  margin-top: 3.5rem;
+  margin-bottom: 10px;
+  max-height: 90%;
+  overflow-y: auto;
+  border: 4px solid black;
+  border-top: 0;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  background-color: orangered;
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #27f89a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: orangered;
 }
 
 .row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: white;
-  border-top: 4px solid black;
-  height: 3rem;
+  min-height: 3.3rem;
+  border-bottom: 4px solid black;
+}
+
+.rows > .row:last-child {
+  border-bottom: 0;
 }
 
 .row > div {
@@ -167,33 +173,28 @@ button {
 .row div:nth-child(1),
 .row div:nth-child(2) {
   min-width: 30%;
-}
-
-.row > div {
-  border-right: 4px solid black;
-}
-
-.row > div:first-child {
-  border-left: 4px solid black;
+  max-width: 30%;
 }
 
 .schedule_header > div:last-child,
 .row > div:last-child {
   min-width: 23%;
+  max-width: 23%;
 }
 .distance {
   min-width: 7%;
+  max-width: 7%;
 }
 
 .duration {
   min-width: 10%;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 }
 
-#duration {
-  width: 80%;
+.value {
+  width: 60% !important;
 }
 
 .cell,
@@ -207,8 +208,6 @@ button {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-right: 4px solid black;
-  /* height: 100%; */
 }
 
 .actions button {

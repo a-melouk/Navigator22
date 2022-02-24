@@ -24,33 +24,19 @@
             <option disabled selected value>--Select a line --</option>
           </select>
         </div>
-        <button class="get slideLeft" id="getline" style="margin-left: 10px">Get line</button>
+        <!-- <button class="get slideLeft" id="getline" style="margin-left: 10px">Get line</button> -->
       </div>
     </div>
     <div class="schedule">
       <div class="table">
-        <div class="row schedule_header">
+        <div class="row schedule_header" id="schedule_header">
           <div>From</div>
           <div>To</div>
           <div class="distance">Distance</div>
           <div class="duration">Duration</div>
           <div class="actions">Actions</div>
         </div>
-        <div class="rows">
-          <div class="row">
-            <div class="cell station">DGARP Direction des services agricoles</div>
-            <div class="cell station">Ghalmi, Gare Routière Est</div>
-            <div class="cell distance">495</div>
-            <div class="duration">
-              <input type="text" value="101" id="duration" class="cell duration value" />
-            </div>
-            <div class="segment_id" hidden>24641264646+6</div>
-            <div class="actions">
-              <button id="confirm_schedule">Confirm</button>
-              <button id="cancel_schedule">Cancel</button>
-            </div>
-          </div>
-        </div>
+        <div class="rows"></div>
       </div>
     </div>
 
