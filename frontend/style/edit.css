@@ -219,4 +219,29 @@ div.duration {
 #confirm_all {
   margin-bottom: 10px;
   min-height: 2.5rem;
+  background-color: #27f89a;
+  color: #000;
+  font-weight: bold;
+}
+
+#confirm_all:hover {
+  box-shadow: 0 3px #000000;
+  top: 1px;
+}
+
+#confirm_all:disabled {
+  box-shadow: 0 0;
+  cursor: not-allowed;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+#confirm_all:disabled:hover {
+  box-shadow: 0 0;
+  cursor: not-allowed;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  top: 0;
 }

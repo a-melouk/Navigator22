@@ -52,11 +52,6 @@ line_schedule.addEventListener('change', event => {
       const duration_div = document.createElement('div')
       const duration_input = document.createElement('input')
       const segmentID = document.createElement('div')
-      // const actions = document.createElement('div')
-      // const confirm_schedule = document.createElement('button')
-      // const cancel_schedule = document.createElement('button')
-      // confirm_schedule.innerHTML = 'Confirm'
-      // cancel_schedule.innerHTML = 'Cancel'
       fromStation.innerHTML = item.from.name
       toStation.innerHTML = item.to.name
       distance.innerHTML = item.distance
@@ -76,42 +71,48 @@ line_schedule.addEventListener('change', event => {
       segmentID.classList.add('segment_id')
       segmentID.hidden = true
       duration_div.appendChild(duration_input)
-      // actions.classList.add('actions')
-      // actions.appendChild(confirm_schedule)
-      // actions.appendChild(cancel_schedule)
       const row = document.createElement('div')
       row.classList.add('row')
       row.append(fromStation, toStation, distance, duration_div, segmentID)
-      // , actions)
       document.getElementsByClassName('rows')[0].appendChild(row)
     })
     if (document.getElementsByClassName('table')[0].children.length === 2) {
       const confirm_all = document.createElement('button')
       confirm_all.innerHTML = 'Confirm all '
       confirm_all.setAttribute('id', 'confirm_all')
+      confirm_all.disabled = true
       document.getElementsByClassName('table')[0].appendChild(confirm_all)
+    }
+
+    function clickConfirm() {
+      let dif = differenceNewOriginal(originalDurations, newDurations)
+      patchSegmentDurationDb(JSON.parse(document.getElementById('line_schedule').value)._id, dif)
+      document.getElementById('confirm_all').removeEventListener('click', clickConfirm, true)
+      line_schedule.value = ''
+      document.getElementsByClassName('rows')[0].replaceChildren()
+      confirm_all.disabled = true
     }
 
     newDurations = JSON.parse(JSON.stringify(originalDurations))
     const inputs = document.querySelectorAll('input')
     inputs.forEach(value =>
       value.addEventListener('focusout', e => {
-        let segment = {}
-        let search = searchById(newDurations, value.parentNode.children[0].getAttribute('id'))
-        if (search.length !== 1) throw new Error('More than one segment had that id')
-        else {
-          segment = search[0]
-          if (Number(e.target.value) !== segment.duration) {
-            newDurations[segment.index].duration = Number(e.target.value)
-            //change background of modified elements
-            console.log(originalDurations)
-            console.log(newDurations)
-          }
-        }
+        let searchOriginal = searchById(originalDurations, value.parentNode.children[0].getAttribute('id'))
+        if (searchOriginal.length !== 1) throw new Error('More than one segment have that id')
+        else if (Number(e.target.value) !== searchOriginal[0].duration) value.style.backgroundColor = '#27f89a'
+        else value.style.backgroundColor = 'white'
+
+        let searchPatched = searchById(newDurations, value.parentNode.children[0].getAttribute('id'))
+        if (searchPatched.length !== 1) throw new Error('More than one segment have that id')
+        else if (Number(e.target.value) !== searchPatched[0].duration) newDurations[searchPatched[0].index].duration = Number(e.target.value)
+
+        let difference = differenceNewOriginal(originalDurations, newDurations)
+        // console.log(difference)
+        if (difference.length > 0) {
+          confirm_all.disabled = false
+          document.getElementById('confirm_all').addEventListener('click', clickConfirm, true)
+        } else confirm_all.disabled = true
       })
     )
   })
 })
-
-// const getall = getAllSegmentLineDb('tramway retour').then(data => console.log(data))
-// getAllSegmentLineDb('metro').then(data => {

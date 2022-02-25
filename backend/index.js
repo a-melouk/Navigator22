@@ -337,6 +337,36 @@ app.patch('/segment', (request, response) => {
     .catch(err => response.json(err))
 })
 
+app.patch('/duration', (request, response) => {
+  let id = request.query.id
+  let body = request.body
+  const promise = new Promise((resolve, reject) => {
+    for (let i = 0; i < body.length; i++) {
+      Line.updateOne({ _id: ObjectId(id), 'route._id': body[i].segment_id }, { $set: { 'route.$.duration': body[i].duration } }).then(data => {
+        if (data.matchedCount === 0) reject('Line does not exist')
+        else if (data.modifiedCount === 1) console.log('Patched ' + (i + 1))
+        else reject('There was an error updating the segment')
+        if (i === body.length - 1) resolve(i + 1 + 'segments have been patched successfully')
+      })
+    }
+  })
+  promise
+    .then(data => {
+      console.log('finished updating ' + data)
+      response.json({
+        status: 200,
+        message: data,
+      })
+    })
+    .catch(err => {
+      console.log(err)
+      response.status(404).json({
+        status: 404,
+        message: err,
+      })
+    })
+})
+
 app.patch('/line', (request, response) => {
   let lineID = request.query.id
   let body = request.body

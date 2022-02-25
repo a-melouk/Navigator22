@@ -144,7 +144,6 @@ select {
   width: 100%;
   display: flex;
   align-items: center;
-  flex-direction: column;
   flex-wrap: wrap;
   justify-content: space-evenly;
 }
@@ -381,4 +380,16 @@ select {
   height: 0;
   width: 100%;
   background: #d90429;
+}
+
+a.btn {
+  text-decoration: none;
+  color: white;
+  width: 7rem;
+  height: 2rem;
+  background: #2c36cf;
+  box-shadow: 0 5px #0412d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

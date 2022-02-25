@@ -186,6 +186,23 @@ async function patchSegmentDb(id, body) {
   }
 }
 
+async function patchSegmentDurationDb(id, body) {
+  try {
+    const response = await fetch(baseURI + 'duration?id=' + id, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    const data = await response.json()
+    return data
+  } catch (err) {
+    return err
+  }
+}
+
 async function patchLineDb(lineID, body) {
   try {
     const response = await fetch(baseURI + 'line?id=' + lineID, {
