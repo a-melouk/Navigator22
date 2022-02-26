@@ -8,6 +8,8 @@ const Models = require('./Models/line')
 const { ObjectId } = require('mongodb')
 const Line = Models.Line
 const Station = Models.Station
+const LineMatrix = Models.LineMatrix
+require('dotenv').config()
 
 //express app
 const app = express()
@@ -558,12 +560,12 @@ function calculateDistanceSegment(path) {
 }
 
 /* const speed = (1000 / 3600) * 21
-Line.findOne({ name: 'tramway retour' }).then(data => {
+Line.findOne({ name: 'metro' }).then(data => {
   data.route.forEach(segment => {
     let distance = Math.ceil(calculateDistanceSegment(segment.path))
     Line.updateOne(
       {
-        name: 'tramway retour',
+        name: 'metro',
       },
       {
         $set: {
@@ -574,4 +576,80 @@ Line.findOne({ name: 'tramway retour' }).then(data => {
       { arrayFilters: [{ 'segment._id': segment._id }] }
     ).then(data => console.log(data.modifiedCount))
   })
+}) */
+// import {GH} from 'graphhopper-js-api-client';
+
+function transform(array) {
+  let result = []
+  array.forEach(item => {
+    let point = {
+      latitude: item[1],
+      longitude: item[0],
+    }
+    result.push(point)
+  })
+  return result
+}
+
+const GraphHopperRouting = require('graphhopper-js-api-client/src/GraphHopperRouting')
+const GHInput = require('graphhopper-js-api-client/src/GHInput')
+const profile = 'foot'
+
+const ghRouting = new GraphHopperRouting({
+  key: process.env.GRAPHHOPPER_KEY,
+  vehicle: profile,
+  locale: 'fr',
+  elevation: false,
+})
+
+async function addMatrix(nameOfTheLine) {
+  return new Promise((resolve, reject) => {
+    let route = []
+    Line.find({ name: nameOfTheLine })
+      .then(async lineData => {
+        for (let i = 0; i < lineData[0].route.length; i++) {
+          let item = lineData[0].route[i]
+          ghRouting.clearPoints()
+          let from = item.from
+          let to = item.to
+          ghRouting.addPoint(new GHInput(from.coordinates.latitude, from.coordinates.longitude))
+          ghRouting.addPoint(new GHInput(to.coordinates.latitude, to.coordinates.longitude))
+          let data = await ghRouting.doRequest()
+          let segment = {
+            from: item.from,
+            to: item.to,
+            _id: item._id,
+            transport: {
+              order: item.order,
+              distance: item.distance,
+              duration: item.duration,
+              path: item.path,
+            },
+            walk: {
+              distance: Math.ceil(data.paths[0].distance),
+              duration: Math.ceil(data.paths[0].time / 1000),
+              path: transform(data.paths[0].points.coordinates),
+            },
+          }
+          route.push(segment)
+          if (i + 1 === lineData[0].route.length) {
+            let body = {
+              name: nameOfTheLine,
+              route: route,
+            }
+            const lineMatrix = new LineMatrix(body)
+            lineMatrix
+              .save()
+              .then(() => resolve('Inserted ' + nameOfTheLine))
+              .catch(err => console.log(err))
+          }
+        }
+      })
+      .catch(err => console.log('Error fetching lines ' + err))
+  })
+}
+
+/* Line.find({}, { name: 1, _id: 0 }).then(data => {
+  console.log('STARTED')
+  for (let i = 0; i < data.length; i++) addMatrix(data[i].name).then(line => console.log(line))
 }) */

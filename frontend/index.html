@@ -130,6 +130,15 @@
     <script>
       init()
       populate()
+      const key = 'd9104c9d-8ef1-40aa-be38-10cbf1c4fe9d'
+      const x1 = 35.2090247480782
+      const y1 = -0.6162750701035336
+      const x2 = 35.21326746334253
+      const y2 = -0.615711808204651
+
+      fetch('https://graphhopper.com/api/1/route?point=' + x1 + ',' + y1 + '&point=' + x2 + ',' + y2 + '&vehicle=foot&locale=de&points_encoded=false&key=' + key)
+        .then(data => data.json())
+        .then(data => console.log(data.paths[0]))
     </script>
   </body>
 </html>

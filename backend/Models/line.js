@@ -50,6 +50,31 @@ const lineSchema = new Schema({
   route: [segment],
 })
 
+const segmentMatrix = {
+  from: station,
+  to: station,
+  transport: {
+    order: Number,
+    duration: Number,
+    distance: Number,
+    path: [coordinates],
+  },
+  walk: {
+    duration: Number,
+    distance: Number,
+    path: [coordinates],
+  },
+}
+
+const lineMatrixSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  route: [segmentMatrix],
+})
+
 const Line = mongoose.model('Line', lineSchema)
 const Station = mongoose.model('Station', stationSchema)
-module.exports = { Line, Station }
+const LineMatrix = mongoose.model('Matrix', lineMatrixSchema)
+module.exports = { Line, Station, LineMatrix }
