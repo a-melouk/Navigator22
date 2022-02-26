@@ -649,7 +649,7 @@ async function addMatrix(nameOfTheLine) {
   })
 }
 
-/* Line.find({}, { name: 1, _id: 0 }).then(data => {
-  console.log('STARTED')
-  for (let i = 0; i < data.length; i++) addMatrix(data[i].name).then(line => console.log(line))
-}) */
+// Line.find({}, { name: 1, _id: 0 }).then(data => {
+//   console.log('STARTED')
+//   for (let i = 0; i < data.length; i++) addMatrix(data[i].name).then(line => console.log(line))
+// })

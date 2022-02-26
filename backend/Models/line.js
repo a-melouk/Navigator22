@@ -66,13 +66,16 @@ const segmentMatrix = {
   },
 }
 
-const lineMatrixSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
+const lineMatrixSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    route: [segmentMatrix],
   },
-  route: [segmentMatrix],
-})
+  { timestamps: true }
+)
 
 const Line = mongoose.model('Line', lineSchema)
 const Station = mongoose.model('Station', stationSchema)
