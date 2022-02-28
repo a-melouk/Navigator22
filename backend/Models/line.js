@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
@@ -77,7 +78,29 @@ const lineMatrixSchema = new Schema(
   { timestamps: true }
 )
 
+const stationRoutes = {
+  name: String,
+  coordinates: coordinates,
+  line: String,
+  station_id: ObjectId,
+  distance: Number,
+  duration: Number,
+  path: [coordinates],
+}
+
+const lineMatrix = new Schema(
+  {
+    name: String,
+    coordinates: coordinates,
+    line: String,
+    station_id: ObjectId,
+    route: [stationRoutes],
+  },
+  { timestamps: true }
+)
+
 const Line = mongoose.model('Line', lineSchema)
 const Station = mongoose.model('Station', stationSchema)
 const LineMatrix = mongoose.model('Matrix', lineMatrixSchema)
-module.exports = { Line, Station, LineMatrix }
+const Route = mongoose.model('routes', lineMatrix)
+module.exports = { Line, Station, LineMatrix, Route }

@@ -1,1 +1,25 @@
-{}
+{
+  "name": "Les Cascades",
+  "coordinates": { "latitude": 35.20902474807825, "longitude": -0.6162750701035336 },
+  "line": "tramway",
+  "station_id": 24534,
+  "routes": [
+    {
+      "name": "Ghalmi Gare Routiere Est",
+      "coordinates": {
+        "latitude": 35.21326746334253,
+        "longitude": -0.615711808204651
+      },
+      "line": "tramway",
+      "distance": 685,
+      "duration": 45
+    },
+    {
+      "name": "Les Freres Adnane",
+      "coordinates": { "latitude": 35.21683928147929, "longitude": -0.6147944927215577 },
+      "line": "tramway",
+      "distance": 64,
+      "duration": 64654
+    }
+  ]
+}

@@ -9,6 +9,7 @@ const { ObjectId } = require('mongodb')
 const Line = Models.Line
 const Station = Models.Station
 const LineMatrix = Models.LineMatrix
+const Route = Models.Route
 require('dotenv').config()
 
 //express app
@@ -583,8 +584,8 @@ function transform(array) {
   let result = []
   array.forEach(item => {
     let point = {
-      latitude: item[1],
-      longitude: item[0],
+      latitude: precise(item[1]),
+      longitude: precise(item[0]),
     }
     result.push(point)
   })
@@ -653,3 +654,71 @@ async function addMatrix(nameOfTheLine) {
 //   console.log('STARTED')
 //   for (let i = 0; i < data.length; i++) addMatrix(data[i].name).then(line => console.log(line))
 // })
+
+function precise(number) {
+  return Number(Number.parseFloat(number).toFixed(5))
+}
+
+async function routes(line) {
+  let routes = []
+  // const station = await Station.find({ line: { $nin: ['tramway', 'Ligne 03'] } })
+  const station = await Station.find({ line: 'metro' })
+  for (let i = 0; i < station.length; i++) {
+    const from = station[i]
+    // console.log(from)
+    const promiseFrom = new Promise(async (resolve, reject) => {
+      const stations = await Station.find({})
+      const promises = []
+      for (let j = 0; j < stations.length; j++) {
+        promises.push(
+          new Promise(async (resolve, reject) => {
+            const to = stations[j]
+            // console.log(i, j, from.name, to.name, stations.length)
+            ghRouting.clearPoints()
+            ghRouting.addPoint(new GHInput(from.coordinates.latitude, from.coordinates.longitude))
+            ghRouting.addPoint(new GHInput(to.coordinates.latitude, to.coordinates.longitude))
+            ghRouting.doRequest().then(data => {
+              let route = {
+                // from: from.name,
+                name: to.name,
+                coordinates: {
+                  latitude: to.coordinates.latitude,
+                  longitude: to.coordinates.longitude,
+                },
+                line: to.line,
+                station_id: to._id,
+                distance: Math.ceil(data.paths[0].distance),
+                duration: Math.ceil(data.paths[0].time / 1000),
+                path: transform(data.paths[0].points.coordinates),
+              }
+              resolve(route)
+            })
+          })
+        )
+      }
+      // const data = await Promise.all(promises)
+      Promise.all(promises).then(data => {
+        // console.log(typeof data)
+        // console.log(data)
+        setTimeout(() => {
+          let body = {
+            name: from.name,
+            coordinates: from.coordinates,
+            line: from.line,
+            station_id: from._id,
+            route: data,
+          }
+          resolve(body)
+        }, 10000)
+      })
+      // console.log(data[0])
+    })
+    const data = await promiseFrom
+    const stationToMatrix = new Route(data)
+    stationToMatrix
+      .save()
+      .then(() => console.log('Inserted matrix of ' + data.name + ' of ' + data.line))
+      .catch(err => console.log(err))
+  }
+}
+// routes('Ligne 03')
