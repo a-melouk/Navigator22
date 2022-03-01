@@ -578,7 +578,6 @@ Line.findOne({ name: 'metro' }).then(data => {
     ).then(data => console.log(data.modifiedCount))
   })
 }) */
-// import {GH} from 'graphhopper-js-api-client';
 
 function transform(array) {
   let result = []
@@ -660,12 +659,9 @@ function precise(number) {
 }
 
 async function routes(line) {
-  let routes = []
-  // const station = await Station.find({ line: { $nin: ['tramway', 'Ligne 03'] } })
   const station = await Station.find({ line: 'metro' })
   for (let i = 0; i < station.length; i++) {
     const from = station[i]
-    // console.log(from)
     const promiseFrom = new Promise(async (resolve, reject) => {
       const stations = await Station.find({})
       const promises = []
@@ -673,13 +669,11 @@ async function routes(line) {
         promises.push(
           new Promise(async (resolve, reject) => {
             const to = stations[j]
-            // console.log(i, j, from.name, to.name, stations.length)
             ghRouting.clearPoints()
             ghRouting.addPoint(new GHInput(from.coordinates.latitude, from.coordinates.longitude))
             ghRouting.addPoint(new GHInput(to.coordinates.latitude, to.coordinates.longitude))
             ghRouting.doRequest().then(data => {
               let route = {
-                // from: from.name,
                 name: to.name,
                 coordinates: {
                   latitude: to.coordinates.latitude,
@@ -696,10 +690,7 @@ async function routes(line) {
           })
         )
       }
-      // const data = await Promise.all(promises)
       Promise.all(promises).then(data => {
-        // console.log(typeof data)
-        // console.log(data)
         setTimeout(() => {
           let body = {
             name: from.name,
@@ -711,7 +702,6 @@ async function routes(line) {
           resolve(body)
         }, 10000)
       })
-      // console.log(data[0])
     })
     const data = await promiseFrom
     const stationToMatrix = new Route(data)
@@ -722,3 +712,34 @@ async function routes(line) {
   }
 }
 // routes('Ligne 03')
+app.get('/route', (request, response) => {
+  const from = request.query.from
+  const to = request.query.to
+  Route.find({ station_id: ObjectId(from), 'route.station_id': ObjectId(to) }, { name: 1, coordinates: 1, line: 1, station_id: 1, route: { $elemMatch: { station_id: ObjectId(to) } } }).then(data => {
+    if (data.length !== 1)
+      response.status(404).json({
+        status: 404,
+        message: 'Error retrieving data',
+      })
+    else {
+      let result = {
+        from: {
+          station_id: data[0].station_id,
+          line: data[0].line,
+          name: data[0].name,
+          coordinates: data[0].coordinates,
+        },
+        to: {
+          station_id: data[0].route[0].station_id,
+          line: data[0].route[0].line,
+          name: data[0].route[0].name,
+          coordinates: data[0].route[0].coordinates,
+        },
+        distance: data[0].route[0].distance,
+        duration: data[0].route[0].duration,
+        path: data[0].route[0].path,
+      }
+      response.json(result)
+    }
+  })
+})
