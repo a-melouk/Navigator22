@@ -12,6 +12,8 @@ getsegment.disabled = true
 let routeLine = []
 let nameOfTheLine = ''
 
+let getroute = document.getElementById('getroute')
+
 manipulationsElement.addEventListener('change', event => {
   let manipulation = event.target.value
   map.removeEventListener('draw:created') //for creation of new segments of a new line or just adding new segment to a line(add-segment VS add-line)
@@ -26,6 +28,9 @@ manipulationsElement.addEventListener('change', event => {
     }
   } else if (manipulation.toLowerCase() === 'add-segment') addSegmentToLine()
   else if (manipulation.toLowerCase() === 'add-line') newLine()
+  else if (manipulation === 'getroute') {
+    populateWithAllStations()
+  }
 })
 
 lineElement.addEventListener('change', () => {
@@ -44,6 +49,8 @@ fromElement.addEventListener('change', event => {
   } else if (manipulationsElement.value === 'add-line') {
     addStationToMap(JSON.parse(from), 'markers', nameOfTheLine)
     markersLayer.addTo(map)
+  } else if (manipulationsElement.value === 'getroute') {
+    //
   }
 })
 
@@ -139,6 +146,30 @@ getsegment.addEventListener('click', () => {
       console.warn('Inexistant segment')
       alert('Inexistant segment')
     }
+  })
+})
+
+getroute.addEventListener('click', () => {
+  clearMap(true)
+  const from = JSON.parse(fromElement.value)._id
+  const to = JSON.parse(toElement.value)._id
+  getRoute(from, to).then(route => {
+    addStationToMap(route.from, 'draw', route.from.line)
+    addStationToMap(route.to, 'draw', route.to.line)
+    addPolylineToMap(route.path, 'red', 'draw')
+    let distance = route.distance
+    let duration = route.duration
+    let hours = Math.floor(duration / 3600)
+    let minutes = Math.floor((duration - Math.floor(duration / 3600) * 3600) / 60)
+    let seconds = duration - Math.floor(duration / 3600) * 3600 - Math.floor((duration - Math.floor(duration / 3600) * 3600) / 60) * 60
+    console.log(route.from.coordinates.latitude, route.from.coordinates.longitude)
+    console.log(route.to.coordinates.latitude, route.to.coordinates.longitude)
+    if (Math.floor(distance / 1000) === 0) console.log(distance + 'm')
+    else console.log(distance / 1000 + 'km')
+    if (hours > 0) console.log(hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds')
+    else if (minutes > 0) console.log(minutes + ' minutes, ' + seconds + ' seconds')
+    else if (seconds > 0) console.log(seconds + ' seconds')
+    else console.log('Error')
   })
 })
 

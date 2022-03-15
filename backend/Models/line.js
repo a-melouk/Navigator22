@@ -85,7 +85,8 @@ const stationRoutes = {
   station_id: ObjectId,
   distance: Number,
   duration: Number,
-  path: [coordinates],
+  // path: [coordinates],
+  path: String,
 }
 
 const lineMatrix = new Schema(

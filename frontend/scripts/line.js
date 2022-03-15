@@ -37,6 +37,15 @@ function populateListsToAddNewSegment(line) {
     populateList(data, 'to')
   })
 }
+
+function populateWithAllStations() {
+  fetch('http://localhost:4000/stations').then(data =>
+    data.json().then(result => {
+      populateList(result, 'from')
+      populateList(result, 'to')
+    })
+  )
+}
 //----------------------------------------------------------------------------------------------//
 
 //--------------------------------------Adding data to map--------------------------------------//
@@ -81,9 +90,9 @@ map.on('draw:edited', function () {
       name: tempLayers[0].options.item.name,
       coordinates: {
         latitude: tempLayers[0]._latlng.lat,
-        longitude: tempLayers[0]._latlng.lng
+        longitude: tempLayers[0]._latlng.lng,
       },
-      id: tempLayers[0].options.item.id
+      id: tempLayers[0].options.item.id,
     }
 
     //New segment's to
@@ -91,9 +100,9 @@ map.on('draw:edited', function () {
       name: tempLayers[1].options.item.name,
       coordinates: {
         latitude: tempLayers[1]._latlng.lat,
-        longitude: tempLayers[1]._latlng.lng
+        longitude: tempLayers[1]._latlng.lng,
       },
-      id: tempLayers[1].options.item.id
+      id: tempLayers[1].options.item.id,
     }
 
     //New segment's path
@@ -102,7 +111,7 @@ map.on('draw:edited', function () {
     tempPath.forEach(item => {
       let coordinates = {
         latitude: item.lat,
-        longitude: item.lng
+        longitude: item.lng,
       }
       path.push(coordinates)
     })
@@ -147,7 +156,7 @@ map.on('draw:edited', function () {
       to: to,
       path: path,
       line: originalSegment.line,
-      order: originalSegment.order
+      order: originalSegment.order,
     }
     //TODO: Update related segments correctly
     if (modifiedPath) {
@@ -177,7 +186,7 @@ map.on('draw:edited', function () {
                     from: data.from,
                     to: from,
                     path: tempPath,
-                    order: originalSegment.order - 1
+                    order: originalSegment.order - 1,
                   }
                   patchSegmentDb(data._id, temp).then(() => resolve('from'))
                 }
@@ -197,7 +206,7 @@ map.on('draw:edited', function () {
                     from: to,
                     to: data.to,
                     path: tempPath,
-                    order: originalSegment.order + 1
+                    order: originalSegment.order + 1,
                   }
                   patchSegmentDb(data._id, temp).then(() => resolve('to'))
                 }
