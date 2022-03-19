@@ -849,23 +849,250 @@ graph.setEdge('11', '12', 11, '17')
 
 // s.forEach(item => console.log(item))
 async function a() {
+  let tramway = ['La Poste Cpr, Les Cascades', 'Ghalmi Gare Routiere Est', 'Les Freres Adnane', 'Benhamouda']
+  let ligne16 = ['La Poste Cpr, Les Cascades', 'Ghalmi Gare Routiere Est', 'Les Freres Adnane', 'Benhamouda']
   let data = await Route.find()
+  //max is maximum number of seconds to walk
+  let max = 60 * 20
   let result = []
   data.forEach(station => {
     station.route.forEach(item => {
-      if (item.duration < 1200 && station.line === 'tramway' && item.line === 'Ligne 22') {
+      // if (item.duration < max && (item.line !== station.line || item.name !== station.name) && station.line === 'Ligne 03' && item.line === 'tramway') {
+      if ((item.line !== station.line || item.name !== station.name) && (station.line === 'Ligne 16' || station.line === 'tramway') && (item.line === 'tramway' || item.line === 'Ligne 16') && ligne16.includes(station.name) && tramway.includes(item.name)) {
         result.push({
-          to: item.name,
           from: station.name,
-          b: item.line,
+          to: item.name,
           a: station.line,
-          duration: Math.ceil(item.duration / 60),
+          b: item.line,
+          // duration: Math.ceil(item.duration / 60),
+          duration: item.duration,
+          path: item.path,
         })
       }
     })
   })
   return result
 }
-let res = a().then(data => console.table(data))
-// console.log(res)
-// console.table(res)
+let b = async () => {
+  let res = await a()
+  // console.table(res)
+  console.table(res.sort((a, b) => a.duration - b.duration))
+}
+
+b()
+//TODO: find closest tramway stations to every bus station
+const Edge = (from, to, weight, label) => {
+  let edge = {
+    from: from,
+    to: to,
+    weight: weight,
+  }
+  if (label) edge.label = label
+  return edge
+}
+
+function otherNodes(allNodes, visited, reached) {
+  let merge = [...visited, ...reached]
+  return allNodes.filter(x => !merge.includes(x))
+}
+
+function outEdgesTos(edges, node) {
+  let result = []
+  edges.forEach(edge => {
+    if (edge.from === node) if (!result.includes(edge.to)) result.push(edge.to)
+  })
+  return result
+}
+
+const sortByToName = (a, b) => {
+  let fa = a.to.toLowerCase(),
+    fb = b.to.toLowerCase()
+
+  if (fa < fb) {
+    return -1
+  }
+  if (fa > fb) {
+    return 1
+  }
+  return 0
+}
+
+function minimalEdge(edges) {
+  let min = Number.POSITIVE_INFINITY
+  let temp
+  for (let i = 0; i < edges.length; i++) {
+    if (edges[i].weight < min) {
+      min = edges[i].weight
+      temp = edges[i]
+    }
+  }
+  return temp
+}
+
+function getEdgeByTarget(edges, target) {
+  return edges.filter(x => x.to === target)
+}
+
+function getEdgeBySource(edges, source) {
+  return edges.filter(x => x.from === source)
+}
+
+function indexOfEdge(edges, edge) {
+  for (let i = 0; i < edges.length; i++) if (edges[i].from === edge.from && edges[i].to === edge.to) return i
+  return -1
+}
+
+/*
+class Graph {
+  constructor(directed) {
+    this.nodes = []
+    this.edges = []
+    this.directed = directed
+  }
+
+  setEdge(edge) {
+    if (!this.nodes.includes(edge.from)) this.nodes.push(edge.from)
+    if (!this.nodes.includes(edge.to)) this.nodes.push(edge.to)
+    this.edges.push(edge)
+    if (!this.directed) this.edges.push(Edge(edge.to, edge.from, edge.weight, edge.label))
+  }
+
+  neighbours(node) {
+    let result = []
+    this.edges.forEach(edge => {
+      if (edge.from === node || edge.to === node) result.push(edge)
+    })
+    return result
+  }
+
+  outEdges(node) {
+    let result = []
+    this.neighbours(node).forEach(neighbour => {
+      if (neighbour.from === node) result.push(neighbour)
+    })
+    return result
+  }
+
+  inEdges(node) {
+    let result = []
+    this.neighbours(node).forEach(neighbour => {
+      if (neighbour.to === node) result.push(neighbour)
+    })
+    return result
+  }
+
+  getEdge(from, to) {
+    return g.edges.filter(edge => edge.from === from && edge.to === to)
+  }
+}
+
+function compareEdge(edge1, edge2) {
+  if (edge1.weight <= edge2.weight) return edge1
+  else return edge2
+}
+
+let g = new Graph(true)
+
+const source = 'tramway_ghalmi'
+g.setEdge(Edge('tramway_ghalmi', 'tramway_adnane', 501, 'walk'))
+g.setEdge(Edge('tramway_ghalmi', 'tramway_benhamouda', 845, 'walk'))
+g.setEdge(Edge('tramway_ghalmi', '16_ghalmi', 21, 'walk'))
+g.setEdge(Edge('tramway_ghalmi', '16_cascades', 332, 'walk'))
+g.setEdge(Edge('tramway_adnane', 'tramway_benhamouda', 447, 'walk'))
+g.setEdge(Edge('tramway_adnane', '16_ghalmi', 503, 'walk'))
+g.setEdge(Edge('tramway_adnane', '16_cascades', 814, 'walk'))
+g.setEdge(Edge('tramway_benhamouda', '16_ghalmi', 847, 'walk'))
+g.setEdge(Edge('tramway_benhamouda', '16_cascades', 1158, 'walk'))
+g.setEdge(Edge('16_ghalmi', '16_cascades', 326, 'walk'))
+g.setEdge(Edge('tramway_ghalmi', 'tramway_adnane', 112, 'tramway'))
+g.setEdge(Edge('tramway_adnane', 'tramway_benhamouda', 120, 'tramway'))
+g.setEdge(Edge('16_ghalmi', '16_cascades', 131, 'ligne_16'))
+
+//init
+let outEdges = g.outEdges(source)
+outEdges = filterOutedgesDuplicates(outEdges)
+let temp = []
+let visited = [source]
+
+let reached = outEdgesTos(outEdges, source)
+let others = otherNodes(g.nodes, visited, reached)
+
+function filterOutedgesDuplicates(outedges) {
+  let result = []
+  for (let j = 0; j < outedges.length; j++) {
+    let b = outedges[j]
+    let index = indexOfEdge(result, b)
+    if (index === -1) result.push(b)
+    else result[index] = compareEdge(result[index], b)
+  }
+  return result
+}
+
+outEdges.forEach(item => {
+  let path = { from: source, to: item.to, weight: item.weight }
+  if (item.label) path.label = item.label
+  temp.push({
+    from: source,
+    to: item.to,
+    cost: item.weight,
+    path: [JSON.stringify(path)],
+  })
+})
+
+others.forEach(item => {
+  temp.push({
+    from: source,
+    to: item,
+    cost: Number.POSITIVE_INFINITY,
+    path: [],
+  })
+})
+
+temp = temp.sort(sortByToName)
+// Init step is over
+
+function minimalNode(temp, reached) {
+  let result = { cost: Number.POSITIVE_INFINITY }
+  for (let i = 0; i < temp.length; i++) {
+    for (let j = 0; j < reached.length; j++) {
+      if (temp[i].to === reached[j]) {
+        if (result.cost > temp[i].cost) result = temp[i]
+      }
+    }
+  }
+  return result
+}
+
+for (let i = 0; i < g.nodes.length; i++) {
+  let minNode = minimalNode(temp, reached)
+  visited.push(minNode.to)
+  outEdges = g.outEdges(minNode.to)
+  reached.splice(reached.indexOf(minNode.to), 1)
+  for (let i = 0; i < outEdges.length; i++) if (!reached.includes(outEdges[i].to)) reached.push(outEdges[i].to)
+  others = others.filter(x => !reached.includes(x))
+
+  for (let i = 0; i < outEdges.length; i++) {
+    for (let j = 0; j < temp.length; j++) {
+      if (outEdges[i].to === temp[j].to) {
+        let min1 = temp[j].cost
+        let candidateEdge = outEdges[i]
+        let candidatePath = [...minNode.path]
+        candidatePath.push(JSON.stringify(candidateEdge))
+        let min2 = minNode.cost + candidateEdge.weight
+        if (min2 < min1) {
+          temp[j] = {
+            from: source,
+            to: candidateEdge.to,
+            cost: min2,
+            path: candidatePath,
+          }
+        }
+      }
+    }
+  }
+}
+
+temp.forEach(item => {
+  console.log(item)
+})
+*/
