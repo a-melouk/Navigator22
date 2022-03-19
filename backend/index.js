@@ -625,18 +625,20 @@ function transform(array) {
   })
   return result
 }
-/*
-const GraphHopperRouting = require('graphhopper-js-api-client/src/GraphHopperRouting')
-const GHInput = require('graphhopper-js-api-client/src/GHInput')
-const profile = 'foot'
 
-const ghRouting = new GraphHopperRouting({
-  key: process.env.GRAPHHOPPER_KEY,
-  vehicle: profile,
-  locale: 'fr',
-  elevation: false,
-})
-*/
+// const GraphHopperRouting = require('graphhopper-js-api-client/src/GraphHopperRouting')
+// const GHInput = require('graphhopper-js-api-client/src/GHInput')
+// const profile = 'foot'
+// const ghRouting = new GraphHopperRouting({
+//   key: process.env.GRAPHHOPPER_KEY,
+//   vehicle: profile,
+//   locale: 'fr',
+//   elevation: false,
+// })
+const GHUtil = require('graphhopper-js-api-client/src/GHUtil')
+let Ghutil = new GHUtil()
+let decodedPath = Ghutil.decodePath('mw{uEvjwB', false)
+console.table(decodedPath)
 
 async function addMatrix(nameOfTheLine) {
   return new Promise((resolve, reject) => {
