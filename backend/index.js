@@ -754,100 +754,10 @@ async function routesWalk(line) {
 }
 // routesWalk('Ligne 03')
 
-function shortest(from, to, k) {
-  let graph = new graphlib.Graph({ multigraph: true, directed: true })
-  let a = Date.now()
-  const promiseWalk = new Promise(async (resolve, reject) => {
-    const routesWalk = await Route.find({}, { 'route.path': 0 })
-    // const routesWalk = await Route.find({})
-    for (let i = 0; i < routesWalk.length; i++) {
-      let stationA = routesWalk[i].station_id
-      for (let j = 0; j < routesWalk[i].route.length; j++) {
-        let stationB = routesWalk[i].route[j].station_id
-        graph.setEdge(stationA, stationB, routesWalk[i].route[j].duration, 'walk_' + routesWalk[i].name + '_' + routesWalk[i].route[j].name)
-        if (i + 1 === routesWalk.length && j + 1 === routesWalk[i].route.length) resolve('Walk matrix done')
-      }
-    }
-  })
-
-  promiseWalk.then(() => {
-    const promiseTransport = new Promise(async (resolve, reject) => {
-      const matrixTransport = await LineMatrix.find({}, { 'route.transport.path': 0, 'route.walk.path': 0 })
-      // const matrixTransport = await LineMatrix.find({})
-      for (let i = 0; i < matrixTransport.length; i++) {
-        let route = matrixTransport[i].route
-        for (let j = 0; j < route.length; j++) {
-          let stationA = route[j].from.id
-          let stationB = route[j].to.id
-          graph.setEdge(stationA, stationB, route[j].transport.duration, matrixTransport[i].name + '_' + route[j].from.name + '_' + route[j].to.name)
-          graph.setEdge(stationB, stationA, route[j].transport.duration, matrixTransport[i].name + '_' + route[j].to.name + '_' + route[j].from.name)
-          if (i + 1 === matrixTransport.length && j + 1 === route.length) resolve('Transport matrix done')
-        }
-      }
-    })
-    promiseTransport.then(() => {
-      // console.table(graph.edges())
-      let shortestPaths = ksp.ksp(graph, from, to, k)
-      console.log(Date.now() - a)
-      console.log(JSON.stringify(shortestPaths, null, 3))
-    })
-  })
-
-  // Promise.all([promiseWalk, promiseTransport]).then(() => {
-  // Promise.all([promiseTransport, promiseWalk]).then(() => {})
-}
-
-/*
-61eb2de817e57cb86cb3f8f9  Les cascades
-61eb2de817e57cb86cb3f906  Daira
-61eb2de817e57cb86cb3f90c  4 Horloges
-
-*/
-// shortest('61eb2de817e57cb86cb3f906', '61eb2de817e57cb86cb3f90c', 3)
-
 // Route.updateMany({ 'route.line': 'tramway retour' }, { $pull: { route: { line: 'tramway retour' } } }).then(data => console.log(data))
 // Route.updateMany({ 'route.line': 'metro' }, { $pull: { route: { line: 'metro' } } }).then(data => console.log(data))
-let graph = new graphlib.Graph({ multigraph: true, directed: true })
-graph.setEdge('1', '2', 2, '1')
-graph.setEdge('1', '5', 13, '2')
-graph.setEdge('1', '5', 18, '22')
+/*
 
-graph.setEdge('2', '3', 20, '3')
-graph.setEdge('2', '6', 27, '4')
-
-graph.setEdge('3', '4', 14, '5')
-graph.setEdge('3', '7', 14, '6')
-
-graph.setEdge('4', '8', 15, '7')
-
-graph.setEdge('5', '6', 9, '8')
-graph.setEdge('5', '9', 15, '9')
-
-graph.setEdge('6', '7', 10, '10')
-graph.setEdge('6', '10', 20, '11')
-
-graph.setEdge('7', '8', 25, '12')
-graph.setEdge('7', '8', 29, '129')
-graph.setEdge('7', '11', 12, '13')
-
-graph.setEdge('8', '12', 7, '14')
-
-graph.setEdge('9', '10', 18, '15')
-
-graph.setEdge('10', '11', 8, '16')
-
-graph.setEdge('11', '12', 11, '17')
-// let dij = graphlib.alg.dijkstra(
-//   graph,
-//   '1',
-//   edge => graph.edge(edge),
-//   edge => graph.outEdges(edge)
-// )
-// console.log(dij)
-
-// let s = ksp.ksp(graph, '1', '12', 3)
-
-// s.forEach(item => console.log(item))
 async function a() {
   let tramway = ['La Poste Cpr, Les Cascades', 'Ghalmi Gare Routiere Est', 'Les Freres Adnane', 'Benhamouda']
   let ligne16 = ['La Poste Cpr, Les Cascades', 'Ghalmi Gare Routiere Est', 'Les Freres Adnane', 'Benhamouda']
@@ -879,220 +789,45 @@ let b = async () => {
   console.table(res.sort((a, b) => a.duration - b.duration))
 }
 
-b()
-//TODO: find closest tramway stations to every bus station
-const Edge = (from, to, weight, label) => {
-  let edge = {
-    from: from,
-    to: to,
-    weight: weight,
-  }
-  if (label) edge.label = label
-  return edge
-}
+// b()
 
-function otherNodes(allNodes, visited, reached) {
-  let merge = [...visited, ...reached]
-  return allNodes.filter(x => !merge.includes(x))
-}
+*/
+const util = require('./Dijkstra')
+let Edge = util.Edge
+let Graph = util.Graph
+let Dijkstra = util.dijikstra
 
-function outEdgesTos(edges, node) {
-  let result = []
-  edges.forEach(edge => {
-    if (edge.from === node) if (!result.includes(edge.to)) result.push(edge.to)
-  })
-  return result
-}
-
-const sortByToName = (a, b) => {
-  let fa = a.to.toLowerCase(),
-    fb = b.to.toLowerCase()
-
-  if (fa < fb) {
-    return -1
-  }
-  if (fa > fb) {
-    return 1
-  }
-  return 0
-}
-
-function minimalEdge(edges) {
-  let min = Number.POSITIVE_INFINITY
-  let temp
-  for (let i = 0; i < edges.length; i++) {
-    if (edges[i].weight < min) {
-      min = edges[i].weight
-      temp = edges[i]
-    }
-  }
-  return temp
-}
-
-function getEdgeByTarget(edges, target) {
-  return edges.filter(x => x.to === target)
-}
-
-function getEdgeBySource(edges, source) {
-  return edges.filter(x => x.from === source)
-}
-
-function indexOfEdge(edges, edge) {
-  for (let i = 0; i < edges.length; i++) if (edges[i].from === edge.from && edges[i].to === edge.to) return i
-  return -1
-}
-
-/*
-class Graph {
-  constructor(directed) {
-    this.nodes = []
-    this.edges = []
-    this.directed = directed
-  }
-
-  setEdge(edge) {
-    if (!this.nodes.includes(edge.from)) this.nodes.push(edge.from)
-    if (!this.nodes.includes(edge.to)) this.nodes.push(edge.to)
-    this.edges.push(edge)
-    if (!this.directed) this.edges.push(Edge(edge.to, edge.from, edge.weight, edge.label))
-  }
-
-  neighbours(node) {
-    let result = []
-    this.edges.forEach(edge => {
-      if (edge.from === node || edge.to === node) result.push(edge)
-    })
-    return result
-  }
-
-  outEdges(node) {
-    let result = []
-    this.neighbours(node).forEach(neighbour => {
-      if (neighbour.from === node) result.push(neighbour)
-    })
-    return result
-  }
-
-  inEdges(node) {
-    let result = []
-    this.neighbours(node).forEach(neighbour => {
-      if (neighbour.to === node) result.push(neighbour)
-    })
-    return result
-  }
-
-  getEdge(from, to) {
-    return g.edges.filter(edge => edge.from === from && edge.to === to)
-  }
-}
-
-function compareEdge(edge1, edge2) {
-  if (edge1.weight <= edge2.weight) return edge1
-  else return edge2
-}
-
-let g = new Graph(true)
-
-const source = 'tramway_ghalmi'
-g.setEdge(Edge('tramway_ghalmi', 'tramway_adnane', 501, 'walk'))
-g.setEdge(Edge('tramway_ghalmi', 'tramway_benhamouda', 845, 'walk'))
-g.setEdge(Edge('tramway_ghalmi', '16_ghalmi', 21, 'walk'))
-g.setEdge(Edge('tramway_ghalmi', '16_cascades', 332, 'walk'))
-g.setEdge(Edge('tramway_adnane', 'tramway_benhamouda', 447, 'walk'))
-g.setEdge(Edge('tramway_adnane', '16_ghalmi', 503, 'walk'))
-g.setEdge(Edge('tramway_adnane', '16_cascades', 814, 'walk'))
-g.setEdge(Edge('tramway_benhamouda', '16_ghalmi', 847, 'walk'))
-g.setEdge(Edge('tramway_benhamouda', '16_cascades', 1158, 'walk'))
-g.setEdge(Edge('16_ghalmi', '16_cascades', 326, 'walk'))
-g.setEdge(Edge('tramway_ghalmi', 'tramway_adnane', 112, 'tramway'))
-g.setEdge(Edge('tramway_adnane', 'tramway_benhamouda', 120, 'tramway'))
-g.setEdge(Edge('16_ghalmi', '16_cascades', 131, 'ligne_16'))
-
-//init
-let outEdges = g.outEdges(source)
-outEdges = filterOutedgesDuplicates(outEdges)
-let temp = []
-let visited = [source]
-
-let reached = outEdgesTos(outEdges, source)
-let others = otherNodes(g.nodes, visited, reached)
-
-function filterOutedgesDuplicates(outedges) {
-  let result = []
-  for (let j = 0; j < outedges.length; j++) {
-    let b = outedges[j]
-    let index = indexOfEdge(result, b)
-    if (index === -1) result.push(b)
-    else result[index] = compareEdge(result[index], b)
-  }
-  return result
-}
-
-outEdges.forEach(item => {
-  let path = { from: source, to: item.to, weight: item.weight }
-  if (item.label) path.label = item.label
-  temp.push({
-    from: source,
-    to: item.to,
-    cost: item.weight,
-    path: [JSON.stringify(path)],
-  })
-})
-
-others.forEach(item => {
-  temp.push({
-    from: source,
-    to: item,
-    cost: Number.POSITIVE_INFINITY,
-    path: [],
-  })
-})
-
-temp = temp.sort(sortByToName)
-// Init step is over
-
-function minimalNode(temp, reached) {
-  let result = { cost: Number.POSITIVE_INFINITY }
-  for (let i = 0; i < temp.length; i++) {
-    for (let j = 0; j < reached.length; j++) {
-      if (temp[i].to === reached[j]) {
-        if (result.cost > temp[i].cost) result = temp[i]
-      }
-    }
-  }
-  return result
-}
-
-for (let i = 0; i < g.nodes.length; i++) {
-  let minNode = minimalNode(temp, reached)
-  visited.push(minNode.to)
-  outEdges = g.outEdges(minNode.to)
-  reached.splice(reached.indexOf(minNode.to), 1)
-  for (let i = 0; i < outEdges.length; i++) if (!reached.includes(outEdges[i].to)) reached.push(outEdges[i].to)
-  others = others.filter(x => !reached.includes(x))
-
-  for (let i = 0; i < outEdges.length; i++) {
-    for (let j = 0; j < temp.length; j++) {
-      if (outEdges[i].to === temp[j].to) {
-        let min1 = temp[j].cost
-        let candidateEdge = outEdges[i]
-        let candidatePath = [...minNode.path]
-        candidatePath.push(JSON.stringify(candidateEdge))
-        let min2 = minNode.cost + candidateEdge.weight
-        if (min2 < min1) {
-          temp[j] = {
-            from: source,
-            to: candidateEdge.to,
-            cost: min2,
-            path: candidatePath,
-          }
+async function shortest(from, target) {
+  return new Promise((resolve, reject) => {
+    const graph = new Graph(true)
+    const promiseWalk = new Promise(async (resolve, reject) => {
+      const routesWalk = await Route.find({})
+      for (let i = 0; i < routesWalk.length; i++) {
+        let stationA = routesWalk[i].name + '_' + routesWalk[i].line
+        for (let j = 0; j < routesWalk[i].route.length; j++) {
+          let stationB = routesWalk[i].route[j].name + '_' + routesWalk[i].route[j].line
+          graph.setEdge(Edge(stationA, stationB, routesWalk[i].route[j].duration, 'walk'))
+          if (i + 1 === routesWalk.length && j + 1 === routesWalk[i].route.length) resolve('Walk matrix done')
         }
       }
-    }
-  }
+    })
+
+    const promiseTransport = new Promise(async (resolve, reject) => {
+      const matrixTransport = await LineMatrix.find({})
+      for (let i = 0; i < matrixTransport.length; i++) {
+        let route = matrixTransport[i].route
+        for (let j = 0; j < route.length; j++) {
+          let stationA = route[j].from.name + '_' + matrixTransport[i].name
+          let stationB = route[j].to.name + '_' + matrixTransport[i].name
+          graph.setEdge(Edge(stationA, stationB, route[j].transport.duration, matrixTransport[i].name))
+          graph.setEdge(Edge(stationB, stationA, route[j].transport.duration, matrixTransport[i].name))
+          if (i + 1 === matrixTransport.length && j + 1 === route.length) resolve('Transport matrix done')
+        }
+      }
+    })
+    Promise.all([promiseWalk, promiseTransport]).then(() => resolve(Dijkstra(graph, from, target).find(item => item.to === target)))
+  })
 }
 
-temp.forEach(item => {
-  console.log(item)
-})
-*/
+let a = shortest('Daira_tramway', '4 Horloges_tramway')
+a.then(optimalPath => console.log(optimalPath))
