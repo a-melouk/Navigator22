@@ -28,9 +28,7 @@ manipulationsElement.addEventListener('change', event => {
     }
   } else if (manipulation.toLowerCase() === 'add-segment') addSegmentToLine()
   else if (manipulation.toLowerCase() === 'add-line') newLine()
-  else if (manipulation === 'getroute') {
-    populateWithAllStations()
-  }
+  else if (manipulation === 'getroute') populateWithAllStations()
 })
 
 lineElement.addEventListener('change', () => {
@@ -154,22 +152,27 @@ getroute.addEventListener('click', () => {
   const from = JSON.parse(fromElement.value)._id
   const to = JSON.parse(toElement.value)._id
   getRoute(from, to).then(route => {
-    addStationToMap(route.from, 'draw', route.from.line)
-    addStationToMap(route.to, 'draw', route.to.line)
-    addPolylineToMap(route.path, 'red', 'draw')
-    let distance = route.distance
-    let duration = route.duration
-    let hours = Math.floor(duration / 3600)
-    let minutes = Math.floor((duration - Math.floor(duration / 3600) * 3600) / 60)
-    let seconds = duration - Math.floor(duration / 3600) * 3600 - Math.floor((duration - Math.floor(duration / 3600) * 3600) / 60) * 60
-    console.log(route.from.coordinates.latitude, route.from.coordinates.longitude)
-    console.log(route.to.coordinates.latitude, route.to.coordinates.longitude)
-    if (Math.floor(distance / 1000) === 0) console.log(distance + 'm')
-    else console.log(distance / 1000 + 'km')
-    if (hours > 0) console.log(hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds')
-    else if (minutes > 0) console.log(minutes + ' minutes, ' + seconds + ' seconds')
-    else if (seconds > 0) console.log(seconds + ' seconds')
-    else console.log('Error')
+    route.path.forEach(segment => {
+      addStationToMap(segment.from, 'draw', segment.from.line)
+      addStationToMap(segment.to, 'draw', segment.to.line)
+      if (segment.mean === 'tramway') addPolylineToMap(segment.segment, '#f47e1b', 'draw')
+      else if (segment.mean === 'walk') addPolylineToMap(segment.segment, '#1d691f', 'draw')
+      else addPolylineToMap(segment.segment, '#3338d2', 'draw')
+    })
+    drawsLayer.addTo(map)
+    // let distance = route.distance
+    // let duration = route.duration
+    // let hours = Math.floor(duration / 3600)
+    // let minutes = Math.floor((duration - Math.floor(duration / 3600) * 3600) / 60)
+    // let seconds = duration - Math.floor(duration / 3600) * 3600 - Math.floor((duration - Math.floor(duration / 3600) * 3600) / 60) * 60
+    // console.log(route.from.coordinates.latitude, route.from.coordinates.longitude)
+    // console.log(route.to.coordinates.latitude, route.to.coordinates.longitude)
+    // if (Math.floor(distance / 1000) === 0) console.log(distance + 'm')
+    // else console.log(distance / 1000 + 'km')
+    // if (hours > 0) console.log(hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds')
+    // else if (minutes > 0) console.log(minutes + ' minutes, ' + seconds + ' seconds')
+    // else if (seconds > 0) console.log(seconds + ' seconds')
+    // else console.log('Error')
   })
 })
 
