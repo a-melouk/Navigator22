@@ -6,8 +6,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const Models = require('./Models/line')
 const { ObjectId } = require('mongodb')
-const graphlib = require('graphlib')
-const ksp = require('k-shortest-path')
 
 const Line = Models.Line
 const Station = Models.Station
@@ -660,9 +658,8 @@ function precise(number) {
   return Number(Number.parseFloat(number).toFixed(5))
 }
 
-const axios = require('axios')
-
 async function routesWalk(line) {
+  const axios = require('axios')
   let count = 1
   const station = await Station.find({ line: { $nin: ['tramway retour'] } })
   for (let i = 0; i < station.length; i++) {
@@ -695,7 +692,6 @@ async function routesWalk(line) {
       }
       Promise.all(promises).then(data => {
         setTimeout(() => {
-          // console.log(data)
           let body = {
             name: from.name,
             coordinates: from.coordinates,
@@ -756,7 +752,6 @@ let b = async () => {
 }
 
 // b()
-
 */
 const util = require('./Dijkstra')
 let Edge = util.Edge
@@ -764,10 +759,6 @@ let Graph = util.Graph
 let Dijkstra = util.dijikstra
 const GHUtil = require('graphhopper-js-api-client/src/GHUtil')
 let Ghutil = new GHUtil()
-// let decodedPath = Ghutil.decodePath('mw{uEvjwBEO[JDXC@DZZZe@f@yAnBs@jA]f@@TMj@~@pBTZ', false)
-// console.table(decodedPath)
-
-// console.table(transform(decodedPath))
 
 async function shortest(from, target) {
   return new Promise((resolve, reject) => {
@@ -867,7 +858,6 @@ app.get('/route', async (request, response) => {
   const from = request.query.from
   const to = request.query.to
   // shortest(from, to).then(graph => {
-  // console.log(matrix)
   let solution = Dijkstra(matrix, from, to).find(item => item.to === to)
   let source = JSON.parse(solution.path[0]).label.from
   let target = JSON.parse(solution.path[solution.path.length - 1]).label.to
@@ -888,6 +878,4 @@ app.get('/route', async (request, response) => {
     duration: duration,
     path: path,
   })
-  // }
-  // })
 })
