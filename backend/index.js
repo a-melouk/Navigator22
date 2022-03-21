@@ -834,10 +834,7 @@ async function shortest(from, target) {
         }
       }
     })
-    Promise.all([promiseWalk, promiseTransport]).then(() => {
-      resolve(graph)
-      // resolve(Dijkstra(graph, from, target).find(item => item.to === target))
-    })
+    Promise.all([promiseWalk, promiseTransport]).then(() => resolve(graph))
   })
 }
 
@@ -846,18 +843,13 @@ async function shortest(from, target) {
 61eb2de817e57cb86cb3f906 Daira
 61eb2de817e57cb86cb3f90c 4 Horloges
 */
-// let a = shortest('61eb2de817e57cb86cb3f8f9', '61eb2de817e57cb86cb3f90c')
-// console.log(transform(Ghutil.decodePath('mw{uEvjwBEO[JDXC@DZZZe@f@yAnBs@jA]f@@TMj@~@pBTZ')))
 
 let matrix
-shortest().then(graph => {
-  matrix = graph
-})
+shortest().then(graph => (matrix = graph))
 
 app.get('/route', async (request, response) => {
   const from = request.query.from
   const to = request.query.to
-  // shortest(from, to).then(graph => {
   let solution = Dijkstra(matrix, from, to).find(item => item.to === to)
   let source = JSON.parse(solution.path[0]).label.from
   let target = JSON.parse(solution.path[solution.path.length - 1]).label.to

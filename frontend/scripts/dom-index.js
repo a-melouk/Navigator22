@@ -160,6 +160,7 @@ getroute.addEventListener('click', () => {
       else addPolylineToMap(segment.segment, '#3338d2', 'draw')
     })
     drawsLayer.addTo(map)
+    map.fitBounds(drawsLayer.getBounds())
     // let distance = route.distance
     // let duration = route.duration
     // let hours = Math.floor(duration / 3600)

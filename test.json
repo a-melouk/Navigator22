@@ -1,25 +1,395 @@
 {
-  "name": "Les Cascades",
-  "coordinates": { "latitude": 35.20902474807825, "longitude": -0.6162750701035336 },
-  "line": "tramway",
-  "station_id": 24534,
-  "routes": [
+  "from": "61eb2de817e57cb86cb3f8f9",
+  "to": "61eb2de817e57cb86cb3f90c",
+  "cost": 1204,
+  "path": [
     {
-      "name": "Ghalmi Gare Routiere Est",
-      "coordinates": {
-        "latitude": 35.21326746334253,
-        "longitude": -0.615711808204651
-      },
-      "line": "tramway",
-      "distance": 685,
-      "duration": 45
+      "from": "61eb2de817e57cb86cb3f8f9",
+      "to": "61eb2de817e57cb86cb3f8fa",
+      "weight": 105,
+      "label": {
+        "from": { "line": "tramway", "name": "Les Cascades", "coordinates": { "latitude": 35.20902474807825, "longitude": -0.6162750701035336 } },
+        "to": { "line": "tramway", "name": "Ghalmi Gare Routiere Est", "coordinates": { "latitude": 35.21326746334253, "longitude": -0.615711808204651 } },
+        "path": [
+          { "latitude": 35.20902474807825, "longitude": -0.6162750701035336 },
+          { "latitude": 35.20939341424022, "longitude": -0.6163941064212765 },
+          { "latitude": 35.20979151211425, "longitude": -0.6165156382485183 },
+          { "latitude": 35.209996414580225, "longitude": -0.6165513826533343 },
+          { "latitude": 35.2102958160374, "longitude": -0.6165802622981499 },
+          { "latitude": 35.210992688241426, "longitude": -0.6165647506713868 },
+          { "latitude": 35.211336126394364, "longitude": -0.6165659596379137 },
+          { "latitude": 35.21171016752006, "longitude": -0.6165516569776774 },
+          { "latitude": 35.21186796552786, "longitude": -0.6165516569776774 },
+          { "latitude": 35.21215433881761, "longitude": -0.6164872940245303 },
+          { "latitude": 35.212481621531516, "longitude": -0.6163299621429875 },
+          { "latitude": 35.21259249882857, "longitude": -0.6162475747845321 },
+          { "latitude": 35.21277367223473, "longitude": -0.6161116975480896 },
+          { "latitude": 35.21319287137555, "longitude": -0.6157702803415234 },
+          { "latitude": 35.21326746334253, "longitude": -0.615711808204651 }
+        ],
+        "mean": "tramway"
+      }
     },
     {
-      "name": "Les Freres Adnane",
-      "coordinates": { "latitude": 35.21683928147929, "longitude": -0.6147944927215577 },
-      "line": "tramway",
-      "distance": 64,
-      "duration": 64654
+      "from": "61eb2de817e57cb86cb3f8fa",
+      "to": "61eb2de817e57cb86cb3f8fb",
+      "weight": 112,
+      "label": {
+        "from": { "line": "tramway", "name": "Ghalmi Gare Routiere Est", "coordinates": { "latitude": 35.21326746334253, "longitude": -0.615711808204651 } },
+        "to": { "line": "tramway", "name": "Les Freres Adnane", "coordinates": { "latitude": 35.21683928147929, "longitude": -0.6147944927215577 } },
+        "path": [
+          { "latitude": 35.21326746334253, "longitude": -0.615711808204651 },
+          { "latitude": 35.21332250059542, "longitude": -0.6156604637886521 },
+          { "latitude": 35.21360925685083, "longitude": -0.6154221296310426 },
+          { "latitude": 35.213903533445745, "longitude": -0.6151929942032709 },
+          { "latitude": 35.21420533364544, "longitude": -0.6149232387542726 },
+          { "latitude": 35.21447704151839, "longitude": -0.6147101205284456 },
+          { "latitude": 35.21478423064218, "longitude": -0.6144575067159175 },
+          { "latitude": 35.214967905275444, "longitude": -0.6143131535942415 },
+          { "latitude": 35.215179864754845, "longitude": -0.614164408384772 },
+          { "latitude": 35.21540356453689, "longitude": -0.6140234770716524 },
+          { "latitude": 35.216174983584686, "longitude": -0.6136873596456006 },
+          { "latitude": 35.21632214792857, "longitude": -0.6136344279442586 },
+          { "latitude": 35.2164730298381, "longitude": -0.613601542374731 },
+          { "latitude": 35.216548956382624, "longitude": -0.6136102901472175 },
+          { "latitude": 35.216587679146805, "longitude": -0.6136370841022921 },
+          { "latitude": 35.216643240643066, "longitude": -0.6136864986453096 },
+          { "latitude": 35.21668589453293, "longitude": -0.6137269818699421 },
+          { "latitude": 35.21673956303388, "longitude": -0.6138490213380733 },
+          { "latitude": 35.216774676441, "longitude": -0.6140595632833112 },
+          { "latitude": 35.216790383088274, "longitude": -0.614283094117134 },
+          { "latitude": 35.21684120311083, "longitude": -0.6147171668962148 },
+          { "latitude": 35.21683928147929, "longitude": -0.6147944927215577 }
+        ],
+        "mean": "tramway"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f8fb",
+      "to": "61eb2de817e57cb86cb3f8fc",
+      "weight": 120,
+      "label": {
+        "from": { "line": "tramway", "name": "Les Freres Adnane", "coordinates": { "latitude": 35.21683928147929, "longitude": -0.6147944927215577 } },
+        "to": { "line": "tramway", "name": "Benhamouda", "coordinates": { "latitude": 35.21742217872461, "longitude": -0.6211030483245851 } },
+        "path": [
+          { "latitude": 35.21683928147929, "longitude": -0.6147944927215577 },
+          { "latitude": 35.216883124526184, "longitude": -0.6150251626968385 },
+          { "latitude": 35.216917175076425, "longitude": -0.6153750997428188 },
+          { "latitude": 35.21695950205891, "longitude": -0.6160758234138864 },
+          { "latitude": 35.21697389462488, "longitude": -0.6164306402206422 },
+          { "latitude": 35.21699768332409, "longitude": -0.6167908212817587 },
+          { "latitude": 35.217079076730194, "longitude": -0.6173678832696129 },
+          { "latitude": 35.21711851998454, "longitude": -0.6176361086123894 },
+          { "latitude": 35.21716609729122, "longitude": -0.6179579690892202 },
+          { "latitude": 35.217256126632854, "longitude": -0.6186003990584622 },
+          { "latitude": 35.2173783367419, "longitude": -0.6205704363921273 },
+          { "latitude": 35.21742217872461, "longitude": -0.6211030483245851 }
+        ],
+        "mean": "tramway"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f8fc",
+      "to": "61eb2de817e57cb86cb3f8fd",
+      "weight": 92,
+      "label": {
+        "from": { "line": "tramway", "name": "Benhamouda", "coordinates": { "latitude": 35.21742217872461, "longitude": -0.6211030483245851 } },
+        "to": { "line": "tramway", "name": "Environnement", "coordinates": { "latitude": 35.216100966557406, "longitude": -0.6244219586929579 } },
+        "path": [
+          { "latitude": 35.21742217872461, "longitude": -0.6211030483245851 },
+          { "latitude": 35.21743971020816, "longitude": -0.621204972267151 },
+          { "latitude": 35.217484041418835, "longitude": -0.6219043639875089 },
+          { "latitude": 35.21753719289963, "longitude": -0.6225836318689716 },
+          { "latitude": 35.21756021448426, "longitude": -0.6229564568379488 },
+          { "latitude": 35.21753938943853, "longitude": -0.6231790781021119 },
+          { "latitude": 35.21750325171622, "longitude": -0.6233024513804853 },
+          { "latitude": 35.217405758059606, "longitude": -0.6233789078839137 },
+          { "latitude": 35.217324654230815, "longitude": -0.6234178134611535 },
+          { "latitude": 35.21725672960109, "longitude": -0.6234231612065401 },
+          { "latitude": 35.21719428576749, "longitude": -0.6234392627969411 },
+          { "latitude": 35.217128547060945, "longitude": -0.6234499791285432 },
+          { "latitude": 35.21704853071346, "longitude": -0.6234633964258564 },
+          { "latitude": 35.216958640309855, "longitude": -0.6234875342228974 },
+          { "latitude": 35.216764781404606, "longitude": -0.6235250934854176 },
+          { "latitude": 35.21657304497661, "longitude": -0.623566666683122 },
+          { "latitude": 35.21647769418113, "longitude": -0.6235840979155993 },
+          { "latitude": 35.21639881754833, "longitude": -0.6236189645487201 },
+          { "latitude": 35.21632324621446, "longitude": -0.6236538395181325 },
+          { "latitude": 35.216269524848954, "longitude": -0.6236833542377008 },
+          { "latitude": 35.21616982261674, "longitude": -0.6237691515809108 },
+          { "latitude": 35.21610742001855, "longitude": -0.6238791367390718 },
+          { "latitude": 35.216081478741415, "longitude": -0.6239997356303651 },
+          { "latitude": 35.216087322713676, "longitude": -0.6241141587127742 },
+          { "latitude": 35.21609427210546, "longitude": -0.624308327694867 },
+          { "latitude": 35.216100966557406, "longitude": -0.6244219586929579 }
+        ],
+        "mean": "tramway"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f8fd",
+      "to": "61eb2de817e57cb86cb3f904",
+      "weight": 109,
+      "label": {
+        "from": { "line": "tramway", "name": "Environnement", "coordinates": { "latitude": 35.216100966557406, "longitude": -0.6244219586929579 } },
+        "to": { "line": "tramway", "name": "Sidi Djilali", "coordinates": { "latitude": 35.21592551912779, "longitude": -0.623576045036316 } },
+        "path": [
+          { "latitude": 35.2161, "longitude": -0.62443 },
+          { "latitude": 35.21612, "longitude": -0.62438 },
+          { "latitude": 35.21612, "longitude": -0.62424 },
+          { "latitude": 35.21603, "longitude": -0.62425 },
+          { "latitude": 35.21603, "longitude": -0.62386 },
+          { "latitude": 35.21607, "longitude": -0.62371 },
+          { "latitude": 35.2157, "longitude": -0.62366 },
+          { "latitude": 35.2157, "longitude": -0.6236 },
+          { "latitude": 35.2159, "longitude": -0.62361 },
+          { "latitude": 35.21592, "longitude": -0.62358 }
+        ],
+        "mean": "walk"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f904",
+      "to": "61eb2de817e57cb86cb3f905",
+      "weight": 148,
+      "label": {
+        "from": { "line": "tramway", "name": "Sidi Djilali", "coordinates": { "latitude": 35.21592551912779, "longitude": -0.623576045036316 } },
+        "to": { "line": "tramway", "name": "Wiam", "coordinates": { "latitude": 35.21138935217449, "longitude": -0.6279587751480654 } },
+        "path": [
+          { "latitude": 35.21592551912779, "longitude": -0.623576045036316 },
+          { "latitude": 35.215870752335356, "longitude": -0.6235626377703785 },
+          { "latitude": 35.21564502962753, "longitude": -0.623567996955754 },
+          { "latitude": 35.21552888879186, "longitude": -0.6235733619551986 },
+          { "latitude": 35.215414939328845, "longitude": -0.6236028677078799 },
+          { "latitude": 35.215138830351265, "longitude": -0.6237101554870607 },
+          { "latitude": 35.21464994855497, "longitude": -0.62389122054215 },
+          { "latitude": 35.21448799812964, "longitude": -0.6239569181350159 },
+          { "latitude": 35.21433021988439, "longitude": -0.6240159255705335 },
+          { "latitude": 35.21389413695179, "longitude": -0.6241822231108718 },
+          { "latitude": 35.213668122947034, "longitude": -0.6242416412831743 },
+          { "latitude": 35.21339669272813, "longitude": -0.6242868289717453 },
+          { "latitude": 35.213118385285156, "longitude": -0.624340473152043 },
+          { "latitude": 35.212969369991974, "longitude": -0.6243726602416366 },
+          { "latitude": 35.21286903741466, "longitude": -0.624425821762682 },
+          { "latitude": 35.21278748189749, "longitude": -0.6245014068557465 },
+          { "latitude": 35.21274803533009, "longitude": -0.6246086969605669 },
+          { "latitude": 35.212758994994765, "longitude": -0.624825954437256 },
+          { "latitude": 35.21278967552153, "longitude": -0.6250566238311217 },
+          { "latitude": 35.212805014773416, "longitude": -0.6252738830520356 },
+          { "latitude": 35.21281378000134, "longitude": -0.6255099191895709 },
+          { "latitude": 35.21279186511682, "longitude": -0.625729859747377 },
+          { "latitude": 35.21274365291409, "longitude": -0.6259712603029423 },
+          { "latitude": 35.21267572181064, "longitude": -0.6261616951080874 },
+          { "latitude": 35.2125968297566, "longitude": -0.6263145830568485 },
+          { "latitude": 35.21246972848347, "longitude": -0.6265828004699083 },
+          { "latitude": 35.21235139148344, "longitude": -0.6268268829437807 },
+          { "latitude": 35.212245243637504, "longitude": -0.6270651355597169 },
+          { "latitude": 35.21199857309388, "longitude": -0.6275403511231371 },
+          { "latitude": 35.211912115698304, "longitude": -0.6277159164214764 },
+          { "latitude": 35.21177769517641, "longitude": -0.627794582362238 },
+          { "latitude": 35.2116150714062, "longitude": -0.6278541687057771 },
+          { "latitude": 35.21147963168388, "longitude": -0.6279233082685721 },
+          { "latitude": 35.21138935217449, "longitude": -0.6279587751480654 }
+        ],
+        "mean": "tramway"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f905",
+      "to": "61eb2de817e57cb86cb3f906",
+      "weight": 131,
+      "label": {
+        "from": { "line": "tramway", "name": "Wiam", "coordinates": { "latitude": 35.21138935217449, "longitude": -0.6279587751480654 } },
+        "to": { "line": "tramway", "name": "Daira", "coordinates": { "latitude": 35.2059556923662, "longitude": -0.6264588860800592 } },
+        "path": [
+          { "latitude": 35.21138935217449, "longitude": -0.6279587751480654 },
+          { "latitude": 35.21134771166766, "longitude": -0.6279668220657976 },
+          { "latitude": 35.21111980406668, "longitude": -0.6280043753176257 },
+          { "latitude": 35.21099927424682, "longitude": -0.6280258324083499 },
+          { "latitude": 35.210863402214905, "longitude": -0.6280043764804556 },
+          { "latitude": 35.210089814076476, "longitude": -0.6274384271805711 },
+          { "latitude": 35.209710687563984, "longitude": -0.6271541130249926 },
+          { "latitude": 35.20932279166285, "longitude": -0.6268698000322238 },
+          { "latitude": 35.209064194440295, "longitude": -0.626749101498656 },
+          { "latitude": 35.20879025517791, "longitude": -0.6266552256366521 },
+          { "latitude": 35.208509741427584, "longitude": -0.6266203548845463 },
+          { "latitude": 35.208082393372116, "longitude": -0.6266257175583512 },
+          { "latitude": 35.2076484678224, "longitude": -0.6266525425555348 },
+          { "latitude": 35.20718385812605, "longitude": -0.6267303263262591 },
+          { "latitude": 35.20675650349531, "longitude": -0.6267839687623522 },
+          { "latitude": 35.206519813474266, "longitude": -0.6267705591707752 },
+          { "latitude": 35.20625463075806, "longitude": -0.6266230397098882 },
+          { "latitude": 35.206074921829064, "longitude": -0.6265264790225422 },
+          { "latitude": 35.2059556923662, "longitude": -0.6264588860800592 }
+        ],
+        "mean": "tramway"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f906",
+      "to": "61eb2de817e57cb86cb3f907",
+      "weight": 154,
+      "label": {
+        "from": { "line": "tramway", "name": "Daira", "coordinates": { "latitude": 35.2059556923662, "longitude": -0.6264588860800592 } },
+        "to": { "line": "tramway", "name": "Houari Boumediene", "coordinates": { "latitude": 35.19968750451939, "longitude": -0.6247530013102365 } },
+        "path": [
+          { "latitude": 35.2059556923662, "longitude": -0.6264588860800592 },
+          { "latitude": 35.20583384058596, "longitude": -0.6263655406675795 },
+          { "latitude": 35.205656325751185, "longitude": -0.6262448444596515 },
+          { "latitude": 35.20536484293034, "longitude": -0.6260517271547839 },
+          { "latitude": 35.20518074638766, "longitude": -0.6259283443772891 },
+          { "latitude": 35.20502733208182, "longitude": -0.6258291035158604 },
+          { "latitude": 35.20488706923094, "longitude": -0.6257352270724414 },
+          { "latitude": 35.20478625739844, "longitude": -0.6256949907394961 },
+          { "latitude": 35.20472489149335, "longitude": -0.6256923076583588 },
+          { "latitude": 35.20463503135679, "longitude": -0.6257137705631323 },
+          { "latitude": 35.20449915391282, "longitude": -0.6257620503254002 },
+          { "latitude": 35.20435888974674, "longitude": -0.6258881144398077 },
+          { "latitude": 35.203962202499724, "longitude": -0.6261751105136938 },
+          { "latitude": 35.20389207058762, "longitude": -0.6262314331238695 },
+          { "latitude": 35.203797822601565, "longitude": -0.6262555791097603 },
+          { "latitude": 35.203633454861034, "longitude": -0.6262743490495227 },
+          { "latitude": 35.20347344714112, "longitude": -0.626263621376273 },
+          { "latitude": 35.20301102195048, "longitude": -0.626255573877106 },
+          { "latitude": 35.20255734474804, "longitude": -0.6262394812044315 },
+          { "latitude": 35.20175847175397, "longitude": -0.6261751070252642 },
+          { "latitude": 35.201354100897, "longitude": -0.6261616962708971 },
+          { "latitude": 35.20115027077066, "longitude": -0.6261563324342624 },
+          { "latitude": 35.20095739897287, "longitude": -0.6261160978455216 },
+          { "latitude": 35.20079301621625, "longitude": -0.6260275840759278 },
+          { "latitude": 35.200663703320124, "longitude": -0.6259310233885819 },
+          { "latitude": 35.20059795525776, "longitude": -0.6258693346161516 },
+          { "latitude": 35.200530011172255, "longitude": -0.625804962181209 },
+          { "latitude": 35.20036781828685, "longitude": -0.6255850216233828 },
+          { "latitude": 35.200214396500776, "longitude": -0.6253355724058607 },
+          { "latitude": 35.2000938533138, "longitude": -0.625217558697655 },
+          { "latitude": 35.199754110062884, "longitude": -0.6248205638559746 },
+          { "latitude": 35.19968750451939, "longitude": -0.6247530013102365 }
+        ],
+        "mean": "tramway"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f907",
+      "to": "61eb2de817e57cb86cb3f908",
+      "weight": 109,
+      "label": {
+        "from": { "line": "tramway", "name": "Houari Boumediene", "coordinates": { "latitude": 35.19968750451939, "longitude": -0.6247530013102365 } },
+        "to": { "line": "tramway", "name": "Radio", "coordinates": { "latitude": 35.19631518609869, "longitude": -0.6208536049211122 } },
+        "path": [
+          { "latitude": 35.19968750451939, "longitude": -0.6247530013102365 },
+          { "latitude": 35.19963138953952, "longitude": -0.6246784320693345 },
+          { "latitude": 35.19881010844371, "longitude": -0.623698470149503 },
+          { "latitude": 35.19717658110877, "longitude": -0.6218460210938127 },
+          { "latitude": 35.19672725258195, "longitude": -0.6213551782976046 },
+          { "latitude": 35.19631518609869, "longitude": -0.6208536049211122 }
+        ],
+        "mean": "tramway"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f908",
+      "to": "61eb2de817e57cb86cb3f909",
+      "weight": 115,
+      "label": {
+        "from": { "line": "tramway", "name": "Radio", "coordinates": { "latitude": 35.19631518609869, "longitude": -0.6208536049211122 } },
+        "to": { "line": "tramway", "name": "Maternite", "coordinates": { "latitude": 35.19250346639613, "longitude": -0.61917400655926 } },
+        "path": [
+          { "latitude": 35.19631518609869, "longitude": -0.6208536049211122 },
+          { "latitude": 35.19626477205737, "longitude": -0.6207972782411121 },
+          { "latitude": 35.19573875798482, "longitude": -0.6202018673753807 },
+          { "latitude": 35.19515349739793, "longitude": -0.6195285925049455 },
+          { "latitude": 35.19479840574223, "longitude": -0.6191396666744443 },
+          { "latitude": 35.194539764686645, "longitude": -0.6188607239137546 },
+          { "latitude": 35.19442140518384, "longitude": -0.6187909829909378 },
+          { "latitude": 35.19430084735552, "longitude": -0.618745386891202 },
+          { "latitude": 35.193621355702085, "longitude": -0.6185844549317033 },
+          { "latitude": 35.19328599060601, "longitude": -0.6185120361604235 },
+          { "latitude": 35.19295062372258, "longitude": -0.6184369354708164 },
+          { "latitude": 35.19281471988062, "longitude": -0.6184208375654677 },
+          { "latitude": 35.19273800471156, "longitude": -0.6184503479694081 },
+          { "latitude": 35.19261525303695, "longitude": -0.618554958481521 },
+          { "latitude": 35.192575799894165, "longitude": -0.6186220081835315 },
+          { "latitude": 35.19254949805698, "longitude": -0.6186890602111818 },
+          { "latitude": 35.192514426375304, "longitude": -0.6190806516806525 },
+          { "latitude": 35.19250346639613, "longitude": -0.61917400655926 }
+        ],
+        "mean": "tramway"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f909",
+      "to": "61eb2de817e57cb86cb3f90a",
+      "weight": 115,
+      "label": {
+        "from": { "line": "tramway", "name": "Maternite", "coordinates": { "latitude": 35.19250346639613, "longitude": -0.61917400655926 } },
+        "to": { "line": "tramway", "name": "Salle Adda Boudjelal", "coordinates": { "latitude": 35.191784501749964, "longitude": -0.6251993151375924 } },
+        "path": [
+          { "latitude": 35.19250346639613, "longitude": -0.61917400655926 },
+          { "latitude": 35.19249031466095, "longitude": -0.6192898779375523 },
+          { "latitude": 35.192448668492936, "longitude": -0.6196761137100771 },
+          { "latitude": 35.19239386934386, "longitude": -0.6200918569794879 },
+          { "latitude": 35.19236273220819, "longitude": -0.6202565113588188 },
+          { "latitude": 35.19231934271582, "longitude": -0.6205934309373752 },
+          { "latitude": 35.19227504562937, "longitude": -0.6210431697843789 },
+          { "latitude": 35.192209743803254, "longitude": -0.6215643888565615 },
+          { "latitude": 35.19213302443621, "longitude": -0.6222322615175768 },
+          { "latitude": 35.192091378488016, "longitude": -0.6225514394484023 },
+          { "latitude": 35.192030003797285, "longitude": -0.6231039739240752 },
+          { "latitude": 35.1919535274532, "longitude": -0.6237178081693885 },
+          { "latitude": 35.1918809481934, "longitude": -0.6244397238973856 },
+          { "latitude": 35.191812990369016, "longitude": -0.6250245053474092 },
+          { "latitude": 35.191784501749964, "longitude": -0.6251993151375924 }
+        ],
+        "mean": "tramway"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f90a",
+      "to": "61eb2de817e57cb86cb3f90b",
+      "weight": 99,
+      "label": {
+        "from": { "line": "tramway", "name": "Salle Adda Boudjelal", "coordinates": { "latitude": 35.191784501749964, "longitude": -0.6251993151375924 } },
+        "to": { "line": "tramway", "name": "Amir Abdelkader", "coordinates": { "latitude": 35.19119851214091, "longitude": -0.6301510309059722 } },
+        "path": [
+          { "latitude": 35.191784501749964, "longitude": -0.6251993151375924 },
+          { "latitude": 35.19177134748054, "longitude": -0.6253516784508785 },
+          { "latitude": 35.19162031627193, "longitude": -0.6267571697919895 },
+          { "latitude": 35.19157407146647, "longitude": -0.6272399413878494 },
+          { "latitude": 35.19145663317506, "longitude": -0.6282804266775367 },
+          { "latitude": 35.19137479136919, "longitude": -0.6287023617018364 },
+          { "latitude": 35.191321993086454, "longitude": -0.6290933492706574 },
+          { "latitude": 35.19123449109163, "longitude": -0.6296392000240947 },
+          { "latitude": 35.19122335419077, "longitude": -0.6298667019000327 },
+          { "latitude": 35.19121166368615, "longitude": -0.6300473386654583 },
+          { "latitude": 35.19119851214091, "longitude": -0.6301510309059722 }
+        ],
+        "mean": "tramway"
+      }
+    },
+    {
+      "from": "61eb2de817e57cb86cb3f90b",
+      "to": "61eb2de817e57cb86cb3f90c",
+      "weight": 130,
+      "label": {
+        "from": { "line": "tramway", "name": "Amir Abdelkader", "coordinates": { "latitude": 35.19119851214091, "longitude": -0.6301510309059722 } },
+        "to": { "line": "tramway", "name": "4 Horloges", "coordinates": { "latitude": 35.190692015918486, "longitude": -0.6345291159063461 } },
+        "path": [
+          { "latitude": 35.19119851214091, "longitude": -0.6301510309059722 },
+          { "latitude": 35.191186526492544, "longitude": -0.6303137081385769 },
+          { "latitude": 35.191166362425, "longitude": -0.630548710741894 },
+          { "latitude": 35.19110588211264, "longitude": -0.6311624572370201 },
+          { "latitude": 35.191002410091656, "longitude": -0.6321183435673895 },
+          { "latitude": 35.19091881431372, "longitude": -0.6327643794086125 },
+          { "latitude": 35.19087788028597, "longitude": -0.6331236312325417 },
+          { "latitude": 35.19083053977758, "longitude": -0.6335227433580705 },
+          { "latitude": 35.190802490978015, "longitude": -0.6337362527847291 },
+          { "latitude": 35.190777059314385, "longitude": -0.6339615548078872 },
+          { "latitude": 35.190704231644034, "longitude": -0.6344442640783822 },
+          { "latitude": 35.190692015918486, "longitude": -0.6345291159063461 }
+        ],
+        "mean": "tramway"
+      }
     }
   ]
 }
