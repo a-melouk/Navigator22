@@ -50,15 +50,15 @@ function addMarker(marker) {
 
 function addStationToMap(station, layer, line) {
   let url = ''
-  if (line === 'tramway') url = './icons/pin_subway.png'
-  if (line === 'Ligne 03') url = './icons/pin_bus_3.png'
-  if (line === 'Ligne 03 bis') url = './icons/pin_bus_3.png'
-  if (line === 'Ligne 11') url = './icons/pin_bus_11.png'
-  if (line === 'Ligne 16') url = './icons/pin_bus_16.png'
-  if (line === 'Ligne 17') url = './icons/pin_bus_17.png'
-  if (line === 'Ligne 22') url = './icons/pin_bus_22.png'
-  if (line === 'Ligne 25') url = './icons/pin_bus_25.png'
-  if (line === 'Ligne 27') url = './icons/pin_bus_27.png'
+  if (line === 'tramway') url = './static/icons/markers/pin_subway.png'
+  if (line === 'Ligne 03') url = './static/icons/markers/pin_bus_3.png'
+  if (line === 'Ligne 03 bis') url = './static/icons/markers/pin_bus_3.png'
+  if (line === 'Ligne 11') url = './static/icons/markers/pin_bus_11.png'
+  if (line === 'Ligne 16') url = './static/icons/markers/pin_bus_16.png'
+  if (line === 'Ligne 17') url = './static/icons/markers/pin_bus_17.png'
+  if (line === 'Ligne 22') url = './static/icons/markers/pin_bus_22.png'
+  if (line === 'Ligne 25') url = './static/icons/markers/pin_bus_25.png'
+  if (line === 'Ligne 27') url = './static/icons/markers/pin_bus_27.png'
   let iconOptions = L.icon({
     iconUrl: url,
     iconSize: [35, 35], // size of the icon

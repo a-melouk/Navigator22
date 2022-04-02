@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const coordinates = {
-  latitude: 0.0,
-  longitude: 0.0,
+  latitude: Number,
+  longitude: Number,
   _id: false,
 }
 

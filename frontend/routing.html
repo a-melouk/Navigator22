@@ -26,22 +26,43 @@
             <div class="destination" id="destination">
               <input type="search" name="to" id="to" placeholder="Choose a destination" />
             </div>
-            <div name="stations" id="stations" class="stations"></div>
+            <div name="stations" id="stations" class="stations" style="display: none"></div>
           </div>
-          <button id="getroute" class="get" style="display: none">Get route</button>
+          <button id="getroute" class="get" style="display: flex">Get route</button>
           <hr />
 
-          <div class="means" style="display: flex">
-            <button id="walk" class="mean inactive"><img src="./static/Means/walk_inactive.svg" alt="walk" /></button>
-            <button id="taxi" class="mean inactive"><img src="./static/Means/taxi_inactive.svg" alt="taxi" /></button>
-            <button id="bus" class="mean active"><img src="./static/Means/bus_active.svg" alt="bus" /></button>
-            <button id="tramway" class="mean inactive"><img src="./static/Means/tramway_inactive.svg" alt="tramway" /></button>
-            <button id="fastest" class="mean inactive"><img src="./static/Means/fastest_inactive.svg" alt="fastest" /></button>
+          <div class="means" style="display: none">
+            <button id="walk" class="mean inactive"><img src="./static/icons/means-flat/walk_inactive.svg" alt="walk" /></button>
+            <button id="taxi" class="mean inactive"><img src="./static/icons/means-flat/taxi_inactive.svg" alt="taxi" /></button>
+            <button id="bus" class="mean active"><img src="./static/icons/means-flat/bus_active.svg" alt="bus" /></button>
+            <button id="tramway" class="mean inactive"><img src="./static/icons/means-flat/tramway_inactive.svg" alt="tramway" /></button>
+            <button id="fastest" class="mean inactive"><img src="./static/icons/means-flat/fastest_inactive.svg" alt="fastest" /></button>
           </div>
         </div>
-        <div class="steps" id="steps" style="display: none">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis at excepturi ut distinctio hic explicabo id laborum! Beatae explicabo, eligendi vero modi fugit, eos perspiciatis repellat repellendus porro labore aspernatur sapiente autem tempora dignissimos magnam et. Molestias necessitatibus dolores dolore, accusamus aperiam, atque veritatis deserunt repellendus architecto quos
-          adipisci? Suscipit atque at itaque! Minima deleniti impedit eius ratione sit delectus autem necessitatibus atque culpa voluptatem ad libero, adipisci ea! Sequi ut sapiente, libero et unde cumque repellendus repellat. Ipsa fugiat sed incidunt, quo vero, iusto excepturi corporis ratione omnis quam earum aliquid cum debitis, vitae dicta. Nulla dolore soluta nemo.
+        <div class="steps" id="steps">
+          <div class="step">
+            <div class="step-mean"><img src="./static/icons/means-colored/tramway.png" alt="tramway" /></div>
+            <div class="details">
+              <div class="step-name">Les Cascades</div>
+              <div class="step-towards">Towards Environnement</div>
+              <div class="step-duration-stops">4 stops | 8 minutes</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-mean"><img src="./static/icons/means-colored/walk.png" alt="walk" /></div>
+            <div class="details">
+              <div class="step-name">Environnement</div>
+              <div class="step-towards">1 minute de correspondance</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-mean"><img src="./static/icons/means-colored/tramway.png" alt="tramway" /></div>
+            <div class="details">
+              <div class="step-name">Sidi Djilali</div>
+              <div class="step-towards">Towards 4 Horloges</div>
+              <div class="step-duration-stops">8 stops | 17 minutes</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

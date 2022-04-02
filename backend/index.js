@@ -760,6 +760,8 @@ let Dijkstra = util.dijikstra
 const GHUtil = require('graphhopper-js-api-client/src/GHUtil')
 let Ghutil = new GHUtil()
 
+// Route.find({}).then(data => console.log(data[0]))
+
 async function shortest(from, target) {
   return new Promise((resolve, reject) => {
     const graph = new Graph(true)
@@ -791,8 +793,8 @@ async function shortest(from, target) {
     })
 
     const promiseTransport = new Promise(async resolve => {
-      const matrixTransport = await LineMatrix.find({})
-      // const matrixTransport = await LineMatrix.find({ name: 'tramway' })
+      // const matrixTransport = await LineMatrix.find({})
+      const matrixTransport = await LineMatrix.find({ name: 'tramway' })
       for (let i = 0; i < matrixTransport.length; i++) {
         let route = matrixTransport[i].route
         for (let j = 0; j < route.length; j++) {
@@ -860,6 +862,7 @@ app.get('/route', async (request, response) => {
     path.push({
       from: parsed.from,
       to: parsed.to,
+      duration: JSON.parse(edge).weight,
       segment: parsed.path,
       mean: parsed.mean,
     })
