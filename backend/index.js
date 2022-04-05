@@ -793,8 +793,8 @@ async function shortest(from, target) {
     })
 
     const promiseTransport = new Promise(async resolve => {
-      // const matrixTransport = await LineMatrix.find({})
-      const matrixTransport = await LineMatrix.find({ name: 'tramway' })
+      const matrixTransport = await LineMatrix.find({})
+      // const matrixTransport = await LineMatrix.find({ name: 'tramway' })
       for (let i = 0; i < matrixTransport.length; i++) {
         let route = matrixTransport[i].route
         for (let j = 0; j < route.length; j++) {

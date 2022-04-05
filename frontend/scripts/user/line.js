@@ -146,138 +146,83 @@ function addLineToMap(number) {
     map.fitBounds(linelayer.getBounds())
   })
 }
-
-const raw = {
-  from: { line: 'tramway', name: 'Les Cascades', coordinates: { latitude: 35.20902474807825, longitude: -0.6162750701035336 } },
-  to: { line: 'tramway', name: '4 Horloges', coordinates: { latitude: 35.190692015918486, longitude: -0.6345291159063461 } },
-  duration: 1539,
-  path: [
-    {
-      from: { line: 'tramway', name: 'Les Cascades', coordinates: { latitude: 35.20902474807825, longitude: -0.6162750701035336 } },
-      to: { line: 'tramway', name: 'Ghalmi Gare Routiere Est', coordinates: { latitude: 35.21326746334253, longitude: -0.615711808204651 } },
-      duration: 105,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Ghalmi Gare Routiere Est', coordinates: { latitude: 35.21326746334253, longitude: -0.615711808204651 } },
-      to: { line: 'tramway', name: 'Les Freres Adnane', coordinates: { latitude: 35.21683928147929, longitude: -0.6147944927215577 } },
-      duration: 112,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Les Freres Adnane', coordinates: { latitude: 35.21683928147929, longitude: -0.6147944927215577 } },
-      to: { line: 'tramway', name: 'Benhamouda', coordinates: { latitude: 35.21742217872461, longitude: -0.6211030483245851 } },
-      duration: 120,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Benhamouda', coordinates: { latitude: 35.21742217872461, longitude: -0.6211030483245851 } },
-      to: { line: 'tramway', name: 'Environnement', coordinates: { latitude: 35.216100966557406, longitude: -0.6244219586929579 } },
-      duration: 92,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Environnement', coordinates: { latitude: 35.216100966557406, longitude: -0.6244219586929579 } },
-      to: { line: 'tramway', name: 'Sidi Djilali', coordinates: { latitude: 35.21592551912779, longitude: -0.623576045036316 } },
-      duration: 109,
-      mean: 'walk',
-    },
-    {
-      from: { line: 'tramway', name: 'Sidi Djilali', coordinates: { latitude: 35.21592551912779, longitude: -0.623576045036316 } },
-      to: { line: 'tramway', name: 'Wiam', coordinates: { latitude: 35.21138935217449, longitude: -0.6279587751480654 } },
-      duration: 148,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Wiam', coordinates: { latitude: 35.21138935217449, longitude: -0.6279587751480654 } },
-      to: { line: 'tramway', name: 'Daira', coordinates: { latitude: 35.2059556923662, longitude: -0.6264588860800592 } },
-      duration: 131,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Daira', coordinates: { latitude: 35.2059556923662, longitude: -0.6264588860800592 } },
-      to: { line: 'tramway', name: 'Houari Boumediene', coordinates: { latitude: 35.19968750451939, longitude: -0.6247530013102365 } },
-      duration: 154,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Houari Boumediene', coordinates: { latitude: 35.19968750451939, longitude: -0.6247530013102365 } },
-      to: { line: 'tramway', name: 'Radio', coordinates: { latitude: 35.19631518609869, longitude: -0.6208536049211122 } },
-      duration: 109,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Radio', coordinates: { latitude: 35.19631518609869, longitude: -0.6208536049211122 } },
-      to: { line: 'tramway', name: 'Maternite', coordinates: { latitude: 35.19250346639613, longitude: -0.61917400655926 } },
-      duration: 115,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Maternite', coordinates: { latitude: 35.19250346639613, longitude: -0.61917400655926 } },
-      to: { line: 'tramway', name: 'Salle Adda Boudjelal', coordinates: { latitude: 35.191784501749964, longitude: -0.6251993151375924 } },
-      duration: 115,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Salle Adda Boudjelal', coordinates: { latitude: 35.191784501749964, longitude: -0.6251993151375924 } },
-      to: { line: 'tramway', name: 'Amir Abdelkader', coordinates: { latitude: 35.19119851214091, longitude: -0.6301510309059722 } },
-      duration: 99,
-      mean: 'tramway',
-    },
-    {
-      from: { line: 'tramway', name: 'Amir Abdelkader', coordinates: { latitude: 35.19119851214091, longitude: -0.6301510309059722 } },
-      to: { line: 'tramway', name: '4 Horloges', coordinates: { latitude: 35.190692015918486, longitude: -0.6345291159063461 } },
-      duration: 130,
-      mean: 'tramway',
-    },
-  ],
-}
+let raw = {}
+const rawJson = fetch('../../../test.json')
+  .then(response => response.json())
+  .then(raw => {
+    separateSegments(raw.path)
+  })
 
 const steps = document.getElementById('steps')
-let i = 0
-let duration = 0
-let stops = 1
-let firstStation = raw.path[0].from.name
-let towards = raw.path[0].to.name
-for (let i = 0; i < raw.path.length - 1; i++) {
-  if (raw.path[i].mean === raw.path[i + 1].mean) {
-    towards = raw.path[i + 1].to.name
-    duration += raw.path[i].duration
-    stops++
-    if (raw.path[i + 1].to.name === '4 Horloges') {
-      duration += raw.path[i + 1].duration
-      let stepName = document.createElement('div')
-      let stepTowards = document.createElement('div')
-      let stepStopsDuration = document.createElement('div')
-      stepName.innerHTML = firstStation
-      stepTowards.innerHTML = towards
-      stepStopsDuration.innerHTML = stops + ' stops | ' + duration + ' minutes'
-      let details = document.createElement('div')
-      details.append(stepName, stepTowards, stepStopsDuration)
-      details.classList.add('details')
-      let step = document.createElement('div')
-      step.appendChild(details)
-      step.classList.add('step')
-      steps.appendChild(step)
+
+function separateSegments(rawData) {
+  let i = 1
+  let first = rawData[0].from.name
+  let last = rawData[0].to.name
+  let mean = rawData[0].mean
+  let duration = rawData[0].duration
+  let stops = 1
+  if (rawData.length === 1) console.log(first, last, mean, duration, stops)
+  else
+    while (i < rawData.length) {
+      if (rawData[i].mean !== mean) {
+        console.log(first, last, mean, duration, stops)
+        console.log('Changement')
+        let imgMean = document.createElement('img')
+        imgMean.setAttribute('alt', mean)
+        if (mean.includes('Ligne')) imgMean.setAttribute('src', 'static/icons/means-colored/bus.png')
+        else imgMean.setAttribute('src', 'static/icons/means-colored/' + mean + '.png')
+        steps.appendChild(imgMean)
+        first = rawData[i].from.name
+        last = rawData[i].to.name
+        mean = rawData[i].mean
+        stops = 1
+        duration = rawData[i].duration
+      } else {
+        last = rawData[i].to.name
+        duration += rawData[i].duration
+        stops++
+      }
+      if (i === rawData.length - 1) {
+        if (mean === rawData[rawData.length - 2].mean) {
+          last = rawData[rawData.length - 1].to.name
+          console.log(first, last, mean, duration, stops)
+          let imgMean = document.createElement('img')
+          imgMean.setAttribute('alt', mean)
+          if (mean.includes('Ligne')) imgMean.setAttribute('src', 'static/icons/means-colored/bus.png')
+          else imgMean.setAttribute('src', 'static/icons/means-colored/' + mean + '.png')
+          steps.appendChild(imgMean)
+        } else {
+          first = rawData[rawData.length - 1].from.name
+          last = rawData[rawData.length - 1].to.name
+          duration = rawData[rawData.length - 1].duration
+          mean = rawData[rawData.length - 1].mean
+          stops = 1
+          console.log(first, last, mean, duration, stops)
+          let imgMean = document.createElement('img')
+          imgMean.setAttribute('alt', mean)
+          if (mean.includes('Ligne')) imgMean.setAttribute('src', 'static/icons/means-colored/bus.png')
+          else imgMean.setAttribute('src', 'static/icons/means-colored/' + mean + '.png')
+          steps.appendChild(imgMean)
+          // console.log('Changement')
+        }
+      }
+      i++
     }
-  } else {
-    duration += raw.path[i].duration
-    let stepName = document.createElement('div')
-    let stepTowards = document.createElement('div')
-    let stepStopsDuration = document.createElement('div')
-    stepName.innerHTML = firstStation
-    stepTowards.innerHTML = towards
-    stepStopsDuration.innerHTML = stops + ' stops | ' + duration + ' minutes'
-    let details = document.createElement('div')
-    details.append(stepName, stepTowards, stepStopsDuration)
-    details.classList.add('details')
-    let step = document.createElement('div')
-    step.appendChild(details)
-    step.classList.add('step')
-    steps.appendChild(step)
-    firstStation = raw.path[i].to.name
-    towards = raw.path[i + 1].to.name
-    duration = 0
-    stops = 1
-  }
 }
+
+/*
+  let stepName = document.createElement('div')
+  let stepTowards = document.createElement('div')
+  let stepStopsDuration = document.createElement('div')
+  stepName.innerHTML = firstStation
+  stepTowards.innerHTML = towards
+  stepStopsDuration.innerHTML = stops + ' stops | ' + duration + ' minutes'
+  let details = document.createElement('div')
+  details.append(stepName, stepTowards, stepStopsDuration)
+  details.classList.add('details')
+  let step = document.createElement('div')
+  step.appendChild(details)
+  step.classList.add('step')
+  steps.appendChild(step)
+*/
