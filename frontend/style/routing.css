@@ -134,10 +134,13 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
   margin: 0.8em;
-  background-color: #42d392;
   border-radius: 10px;
+  /* background-color: #42d392; */
+  position: relative;
 }
+
 
 .step div:first-child {
   margin-top: 0.2em;
@@ -145,6 +148,19 @@ body {
 
 .step div:last-child {
   margin-bottom: 0.2em;
+}
+
+.step:after {
+  content: '';
+  position: absolute;
+  border-right: 4px black dotted;
+  height: 70%;
+  width: 100%;
+  transform: translate(-94%, 100%)
+}
+
+.step:last-child::after {
+  height: 0;
 }
 
 .step-mean {
@@ -199,7 +215,7 @@ hr {
 
 img {
   width: 32px;
-  /* height: 41px; */
+  height: 41px;
 }
 
 button.inactive {
@@ -395,3 +411,13 @@ button:hover {
 ::-webkit-scrollbar-thumb {
   background: orangered;
 }
+
+
+
+/*
+    min-height: 40px;
+    border-left: 2px dashed black;
+    align-self: flex-start;
+    margin-left: 30px;
+
+*/

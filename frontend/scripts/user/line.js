@@ -50,7 +50,7 @@ let inputs = document.getElementsByTagName('input')
 let fromInput = inputs[0]
 let toInput = inputs[1]
 const fromID = '61eb2de817e57cb86cb3f8f9'
-const toID = '61eb2de817e57cb86cb3f90c'
+const toID = '61eb2de817e57cb86cb3f90d'
 
 //TODO: Fix listeners for all stations
 /*
@@ -162,17 +162,14 @@ function separateSegments(rawData) {
   let mean = rawData[0].mean
   let duration = rawData[0].duration
   let stops = 1
-  if (rawData.length === 1) console.log(first, last, mean, duration, stops)
-  else
+  if (rawData.length === 1) {
+    console.log(first, last, mean, duration, stops)
+    steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops }))
+  } else
     while (i < rawData.length) {
       if (rawData[i].mean !== mean) {
         console.log(first, last, mean, duration, stops)
-        console.log('Changement')
-        let imgMean = document.createElement('img')
-        imgMean.setAttribute('alt', mean)
-        if (mean.includes('Ligne')) imgMean.setAttribute('src', 'static/icons/means-colored/bus.png')
-        else imgMean.setAttribute('src', 'static/icons/means-colored/' + mean + '.png')
-        steps.appendChild(imgMean)
+        steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops }))
         first = rawData[i].from.name
         last = rawData[i].to.name
         mean = rawData[i].mean
@@ -187,11 +184,12 @@ function separateSegments(rawData) {
         if (mean === rawData[rawData.length - 2].mean) {
           last = rawData[rawData.length - 1].to.name
           console.log(first, last, mean, duration, stops)
-          let imgMean = document.createElement('img')
-          imgMean.setAttribute('alt', mean)
-          if (mean.includes('Ligne')) imgMean.setAttribute('src', 'static/icons/means-colored/bus.png')
-          else imgMean.setAttribute('src', 'static/icons/means-colored/' + mean + '.png')
-          steps.appendChild(imgMean)
+
+          // let imgMean = document.createElement('img')
+          // imgMean.setAttribute('alt', mean)
+          // if (mean.includes('Ligne')) imgMean.setAttribute('src', 'static/icons/means-colored/bus.png')
+          // else imgMean.setAttribute('src', 'static/icons/means-colored/' + mean + '.png')
+          steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops }))
         } else {
           first = rawData[rawData.length - 1].from.name
           last = rawData[rawData.length - 1].to.name
@@ -199,11 +197,12 @@ function separateSegments(rawData) {
           mean = rawData[rawData.length - 1].mean
           stops = 1
           console.log(first, last, mean, duration, stops)
-          let imgMean = document.createElement('img')
-          imgMean.setAttribute('alt', mean)
-          if (mean.includes('Ligne')) imgMean.setAttribute('src', 'static/icons/means-colored/bus.png')
-          else imgMean.setAttribute('src', 'static/icons/means-colored/' + mean + '.png')
-          steps.appendChild(imgMean)
+
+          // let imgMean = document.createElement('img')
+          // imgMean.setAttribute('alt', mean)
+          // if (mean.includes('Ligne')) imgMean.setAttribute('src', 'static/icons/means-colored/bus.png')
+          // else imgMean.setAttribute('src', 'static/icons/means-colored/' + mean + '.png')
+          steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops }))
           // console.log('Changement')
         }
       }
@@ -226,3 +225,30 @@ function separateSegments(rawData) {
   step.classList.add('step')
   steps.appendChild(step)
 */
+
+function createImg(mean) {
+  let imgMean = document.createElement('img')
+  imgMean.setAttribute('alt', mean)
+  imgMean.setAttribute('src', 'static/icons/circle_ways/' + mean + '.svg')
+  return imgMean
+}
+
+function createStep(details) {
+  let first = document.createElement('div')
+  let last = document.createElement('div')
+  let stops_duration = document.createElement('div')
+  let detailsDiv = document.createElement('div')
+  let step = document.createElement('div')
+
+  first.innerHTML = details.first
+  last.innerHTML = details.last
+  stops_duration.innerHTML = details.stops + ' stops | ' + details.duration + ' minutes'
+
+  detailsDiv.append(first, last, stops_duration)
+  detailsDiv.classList.add('details')
+
+  step.appendChild(createImg(details.mean))
+  step.appendChild(detailsDiv)
+  step.classList.add('step')
+  return step
+}

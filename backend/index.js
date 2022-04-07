@@ -225,6 +225,39 @@ app.get('/lines/:line/stations', (request, response) => {
     .catch(err => response.json(err))
 })
 
+app.get('/schedule/:line', (request, response) => {
+  let name = request.params.line
+  LineMatrix.aggregate([{ $match: { name: name } }, { $unwind: '$route' }, { $sort: { 'route.transport.order': 1 } }, { $group: { _id: '$_id', route: { $push: '$route' } } }])
+    .then(data => {
+      let line = []
+      let fromStations = []
+      let toStations = []
+      data[0].route.forEach(item => {
+        let from = { id: item.from.id, name: item.from.name, coordinates: item.from.coordinates }
+        let to = { id: item.to.id, name: item.to.name, coordinates: item.to.coordinates }
+        fromStations.push(from)
+        toStations.push(to)
+        let segment = {
+          from: from,
+          to: to,
+          order: item.transport.order,
+          distance: item.transport.distance,
+          duration: item.transport.duration,
+          id: item._id,
+        }
+        line.push(segment)
+      })
+      let result = {
+        from: fromStations,
+        to: toStations,
+        line: line,
+      }
+
+      response.json(result)
+    })
+    .catch(err => response.json(err))
+})
+
 app.get('/lines/all', (request, response) => {
   Line.find({}, { _id: 1, name: 1 })
     .then(data => response.json(data))
@@ -346,7 +379,7 @@ app.patch('/duration', (request, response) => {
   let body = request.body
   const promise = new Promise((resolve, reject) => {
     for (let i = 0; i < body.length; i++) {
-      Line.updateOne({ _id: ObjectId(id), 'route._id': body[i].segment_id }, { $set: { 'route.$.duration': body[i].duration } }).then(data => {
+      LineMatrix.updateOne({ line_id: ObjectId(id), 'route._id': body[i].segment_id }, { $set: { 'route.$.transport.duration': body[i].duration } }).then(data => {
         if (data.matchedCount === 0) reject('Line does not exist')
         else if (data.modifiedCount === 1) console.log('Patched ' + (i + 1))
         else reject('There was an error updating the segment')

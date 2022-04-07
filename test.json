@@ -1,239 +1,29 @@
 {
   "from": {
-    "line": "Ligne 03",
-    "name": "Rocher Terminus",
+    "line": "tramway",
+    "name": "Les Cascades",
     "coordinates": {
-      "latitude": 35.21983481578884,
-      "longitude": -0.6085910046433507
+      "latitude": 35.20902474807825,
+      "longitude": -0.6162750701035336
     }
   },
   "to": {
-    "line": "Ligne 11",
-    "name": "Sakia El Hamra",
+    "line": "tramway",
+    "name": "Jardin Public",
     "coordinates": {
-      "latitude": 35.1837636692574,
-      "longitude": -0.6515273408199597
+      "latitude": 35.18830313800839,
+      "longitude": -0.6438875125527656
     }
   },
-  "duration": 2010,
+  "duration": 1404,
   "path": [
     {
       "from": {
-        "line": "Ligne 03",
-        "name": "Rocher Terminus",
+        "line": "tramway",
+        "name": "Les Cascades",
         "coordinates": {
-          "latitude": 35.21983481578884,
-          "longitude": -0.6085910046433507
-        }
-      },
-      "to": {
-        "line": "Ligne 22",
-        "name": "Batiments Citroen",
-        "coordinates": {
-          "latitude": 35.219219636196875,
-          "longitude": -0.6124103869107667
-        }
-      },
-      "duration": 357,
-      "segment": [
-        {
-          "latitude": 35.21982,
-          "longitude": -0.6086
-        },
-        {
-          "latitude": 35.21986,
-          "longitude": -0.6093
-        },
-        {
-          "latitude": 35.21989,
-          "longitude": -0.60999
-        },
-        {
-          "latitude": 35.2188,
-          "longitude": -0.61005
-        },
-        {
-          "latitude": 35.21899,
-          "longitude": -0.61076
-        },
-        {
-          "latitude": 35.21941,
-          "longitude": -0.61218
-        },
-        {
-          "latitude": 35.21942,
-          "longitude": -0.61238
-        },
-        {
-          "latitude": 35.21922,
-          "longitude": -0.61242
-        }
-      ],
-      "mean": "walk"
-    },
-    {
-      "from": {
-        "line": "Ligne 22",
-        "name": "Batiments Citroen",
-        "coordinates": {
-          "latitude": 35.219219636196875,
-          "longitude": -0.6124103869107667
-        }
-      },
-      "to": {
-        "line": "Ligne 22",
-        "name": "Ront Point Rocher",
-        "coordinates": {
-          "latitude": 35.21734454194968,
-          "longitude": -0.6131568105112951
-        }
-      },
-      "duration": 53,
-      "segment": [
-        {
-          "latitude": 35.21734454194968,
-          "longitude": -0.6131568105112951
-        },
-        {
-          "latitude": 35.217544891303206,
-          "longitude": -0.6130702193746541
-        },
-        {
-          "latitude": 35.21775087134922,
-          "longitude": -0.6129790241044587
-        },
-        {
-          "latitude": 35.218041534302436,
-          "longitude": -0.6128468748464023
-        },
-        {
-          "latitude": 35.21844331107596,
-          "longitude": -0.6126724873873292
-        },
-        {
-          "latitude": 35.21873695795532,
-          "longitude": -0.612560817058545
-        },
-        {
-          "latitude": 35.21904668232034,
-          "longitude": -0.6124535454699331
-        },
-        {
-          "latitude": 35.219219636196875,
-          "longitude": -0.6124103869107667
-        }
-      ],
-      "mean": "Ligne 22"
-    },
-    {
-      "from": {
-        "line": "Ligne 22",
-        "name": "Ront Point Rocher",
-        "coordinates": {
-          "latitude": 35.21734454194968,
-          "longitude": -0.6131568105112951
-        }
-      },
-      "to": {
-        "line": "Ligne 22",
-        "name": "Ghalmi Gare Routiere Est",
-        "coordinates": {
-          "latitude": 35.213200403568806,
-          "longitude": -0.6156244429686654
-        }
-      },
-      "duration": 127,
-      "segment": [
-        {
-          "latitude": 35.213200403568806,
-          "longitude": -0.6156244429686654
-        },
-        {
-          "latitude": 35.21345977125745,
-          "longitude": -0.6154428472906504
-        },
-        {
-          "latitude": 35.213711073545994,
-          "longitude": -0.6152640610914051
-        },
-        {
-          "latitude": 35.21403834998407,
-          "longitude": -0.6149994579486285
-        },
-        {
-          "latitude": 35.21474549607196,
-          "longitude": -0.6144201913701642
-        },
-        {
-          "latitude": 35.21507276833975,
-          "longitude": -0.6141484365699014
-        },
-        {
-          "latitude": 35.21527731260301,
-          "longitude": -0.6139982563458447
-        },
-        {
-          "latitude": 35.21562795901808,
-          "longitude": -0.6138051674863633
-        },
-        {
-          "latitude": 35.215949623885045,
-          "longitude": -0.6136786937713624
-        },
-        {
-          "latitude": 35.21620067832787,
-          "longitude": -0.6135691699914371
-        },
-        {
-          "latitude": 35.21643444015841,
-          "longitude": -0.6134690500603114
-        },
-        {
-          "latitude": 35.216499962432685,
-          "longitude": -0.6133162173872342
-        },
-        {
-          "latitude": 35.21659324597569,
-          "longitude": -0.6132211879689199
-        },
-        {
-          "latitude": 35.21666399822491,
-          "longitude": -0.6131974306961908
-        },
-        {
-          "latitude": 35.2167617054832,
-          "longitude": -0.613175840614968
-        },
-        {
-          "latitude": 35.216872741692626,
-          "longitude": -0.6132115982476628
-        },
-        {
-          "latitude": 35.21697208966674,
-          "longitude": -0.6132831122035799
-        },
-        {
-          "latitude": 35.217067190886816,
-          "longitude": -0.6132495447702468
-        },
-        {
-          "latitude": 35.2171766294116,
-          "longitude": -0.6132115982476628
-        },
-        {
-          "latitude": 35.21734454194968,
-          "longitude": -0.6131568105112951
-        }
-      ],
-      "mean": "Ligne 22"
-    },
-    {
-      "from": {
-        "line": "Ligne 22",
-        "name": "Ghalmi Gare Routiere Est",
-        "coordinates": {
-          "latitude": 35.213200403568806,
-          "longitude": -0.6156244429686654
+          "latitude": 35.20902474807825,
+          "longitude": -0.6162750701035336
         }
       },
       "to": {
@@ -244,130 +34,70 @@
           "longitude": -0.6190549925455958
         }
       },
-      "duration": 143,
+      "duration": 255,
       "segment": [
         {
-          "latitude": 35.20970288550616,
-          "longitude": -0.6190549925455958
+          "latitude": 35.20903,
+          "longitude": -0.61628
         },
         {
-          "latitude": 35.20982370244017,
-          "longitude": -0.6188929080963136
+          "latitude": 35.20906,
+          "longitude": -0.6162
         },
         {
-          "latitude": 35.20992326214722,
-          "longitude": -0.6187273806317785
+          "latitude": 35.2092,
+          "longitude": -0.61626
         },
         {
-          "latitude": 35.21015495712157,
-          "longitude": -0.6182981963173307
+          "latitude": 35.20917,
+          "longitude": -0.61639
         },
         {
-          "latitude": 35.210308975113534,
-          "longitude": -0.6179579559290872
+          "latitude": 35.20919,
+          "longitude": -0.6164
         },
         {
-          "latitude": 35.21043920228481,
-          "longitude": -0.6175832294851925
+          "latitude": 35.20916,
+          "longitude": -0.61654
         },
         {
-          "latitude": 35.21053938557825,
-          "longitude": -0.6171602055139603
+          "latitude": 35.20902,
+          "longitude": -0.61668
         },
         {
-          "latitude": 35.21058744819242,
-          "longitude": -0.6169251199831783
+          "latitude": 35.20921,
+          "longitude": -0.61688
         },
         {
-          "latitude": 35.21056991481908,
-          "longitude": -0.6167606364441692
+          "latitude": 35.20966,
+          "longitude": -0.61744
         },
         {
-          "latitude": 35.210511470035456,
-          "longitude": -0.6166748191732797
+          "latitude": 35.20992,
+          "longitude": -0.61782
         },
         {
-          "latitude": 35.21050562566181,
-          "longitude": -0.616524638949223
+          "latitude": 35.21007,
+          "longitude": -0.61802
         },
         {
-          "latitude": 35.21053813068781,
-          "longitude": -0.6164291101144005
+          "latitude": 35.21006,
+          "longitude": -0.61813
         },
         {
-          "latitude": 35.21058744819242,
-          "longitude": -0.6163601560649501
+          "latitude": 35.21013,
+          "longitude": -0.61835
         },
         {
-          "latitude": 35.210667108944925,
-          "longitude": -0.6163156922826741
+          "latitude": 35.20981,
+          "longitude": -0.61892
         },
         {
-          "latitude": 35.21073222854445,
-          "longitude": -0.6163126274652543
-        },
-        {
-          "latitude": 35.21081549778308,
-          "longitude": -0.6163386798973458
-        },
-        {
-          "latitude": 35.21087623447762,
-          "longitude": -0.6163999795411068
-        },
-        {
-          "latitude": 35.210936340313125,
-          "longitude": -0.6164145468028839
-        },
-        {
-          "latitude": 35.210999574134014,
-          "longitude": -0.6164222154264798
-        },
-        {
-          "latitude": 35.211196817400236,
-          "longitude": -0.6164413733343
-        },
-        {
-          "latitude": 35.21159853280683,
-          "longitude": -0.616453124993306
-        },
-        {
-          "latitude": 35.21184798803839,
-          "longitude": -0.6164589968583002
-        },
-        {
-          "latitude": 35.212071926694826,
-          "longitude": -0.6164388216783534
-        },
-        {
-          "latitude": 35.2123119463156,
-          "longitude": -0.6163524737144943
-        },
-        {
-          "latitude": 35.21251793964025,
-          "longitude": -0.6162359910653282
-        },
-        {
-          "latitude": 35.212656304591206,
-          "longitude": -0.6161432612476436
-        },
-        {
-          "latitude": 35.212758994994765,
-          "longitude": -0.6160574350004545
-        },
-        {
-          "latitude": 35.21296300841001,
-          "longitude": -0.615871933645078
-        },
-        {
-          "latitude": 35.213167557989216,
-          "longitude": -0.6156645421253405
-        },
-        {
-          "latitude": 35.213200403568806,
-          "longitude": -0.6156244429686654
+          "latitude": 35.2097,
+          "longitude": -0.61906
         }
       ],
-      "mean": "Ligne 22"
+      "mean": "walk"
     },
     {
       "from": {
@@ -656,7 +386,7 @@
           "longitude": -0.6338918244416859
         }
       },
-      "duration": 365,
+      "duration": 390,
       "segment": [
         {
           "latitude": 35.19921349769843,
@@ -875,483 +605,143 @@
         }
       },
       "to": {
-        "line": "Ligne 11",
-        "name": "Brandt",
+        "line": "tramway",
+        "name": "4 Horloges",
         "coordinates": {
-          "latitude": 35.187207528055865,
-          "longitude": -0.6397104323594506
+          "latitude": 35.190692015918486,
+          "longitude": -0.6345291159063461
         }
       },
-      "duration": 145,
+      "duration": 153,
       "segment": [
         {
-          "latitude": 35.18927245947145,
-          "longitude": -0.6338918244416859
+          "latitude": 35.18927,
+          "longitude": -0.63388
         },
         {
-          "latitude": 35.18911787703321,
-          "longitude": -0.6338619382161714
+          "latitude": 35.18979,
+          "longitude": -0.63396
         },
         {
-          "latitude": 35.18878031250373,
-          "longitude": -0.6338172290873724
+          "latitude": 35.19079,
+          "longitude": -0.63415
         },
         {
-          "latitude": 35.188708370108586,
-          "longitude": -0.6343835430567513
+          "latitude": 35.19077,
+          "longitude": -0.63433
         },
         {
-          "latitude": 35.188550544068725,
-          "longitude": -0.6356978386298451
+          "latitude": 35.19073,
+          "longitude": -0.63431
         },
         {
-          "latitude": 35.18845139091326,
-          "longitude": -0.636548022951069
-        },
-        {
-          "latitude": 35.188081440566634,
-          "longitude": -0.6393599473739966
-        },
-        {
-          "latitude": 35.18782423714516,
-          "longitude": -0.6393098853375802
-        },
-        {
-          "latitude": 35.18765471574105,
-          "longitude": -0.6392616055753121
-        },
-        {
-          "latitude": 35.18749396248089,
-          "longitude": -0.6392759076756162
-        },
-        {
-          "latitude": 35.187429661441016,
-          "longitude": -0.6393617363078575
-        },
-        {
-          "latitude": 35.187356591430685,
-          "longitude": -0.6394207426862809
-        },
-        {
-          "latitude": 35.18728936577661,
-          "longitude": -0.6395244620587714
-        },
-        {
-          "latitude": 35.187238217429915,
-          "longitude": -0.6396424770355226
-        },
-        {
-          "latitude": 35.187207528055865,
-          "longitude": -0.6397104323594506
+          "latitude": 35.19069,
+          "longitude": -0.63454
         }
       ],
-      "mean": "Ligne 11"
+      "mean": "walk"
     },
     {
       "from": {
-        "line": "Ligne 11",
-        "name": "Brandt",
+        "line": "tramway",
+        "name": "4 Horloges",
         "coordinates": {
-          "latitude": 35.187207528055865,
-          "longitude": -0.6397104323594506
+          "latitude": 35.190692015918486,
+          "longitude": -0.6345291159063461
         }
       },
       "to": {
-        "line": "Ligne 11",
-        "name": "Cem Belkhouja",
+        "line": "tramway",
+        "name": "Jardin Public",
         "coordinates": {
-          "latitude": 35.18427341543728,
-          "longitude": -0.64281021202526
+          "latitude": 35.18830313800839,
+          "longitude": -0.6438875125527656
         }
       },
-      "duration": 95,
+      "duration": 175,
       "segment": [
         {
-          "latitude": 35.187207528055865,
-          "longitude": -0.6397104323594506
+          "latitude": 35.190692015918486,
+          "longitude": -0.6345291159063461
         },
         {
-          "latitude": 35.187165249516,
-          "longitude": -0.6398090789173129
+          "latitude": 35.190684979160075,
+          "longitude": -0.634645208037934
         },
         {
-          "latitude": 35.1870350838209,
-          "longitude": -0.6400805683238486
+          "latitude": 35.19057232907601,
+          "longitude": -0.6355574747407534
         },
         {
-          "latitude": 35.18689917330812,
-          "longitude": -0.6403541623593557
+          "latitude": 35.190527139990735,
+          "longitude": -0.6358824068082659
         },
         {
-          "latitude": 35.1867325738241,
-          "longitude": -0.6406831696934723
+          "latitude": 35.19049341756333,
+          "longitude": -0.6363996895342395
         },
         {
-          "latitude": 35.186621556424754,
-          "longitude": -0.6409175524360468
+          "latitude": 35.19044529751616,
+          "longitude": -0.6367405795171212
         },
         {
-          "latitude": 35.18648413393027,
-          "longitude": -0.6411749049984273
+          "latitude": 35.19040354651752,
+          "longitude": -0.6371238830612459
         },
         {
-          "latitude": 35.186351144740684,
-          "longitude": -0.641394850577477
+          "latitude": 35.190357514446866,
+          "longitude": -0.6375074386596681
         },
         {
-          "latitude": 35.18621961423038,
-          "longitude": -0.6415879696265493
+          "latitude": 35.19026764284774,
+          "longitude": -0.6382799148559571
         },
         {
-          "latitude": 35.18608516584243,
-          "longitude": -0.6417274422754194
+          "latitude": 35.190197496693344,
+          "longitude": -0.6387975814865389
         },
         {
-          "latitude": 35.185890797078386,
-          "longitude": -0.6418561905280387
+          "latitude": 35.19011200653986,
+          "longitude": -0.6394118082230517
         },
         {
-          "latitude": 35.18564820077004,
-          "longitude": -0.6420153342987402
+          "latitude": 35.190047774797044,
+          "longitude": -0.639708427020096
         },
         {
-          "latitude": 35.18513076638409,
-          "longitude": -0.6422906287701992
+          "latitude": 35.18998925371866,
+          "longitude": -0.6399562946181625
         },
         {
-          "latitude": 35.18479911452734,
-          "longitude": -0.6424784674593221
+          "latitude": 35.189623185168216,
+          "longitude": -0.6408441049299697
         },
         {
-          "latitude": 35.18465150174679,
-          "longitude": -0.6425803869620595
+          "latitude": 35.1894675504468,
+          "longitude": -0.6412008401824677
         },
         {
-          "latitude": 35.18437380832761,
-          "longitude": -0.6427377195997576
+          "latitude": 35.18928057001863,
+          "longitude": -0.6416396309284257
         },
         {
-          "latitude": 35.18427341543728,
-          "longitude": -0.64281021202526
+          "latitude": 35.18891227178074,
+          "longitude": -0.6424691979894304
+        },
+        {
+          "latitude": 35.18847381905328,
+          "longitude": -0.6434990053218792
+        },
+        {
+          "latitude": 35.18833351376647,
+          "longitude": -0.6438279714996575
+        },
+        {
+          "latitude": 35.18830313800839,
+          "longitude": -0.6438875125527656
         }
       ],
-      "mean": "Ligne 11"
-    },
-    {
-      "from": {
-        "line": "Ligne 11",
-        "name": "Cem Belkhouja",
-        "coordinates": {
-          "latitude": 35.18427341543728,
-          "longitude": -0.64281021202526
-        }
-      },
-      "to": {
-        "line": "Ligne 11",
-        "name": "Fac De Medecine",
-        "coordinates": {
-          "latitude": 35.18005074455886,
-          "longitude": -0.64434885852527
-        }
-      },
-      "duration": 104,
-      "segment": [
-        {
-          "latitude": 35.18427341543728,
-          "longitude": -0.64281021202526
-        },
-        {
-          "latitude": 35.1841778154988,
-          "longitude": -0.6428627423817046
-        },
-        {
-          "latitude": 35.183857934852966,
-          "longitude": -0.643047093550555
-        },
-        {
-          "latitude": 35.18359048493667,
-          "longitude": -0.643161528766998
-        },
-        {
-          "latitude": 35.183184198298925,
-          "longitude": -0.643288496965413
-        },
-        {
-          "latitude": 35.1827589082015,
-          "longitude": -0.6434386916269209
-        },
-        {
-          "latitude": 35.18229415559463,
-          "longitude": -0.6435906842656159
-        },
-        {
-          "latitude": 35.18186262490053,
-          "longitude": -0.6437423697356404
-        },
-        {
-          "latitude": 35.18156048677849,
-          "longitude": -0.6438231498345104
-        },
-        {
-          "latitude": 35.18123310719934,
-          "longitude": -0.6439465247894627
-        },
-        {
-          "latitude": 35.180734734166265,
-          "longitude": -0.6441146106822472
-        },
-        {
-          "latitude": 35.18025389474915,
-          "longitude": -0.644282691971554
-        },
-        {
-          "latitude": 35.18005074455886,
-          "longitude": -0.64434885852527
-        }
-      ],
-      "mean": "Ligne 11"
-    },
-    {
-      "from": {
-        "line": "Ligne 11",
-        "name": "Fac De Medecine",
-        "coordinates": {
-          "latitude": 35.18005074455886,
-          "longitude": -0.64434885852527
-        }
-      },
-      "to": {
-        "line": "Ligne 11",
-        "name": "Cite Universitaire 1500",
-        "coordinates": {
-          "latitude": 35.178328921100345,
-          "longitude": -0.6463072658137882
-        }
-      },
-      "duration": 63,
-      "segment": [
-        {
-          "latitude": 35.18005074455886,
-          "longitude": -0.64434885852527
-        },
-        {
-          "latitude": 35.17999375386229,
-          "longitude": -0.6443649606590164
-        },
-        {
-          "latitude": 35.179575746005234,
-          "longitude": -0.6445133663866632
-        },
-        {
-          "latitude": 35.1791884391375,
-          "longitude": -0.6446582078933716
-        },
-        {
-          "latitude": 35.17894728414486,
-          "longitude": -0.644774436319835
-        },
-        {
-          "latitude": 35.1788223755585,
-          "longitude": -0.6448651459146105
-        },
-        {
-          "latitude": 35.17868420029766,
-          "longitude": -0.644999741877086
-        },
-        {
-          "latitude": 35.178580432087166,
-          "longitude": -0.645108823447702
-        },
-        {
-          "latitude": 35.17855120239233,
-          "longitude": -0.6452071628627731
-        },
-        {
-          "latitude": 35.17850080415406,
-          "longitude": -0.6452656266212077
-        },
-        {
-          "latitude": 35.1784445042715,
-          "longitude": -0.6453430452309906
-        },
-        {
-          "latitude": 35.17839919347556,
-          "longitude": -0.6455432418168795
-        },
-        {
-          "latitude": 35.17835827611835,
-          "longitude": -0.645831204013927
-        },
-        {
-          "latitude": 35.17833196701482,
-          "longitude": -0.646074414253235
-        },
-        {
-          "latitude": 35.178328921100345,
-          "longitude": -0.6463072658137882
-        }
-      ],
-      "mean": "Ligne 11"
-    },
-    {
-      "from": {
-        "line": "Ligne 11",
-        "name": "Cite Universitaire 1500",
-        "coordinates": {
-          "latitude": 35.178328921100345,
-          "longitude": -0.6463072658137882
-        }
-      },
-      "to": {
-        "line": "Ligne 11",
-        "name": "Direction Des Services Agricoles",
-        "coordinates": {
-          "latitude": 35.178611854847304,
-          "longitude": -0.6496953952605301
-        }
-      },
-      "duration": 66,
-      "segment": [
-        {
-          "latitude": 35.178328921100345,
-          "longitude": -0.6463072658137882
-        },
-        {
-          "latitude": 35.17834294131891,
-          "longitude": -0.6464742197436891
-        },
-        {
-          "latitude": 35.17836632833571,
-          "longitude": -0.6469891233690063
-        },
-        {
-          "latitude": 35.178418949299704,
-          "longitude": -0.6475755416049568
-        },
-        {
-          "latitude": 35.178459876871,
-          "longitude": -0.6480546882522954
-        },
-        {
-          "latitude": 35.17850004612084,
-          "longitude": -0.648491082540741
-        },
-        {
-          "latitude": 35.1785329309141,
-          "longitude": -0.6488746427904024
-        },
-        {
-          "latitude": 35.17858335434541,
-          "longitude": -0.6494003476176524
-        },
-        {
-          "latitude": 35.17860527725125,
-          "longitude": -0.6495961584689258
-        },
-        {
-          "latitude": 35.178611854847304,
-          "longitude": -0.6496953952605301
-        }
-      ],
-      "mean": "Ligne 11"
-    },
-    {
-      "from": {
-        "line": "Ligne 11",
-        "name": "Direction Des Services Agricoles",
-        "coordinates": {
-          "latitude": 35.178611854847304,
-          "longitude": -0.6496953952605301
-        }
-      },
-      "to": {
-        "line": "Ligne 11",
-        "name": "Sakia El Hamra",
-        "coordinates": {
-          "latitude": 35.1837636692574,
-          "longitude": -0.6515273408199597
-        }
-      },
-      "duration": 61,
-      "segment": [
-        {
-          "latitude": 35.178611854847304,
-          "longitude": -0.6496953952605301
-        },
-        {
-          "latitude": 35.17863672029055,
-          "longitude": -0.6498818394847296
-        },
-        {
-          "latitude": 35.17869297405494,
-          "longitude": -0.6502103811356142
-        },
-        {
-          "latitude": 35.17870831732827,
-          "longitude": -0.650333765075919
-        },
-        {
-          "latitude": 35.17874559072142,
-          "longitude": -0.6504034996032716
-        },
-        {
-          "latitude": 35.17905910473981,
-          "longitude": -0.6505805335379234
-        },
-        {
-          "latitude": 35.1792717482582,
-          "longitude": -0.650647582077144
-        },
-        {
-          "latitude": 35.1795699074666,
-          "longitude": -0.650728047184781
-        },
-        {
-          "latitude": 35.180221014279404,
-          "longitude": -0.6508541089735487
-        },
-        {
-          "latitude": 35.180747159847506,
-          "longitude": -0.6509640827409013
-        },
-        {
-          "latitude": 35.181225098099205,
-          "longitude": -0.6510445536625876
-        },
-        {
-          "latitude": 35.18165694656621,
-          "longitude": -0.651122329875038
-        },
-        {
-          "latitude": 35.18249876514432,
-          "longitude": -0.6512510759077529
-        },
-        {
-          "latitude": 35.18279690969404,
-          "longitude": -0.6512778985793167
-        },
-        {
-          "latitude": 35.1830577829605,
-          "longitude": -0.6513127675872178
-        },
-        {
-          "latitude": 35.183427799661764,
-          "longitude": -0.651408730573635
-        },
-        {
-          "latitude": 35.183568566200016,
-          "longitude": -0.65143883228302
-        },
-        {
-          "latitude": 35.183722032319025,
-          "longitude": -0.651497846114002
-        },
-        {
-          "latitude": 35.1837636692574,
-          "longitude": -0.6515273408199597
-        }
-      ],
-      "mean": "Ligne 11"
+      "mean": "tramway"
     }
   ]
 }

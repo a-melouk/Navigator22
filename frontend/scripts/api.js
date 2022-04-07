@@ -45,7 +45,7 @@ async function getAllLinesNamesIdsDb() {
 }
 
 async function getAllSegmentLineDb(line) {
-  const response = await fetch(baseURI + 'lines/' + line + '/stations')
+  const response = await fetch(baseURI + 'schedule/' + line)
   let data = await response.json()
   return data
 }

@@ -87,7 +87,7 @@ Content-Type: application/json
 [ { "segment_id": "620e5be60f237023c99bdf7c", "duration": 41 } ]
 ###
 
-GET http://localhost:4000/route?from=61eb2de817e57cb86cb3f8f9&to=61eb2de817e57cb86cb3f8fa
+GET http://localhost:4000/route?from=61eb2de817e57cb86cb3f92d&to=61eb2de817e57cb86cb3f8f9
 
 
 
