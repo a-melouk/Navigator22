@@ -50,8 +50,8 @@ async function getAllSegmentLineDb(line) {
   return data
 }
 
-async function getRoute(from, to) {
-  const response = await fetch('http://localhost:4000/route?from=' + from + '&to=' + to)
+async function getRoute(from, to, mean) {
+  const response = await fetch('http://localhost:4000/route?from=' + from + '&to=' + to + '&mean=' + mean)
   const data = await response.json()
   return data
 }

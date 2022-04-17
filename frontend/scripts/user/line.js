@@ -1,25 +1,8 @@
-//------------------------------------Populating the SELECTs------------------------------------//
-//Fetching all available lines
-let populate = () => {
-  const right = document.getElementsByClassName('Lines')
-  right[0].replaceChildren()
-  getAllLinesNamesIdsDb().then(data => {
-    data.forEach(item => {
-      let line = document.createElement('button')
-      line.innerText = toTitleCase(item.name)
-      if (item.name === 'tramway') line.classList.add('lines', 'tramway')
-      else line.classList.add('lines', 'bus')
-      line.onclick = function () {
-        addLineToMap.call(this, item.name)
-      }
-      right[0].appendChild(line)
-    })
-  })
-}
-
 async function populateWithAllStations() {
   let response = await fetch('http://localhost:4000/stations')
   let result = await response.json()
+  let stations = document.getElementById('stations')
+  stations.replaceChildren()
   for (let i = 0; i < result.length; i++) {
     let station_name = document.createElement('div')
     let station_line = document.createElement('div')
@@ -49,11 +32,9 @@ async function populateWithAllStations() {
 let inputs = document.getElementsByTagName('input')
 let fromInput = inputs[0]
 let toInput = inputs[1]
-const fromID = '61eb2de817e57cb86cb3f8f9'
-const toID = '61eb2de817e57cb86cb3f90d'
 
 //TODO: Fix listeners for all stations
-/*
+
 fromInput.addEventListener('keyup', searchFrom)
 toInput.addEventListener('keyup', searchTo)
 
@@ -72,8 +53,8 @@ function searchFrom() {
         () => {
           fromInput.value = station.children[0].innerHTML
           fromID = station.children[2].innerHTML
-          stations.replaceChildren()
           populateWithAllStations()
+          stations.style.display = ''
         },
         { once: true }
       )
@@ -96,46 +77,85 @@ function searchTo() {
         () => {
           toInput.value = station.children[0].innerHTML
           toID = station.children[2].innerHTML
-          stations.replaceChildren()
           populateWithAllStations()
+          stations.style.display = ''
         },
         { once: true }
       )
     } else station.style.display = 'none'
   }
 }
-*/
+
+let fromID = '61eb2de817e57cb86cb3f943'
+let toID = '61eb2de817e57cb86cb3f966'
+
+const buttons = document.querySelectorAll('.mean')
+buttons.forEach(mean => {
+  mean.addEventListener('click', () => {
+    let active_mean = document.getElementsByClassName('active')[0]
+    active_mean.classList.remove('active')
+    active_mean.classList.add('inactive')
+    mean.classList.add('active')
+    getRouteHandler(fromID, toID, mean.getAttribute('id'))
+    // console.log(mean.getAttribute('id'))
+  })
+})
 
 getroute.addEventListener('click', () => {
   clearMap(true)
   // const from = JSON.parse(fromElement.value)._id
   // const to = JSON.parse(toElement.value)._id
-
-  getRoute(fromID, toID).then(route => {
-    route.path.forEach(segment => {
-      addStationToMap(segment.from, 'draw', segment.from.line)
-      addStationToMap(segment.to, 'draw', segment.to.line)
-      if (segment.mean === 'tramway') addPolylineToMap(segment.segment, '#f47e1b', 'draw')
-      else if (segment.mean === 'walk') addPolylineToMap(segment.segment, '#1d691f', 'draw')
-      else addPolylineToMap(segment.segment, '#3338d2', 'draw')
-    })
-    drawsLayer.addTo(map)
-    map.fitBounds(drawsLayer.getBounds())
-    // let distance = route.distance
-    // let duration = route.duration
-    // let hours = Math.floor(duration / 3600)
-    // let minutes = Math.floor((duration - Math.floor(duration / 3600) * 3600) / 60)
-    // let seconds = duration - Math.floor(duration / 3600) * 3600 - Math.floor((duration - Math.floor(duration / 3600) * 3600) / 60) * 60
-    // console.log(route.from.coordinates.latitude, route.from.coordinates.longitude)
-    // console.log(route.to.coordinates.latitude, route.to.coordinates.longitude)
-    // if (Math.floor(distance / 1000) === 0) console.log(distance + 'm')
-    // else console.log(distance / 1000 + 'km')
-    // if (hours > 0) console.log(hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds')
-    // else if (minutes > 0) console.log(minutes + ' minutes, ' + seconds + ' seconds')
-    // else if (seconds > 0) console.log(seconds + ' seconds')
-    // else console.log('Error')
+  let active_mean = document.getElementsByClassName('active')[0].getAttribute('id')
+  getRoute(fromID, toID, active_mean).then(route => {
+    if (active_mean === 'taxi') {
+      addPolylineToMap(route.path, '#1d691f', 'draw')
+      map.fitBounds(drawsLayer.getBounds())
+      drawsLayer.addTo(map)
+      steps.replaceChildren()
+      steps.appendChild(createStep({ first: route.from, last: route.to, mean: active_mean, duration: route.duration, distance: route.distance }))
+    } else {
+      route.path.forEach(path => {
+        addStationToMap(path.from, 'draw', path.from.line)
+        addStationToMap(path.to, 'draw', path.to.line)
+        if (path.mean === 'tramway') addPolylineToMap(path.segment, '#f47e1b', 'draw')
+        else if (path.mean === 'walk') addPolylineToMap(path.segment, '#1d691f', 'draw')
+        else addPolylineToMap(path.segment, '#3338d2', 'draw')
+      })
+      map.fitBounds(drawsLayer.getBounds())
+      drawsLayer.addTo(map)
+      steps.replaceChildren()
+      separateSegments(route)
+    }
   })
 })
+
+function getRouteHandler(from, to, mean) {
+  clearMap(true)
+  // const from = JSON.parse(fromElement.value)._id
+  // const to = JSON.parse(toElement.value)._id
+
+  getRoute(from, to, mean).then(route => {
+    if (mean === 'taxi') {
+      addPolylineToMap(route.path, '#1d691f', 'draw')
+      map.fitBounds(drawsLayer.getBounds())
+      drawsLayer.addTo(map)
+      steps.replaceChildren()
+      steps.appendChild(createStep({ first: route.from, last: route.to, mean: mean, duration: route.duration, distance: route.distance }))
+    } else {
+      route.path.forEach(path => {
+        addStationToMap(path.from, 'draw', path.from.line)
+        addStationToMap(path.to, 'draw', path.to.line)
+        if (path.mean === 'tramway') addPolylineToMap(path.segment, '#f47e1b', 'draw')
+        else if (path.mean === 'walk') addPolylineToMap(path.segment, '#1d691f', 'draw')
+        else addPolylineToMap(path.segment, '#3338d2', 'draw')
+      })
+      map.fitBounds(drawsLayer.getBounds())
+      drawsLayer.addTo(map)
+      steps.replaceChildren()
+      separateSegments(route)
+    }
+  })
+}
 
 function addLineToMap(number) {
   clearMap(true)
@@ -146,109 +166,142 @@ function addLineToMap(number) {
     map.fitBounds(linelayer.getBounds())
   })
 }
-let raw = {}
-const rawJson = fetch('../../../test.json')
-  .then(response => response.json())
-  .then(raw => {
-    separateSegments(raw.path)
-  })
 
 const steps = document.getElementById('steps')
 
-function separateSegments(rawData) {
+function separateSegments(route) {
+  let path = route.path
   let i = 1
-  let first = rawData[0].from.name
-  let last = rawData[0].to.name
-  let mean = rawData[0].mean
-  let duration = rawData[0].duration
+  let first = path[0].from.name
+  let last = path[0].to.name
+  let mean = path[0].mean
+  let duration = path[0].duration
+  let distance = path[0].distance
   let stops = 1
-  if (rawData.length === 1) {
-    console.log(first, last, mean, duration, stops)
-    steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops }))
+
+  if (route.mean !== 'walk' && route.mean !== 'taxi') {
+    const means = getMeansOfRoute(route)
+    let meansDiv = document.createElement('div')
+    let durationDiv = document.createElement('div')
+    let routeDiv = document.createElement('div')
+    means.forEach(mean => meansDiv.appendChild(createImg(mean)))
+    durationDiv.innerHTML = formatDuration(route.duration)
+    meansDiv.classList.add('path-means')
+    durationDiv.classList.add('duration')
+    routeDiv.append(meansDiv, durationDiv)
+    routeDiv.classList.add('route')
+    steps.appendChild(routeDiv)
+    steps.appendChild(document.createElement('hr'))
+  }
+
+  if (path.length === 1) {
+    steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops, distance: distance }))
   } else
-    while (i < rawData.length) {
-      if (rawData[i].mean !== mean) {
-        console.log(first, last, mean, duration, stops)
-        steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops }))
-        first = rawData[i].from.name
-        last = rawData[i].to.name
-        mean = rawData[i].mean
+    while (i < path.length) {
+      if (path[i].mean !== mean) {
+        steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops, distance: distance }))
+        first = path[i].from.name
+        last = path[i].to.name
+        mean = path[i].mean
         stops = 1
-        duration = rawData[i].duration
+        duration = path[i].duration
+        distance = path[i].distance
       } else {
-        last = rawData[i].to.name
-        duration += rawData[i].duration
+        last = path[i].to.name
+        duration += path[i].duration
+        distance += path[i].distance
         stops++
       }
-      if (i === rawData.length - 1) {
-        if (mean === rawData[rawData.length - 2].mean) {
-          last = rawData[rawData.length - 1].to.name
-          console.log(first, last, mean, duration, stops)
-
-          // let imgMean = document.createElement('img')
-          // imgMean.setAttribute('alt', mean)
-          // if (mean.includes('Ligne')) imgMean.setAttribute('src', 'static/icons/means-colored/bus.png')
-          // else imgMean.setAttribute('src', 'static/icons/means-colored/' + mean + '.png')
-          steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops }))
+      if (i === path.length - 1) {
+        if (mean === path[path.length - 2].mean) {
+          last = path[path.length - 1].to.name
+          distance = path[path.length - 1].distance
+          console.log(distance)
+          steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops, distance: distance }))
         } else {
-          first = rawData[rawData.length - 1].from.name
-          last = rawData[rawData.length - 1].to.name
-          duration = rawData[rawData.length - 1].duration
-          mean = rawData[rawData.length - 1].mean
+          first = path[path.length - 1].from.name
+          last = path[path.length - 1].to.name
+          duration = path[path.length - 1].duration
+          distance = path[path.length - 1].distance
+          mean = path[path.length - 1].mean
           stops = 1
-          console.log(first, last, mean, duration, stops)
-
-          // let imgMean = document.createElement('img')
-          // imgMean.setAttribute('alt', mean)
-          // if (mean.includes('Ligne')) imgMean.setAttribute('src', 'static/icons/means-colored/bus.png')
-          // else imgMean.setAttribute('src', 'static/icons/means-colored/' + mean + '.png')
-          steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops }))
-          // console.log('Changement')
+          steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops, distance: distance }))
         }
       }
       i++
     }
 }
 
-/*
-  let stepName = document.createElement('div')
-  let stepTowards = document.createElement('div')
-  let stepStopsDuration = document.createElement('div')
-  stepName.innerHTML = firstStation
-  stepTowards.innerHTML = towards
-  stepStopsDuration.innerHTML = stops + ' stops | ' + duration + ' minutes'
-  let details = document.createElement('div')
-  details.append(stepName, stepTowards, stepStopsDuration)
-  details.classList.add('details')
-  let step = document.createElement('div')
-  step.appendChild(details)
-  step.classList.add('step')
-  steps.appendChild(step)
-*/
-
 function createImg(mean) {
   let imgMean = document.createElement('img')
   imgMean.setAttribute('alt', mean)
-  imgMean.setAttribute('src', 'static/icons/circle_ways/' + mean + '.svg')
+  if (mean === 'Ligne 03 bis') imgMean.setAttribute('src', 'static/icons/circle_ways/Ligne 03.svg')
+  else imgMean.setAttribute('src', 'static/icons/circle_ways/' + mean + '.svg')
   return imgMean
 }
 
-function createStep(details) {
+function createStep(segment) {
   let first = document.createElement('div')
   let last = document.createElement('div')
   let stops_duration = document.createElement('div')
   let detailsDiv = document.createElement('div')
   let step = document.createElement('div')
 
-  first.innerHTML = details.first
-  last.innerHTML = details.last
-  stops_duration.innerHTML = details.stops + ' stops | ' + details.duration + ' minutes'
+  first.innerHTML = segment.first
+  last.innerHTML = segment.last
+  if (segment.mean === 'walk' || segment.mean === 'taxi') stops_duration.innerHTML = formatDistance(segment.distance) + ', ' + formatDuration(segment.duration)
+  else stops_duration.innerHTML = singular_plural(segment.stops, 'stop') + ' | ' + formatDuration(segment.duration)
 
   detailsDiv.append(first, last, stops_duration)
   detailsDiv.classList.add('details')
 
-  step.appendChild(createImg(details.mean))
+  step.appendChild(createImg(segment.mean))
   step.appendChild(detailsDiv)
   step.classList.add('step')
   return step
+}
+
+function getMeansOfRoute(route) {
+  let means = []
+  route.path.forEach(segment => means.push(segment.mean))
+  means = [...new Set(means)]
+  means = means.filter(mean => mean !== 'walk')
+  return means
+}
+
+function formatDuration(duration) {
+  if (typeof duration !== 'number') return new Error('Please provide a number')
+  else {
+    if (duration < 0) return new Error('Please provide a positive duration')
+    else {
+      let seconds = duration - Math.floor(duration / 3600) * 3600 - Math.floor((duration - Math.floor(duration / 3600) * 3600) / 60) * 60
+      let minutes = Math.floor((duration - Math.floor(duration / 3600) * 3600) / 60)
+      let hours = Math.floor(duration / 3600)
+      if (hours > 0) {
+        if (minutes > 0) {
+          if (seconds > 29) {
+            return singular_plural(hours, 'hour') + ' ' + singular_plural(minutes + 1, 'minute')
+          } else return singular_plural(hours, 'hour') + ' ' + singular_plural(minutes, 'minute')
+        } else return singular_plural(hours, 'hour')
+      } else if (minutes > 0) {
+        if (seconds > 29) return singular_plural(minutes + 1, 'minute')
+        else return singular_plural(minutes, 'minute')
+      } else if (seconds >= 0) return singular_plural(seconds, 'second')
+    }
+  }
+}
+
+function formatDistance(distance) {
+  if (typeof distance !== 'number') return new Error('Please provide a number')
+  else if (distance < 0) return new Error('Please provide a positive distance')
+  else {
+    let kilometers = distance / 1000
+    if (kilometers > 1) return kilometers + ' km'
+    else return singular_plural(distance, 'meter')
+  }
+}
+
+function singular_plural(number, unit) {
+  if (number >= 0 && number <= 1) return number + ' ' + unit
+  else if (number > 1) return number + ' ' + unit + 's'
 }

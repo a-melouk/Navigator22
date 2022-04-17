@@ -69,7 +69,7 @@ function addStationToMap(station, layer, line) {
 function addPolylineToMap(path, color, layer) {
   let pathArray = []
   for (let i = 0; i < path.length; i++) pathArray.push([path[i].latitude, path[i].longitude])
-  let poly = L.polyline(pathArray, { weight: 4, color: color, item: path })
+  let poly = L.polyline(pathArray, { weight: 3, color: color, item: path })
 
   if (layer === 'line') poly.addTo(linelayer)
   else if (layer === 'draw') {

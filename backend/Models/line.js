@@ -74,6 +74,8 @@ const lineMatrixSchema = new Schema(
       required: true,
     },
     route: [segmentMatrix],
+    line_id: ObjectId,
+    type: String,
   },
   { timestamps: true }
 )
