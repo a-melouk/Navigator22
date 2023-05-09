@@ -18,8 +18,7 @@ require('dotenv').config()
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
-const mongoDB = process.env.MONGODB_URI
-// const dbURI = 'mongodb://127.0.0.1/navigator'
+const mongoDB = process.env.MONGODB_URI || dev_db_url
 const port = process.env.PORT || 4000
 mongoose
   .connect(mongoDB, {
