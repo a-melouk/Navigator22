@@ -679,10 +679,10 @@ async function addMatrix(nameOfTheLine) {
   })
 }
 
-Station.find({}).then(data => {
+/*Station.find({}).then(data => {
   console.log('STARTED')
   console.log(data)
-})
+})*/
 
 function precise(number) {
   return Number(Number.parseFloat(number).toFixed(5))
