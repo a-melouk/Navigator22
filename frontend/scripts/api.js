@@ -44,6 +44,18 @@ async function getAllLinesNamesIdsDb() {
   return data
 }
 
+async function getAllSegmentLineDb(line) {
+  const response = await fetch(baseURI + 'schedule/' + line)
+  let data = await response.json()
+  return data
+}
+
+async function getRoute(from, to, mean) {
+  const response = await fetch('http://localhost:4000/route?from=' + from + '&to=' + to + '&mean=' + mean)
+  const data = await response.json()
+  return data
+}
+
 //-------------------------------POST METHODS------------------------------//
 async function postStationDb(station) {
   try {
@@ -51,9 +63,9 @@ async function postStationDb(station) {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(station)
+      body: JSON.stringify(station),
     })
     const data = await response.json()
     return data
@@ -68,9 +80,9 @@ async function postLineDb(line) {
       method: 'POST',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(line)
+      body: JSON.stringify(line),
     })
     const data = await response.json()
     return data
@@ -86,8 +98,8 @@ async function deleteStationByIdDb(id) {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
     const data = await response.json()
     return data
@@ -102,8 +114,8 @@ async function deleteSegmentIdDb(lineID, segmentID) {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
     const data = await response.json()
     return data
@@ -118,8 +130,8 @@ async function deleteSegmentByStationIdDb(id) {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
     const data = await response.json()
     return data
@@ -134,8 +146,8 @@ async function deleteLineDb() {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
     const data = await response.json()
     lineElement.value = ''
@@ -152,9 +164,9 @@ async function patchStationDb(id, body) {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     })
     const data = await response.json()
     return data
@@ -169,9 +181,26 @@ async function patchSegmentDb(id, body) {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+    })
+    const data = await response.json()
+    return data
+  } catch (err) {
+    return err
+  }
+}
+
+async function patchSegmentDurationDb(id, body) {
+  try {
+    const response = await fetch(baseURI + 'duration?id=' + id, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
     })
     const data = await response.json()
     return data
@@ -186,9 +215,9 @@ async function patchLineDb(lineID, body) {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     })
     const data = await response.json()
     return data

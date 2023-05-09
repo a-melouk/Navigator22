@@ -74,9 +74,24 @@ DELETE http://localhost:4000/lines/station/62019c893a1a8c6c7a9146f6
 ### Delete a station from line
 
 DELETE http://localhost:4000/line/abde9a
+###
 
+GET http://localhost:4000/lines/Ligne%2016?from=61eb2de817e57cb86cb3f943&to=61eb2de817e57cb86cb3f944
+### Benhamouda to Frères Adnane A16
 
+GET http://localhost:4000/lines/Ligne%2016?from=61eb2de817e57cb86cb3f943&to=61eb2de817e57cb86cb3f944
+###
+PATCH http://localhost:4000/duration?id=620e5be60f237023c99bdf7a
+Content-Type: application/json
 
+[ { "segment_id": "620e5be60f237023c99bdf7c", "duration": 41 } ]
+###
+
+GET http://localhost:4000/route?from=61eb2de817e57cb86cb3f944&to=61eb2de817e57cb86cb3f948&mean=bus
+### Problem
+
+GET http://localhost:4000/route?from=61eb2de817e57cb86cb3f8fa&to=61eb2de817e57cb86cb3f935&mean=bus
+### No Problem
 
 
 

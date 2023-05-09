@@ -46,7 +46,7 @@ function middlePolyline(point, path) {
   let index = Infinity
   let temp = {
     latitude: point.getLatLng().lat,
-    longitude: point.getLatLng().lng
+    longitude: point.getLatLng().lng,
   }
 
   for (let i = 0; i < path.length; i++) {
@@ -63,7 +63,7 @@ function middlePolyline(point, path) {
   secondHalf.unshift(temp)
   let result = {
     firstHalf: firstHalf,
-    secondHalf: secondHalf
+    secondHalf: secondHalf,
   }
   return result
 }
