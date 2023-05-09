@@ -18,17 +18,19 @@ require('dotenv').config()
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
-// const mongoDB = process.env.MONGODB_URI
-const mongoDB = 'mongodb://mongo:fGyKH8Xnm96TpLhRBUDd@containers-us-west-9.railway.app:7054'
-const port = process.env.PORT || 4000
+const path = require('path')
+app.use('/static', express.static(path.join(__dirname, 'frontend')))
+app.use(express.static('/frontend'))
+const mongoDB = process.env.MONGO_URL
+const PORT = process.env.PORT || 4000
 mongoose
   .connect(mongoDB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(port, '0.0.0.0')
-    console.log('Running on port ' + port)
+    app.listen(PORT, '0.0.0.0')
+    console.log(`Running on port ${PORT}`)
   })
 //---------------------------------------------------------------------//
 async function stationAlreadyExistsLine(line, name) {
@@ -677,10 +679,10 @@ async function addMatrix(nameOfTheLine) {
   })
 }
 
-// Line.find({}, { name: 1, _id: 0 }).then(data => {
-//   console.log('STARTED')
-//   for (let i = 0; i < data.length; i++) addMatrix(data[i].name).then(line => console.log(line))
-// })
+/*Station.find({}).then(data => {
+  console.log('STARTED')
+  console.log(data)
+})*/
 
 function precise(number) {
   return Number(Number.parseFloat(number).toFixed(5))

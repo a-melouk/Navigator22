@@ -5,10 +5,10 @@
     "node": ">=v16.12.0"
   },
   "description": "Routing app for the city of Sidi Bel-Abbès",
-  "main": "backend/index.js",
+  "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node backend/index.js"
+    "start": "node app/index.js"
   },
   "keywords": [
     "routing",
