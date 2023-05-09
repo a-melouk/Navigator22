@@ -22,13 +22,14 @@ app.use(cors())
 const dev_db_url = 'mongodb+srv://admin:abdelillaH96%2a%24@atlascluster.ykygojz.mongodb.net/test?authSource=admin&replicaSet=atlas-w604hz-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true'
 const mongoDB = process.env.MONGODB_URI || dev_db_url
 // const dbURI = 'mongodb://127.0.0.1/navigator'
+const port = process.env.PORT || 4000
 mongoose
   .connect(mongoDB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(4000)
+    app.listen(port, '0.0.0.0')
     console.log('Running on 4000')
   })
 //---------------------------------------------------------------------//
