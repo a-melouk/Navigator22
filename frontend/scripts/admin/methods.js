@@ -48,9 +48,9 @@ function newStation(layer, line) {
         name: toTitleCase(document.getElementById('name').value),
         coordinates: {
           latitude: document.getElementById('latitude').value,
-          longitude: document.getElementById('longitude').value
+          longitude: document.getElementById('longitude').value,
         },
-        line: line
+        line: line,
       }
       postStationDb(station).then(data => resolve(data))
 
@@ -70,6 +70,7 @@ function newStation(layer, line) {
       document.getElementById('cancelStation').removeEventListener('click', clickCancel, true)
       document.getElementById('closeStation').removeEventListener('click', clickCancel, true)
     }
+
     document.getElementById('add-station').addEventListener('click', clickConfirm, true)
     document.getElementById('cancelStation').addEventListener('click', clickCancel, true)
     document.getElementById('closeStation').addEventListener('click', clickCancel, true)
@@ -83,7 +84,7 @@ function newSegment(layer, choice) {
   polyline.forEach(item => {
     point = {
       latitude: item.lat,
-      longitude: item.lng
+      longitude: item.lng,
     }
     path.push(point)
   })
@@ -94,33 +95,33 @@ function newSegment(layer, choice) {
   //Put FROM station at the beginning of the path
   point = {
     latitude: fromValue.coordinates.latitude,
-    longitude: fromValue.coordinates.longitude
+    longitude: fromValue.coordinates.longitude,
   }
   path.unshift(point)
 
   //Put TO station at the end of the path
   point = {
     latitude: toValue.coordinates.latitude,
-    longitude: toValue.coordinates.longitude
+    longitude: toValue.coordinates.longitude,
   }
   path.push(point)
 
   let from = {
     name: fromValue.name,
     coordinates: fromValue.coordinates,
-    id: fromValue._id
+    id: fromValue._id,
   }
 
   let to = {
     name: toValue.name,
     coordinates: toValue.coordinates,
-    id: toValue._id
+    id: toValue._id,
   }
 
   let segment = {
     from: from,
     to: to,
-    path: path
+    path: path,
   }
 
   addStationToMap(segment.from, 'draw', nameOfTheLine)

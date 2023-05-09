@@ -7,17 +7,17 @@ let map = L.map('map', {
   center: [35.20118653849822, -0.6343081902114373],
   zoom: 14,
   maxZoom: 18,
-  minZoom: 13
+  minZoom: 13,
 })
 
 const tile = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  subdomains: ['a', 'b', 'c']
+  subdomains: ['a', 'b', 'c'],
 })
 
 drawControl = new L.Control.Draw({
   position: 'topright',
   draw: false,
-  edit: false
+  edit: false,
 })
 
 function init() {
@@ -50,20 +50,20 @@ function addMarker(marker) {
 
 function addStationToMap(station, layer, line) {
   let url = ''
-  if (line === 'tramway') url = './icons/pin_subway.png'
-  if (line === 'Ligne 03') url = './icons/pin_bus_3.png'
-  if (line === 'Ligne 03 bis') url = './icons/pin_bus_3.png'
-  if (line === 'Ligne 11') url = './icons/pin_bus_11.png'
-  if (line === 'Ligne 16') url = './icons/pin_bus_16.png'
-  if (line === 'Ligne 17') url = './icons/pin_bus_17.png'
-  if (line === 'Ligne 22') url = './icons/pin_bus_22.png'
-  if (line === 'Ligne 25') url = './icons/pin_bus_25.png'
-  if (line === 'Ligne 27') url = './icons/pin_bus_27.png'
+  if (line === 'tramway') url = './static/icons/markers/pin_subway.png'
+  if (line === 'Ligne 03') url = './static/icons/markers/pin_bus_3.png'
+  if (line === 'Ligne 03 bis') url = './static/icons/markers/pin_bus_3.png'
+  if (line === 'Ligne 11') url = './static/icons/markers/pin_bus_11.png'
+  if (line === 'Ligne 16') url = './static/icons/markers/pin_bus_16.png'
+  if (line === 'Ligne 17') url = './static/icons/markers/pin_bus_17.png'
+  if (line === 'Ligne 22') url = './static/icons/markers/pin_bus_22.png'
+  if (line === 'Ligne 25') url = './static/icons/markers/pin_bus_25.png'
+  if (line === 'Ligne 27') url = './static/icons/markers/pin_bus_27.png'
   let iconOptions = L.icon({
     iconUrl: url,
     iconSize: [35, 35], // size of the icon
     iconAnchor: [17.5, 35], // point of the icon which will correspond to marker's location
-    popupAnchor: [0, -30] // point from which the popup should open relative to the iconAnchor
+    popupAnchor: [0, -30], // point from which the popup should open relative to the iconAnchor
   })
   let marker
   let popup = '<div class="markerPopup">'
@@ -75,11 +75,11 @@ function addStationToMap(station, layer, line) {
   if (url !== '')
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
       item: station,
-      icon: iconOptions
+      icon: iconOptions,
     }).bindPopup(popup)
   else
     marker = L.marker([station.coordinates.latitude, station.coordinates.longitude], {
-      item: station
+      item: station,
     }).bindPopup(popup)
   if (layer === 'segment') marker.addTo(segmentLayer)
   else if (layer === 'line') marker.addTo(linelayer)
@@ -90,7 +90,7 @@ function addStationToMap(station, layer, line) {
 function addPolylineToMap(path, color, layer) {
   let pathArray = []
   for (let i = 0; i < path.length; i++) pathArray.push([path[i].latitude, path[i].longitude])
-  let poly = L.polyline(pathArray, { color: color, item: path })
+  let poly = L.polyline(pathArray, { weight: 4, color: color, item: path })
 
   if (layer === 'segment') {
     poly.bindPopup('<b>' + layer.options + '</b>')
@@ -111,11 +111,11 @@ function addDrawControlToMap(type) {
         polygon: false,
         rectangle: false,
         circle: false,
-        circlemarker: false
+        circlemarker: false,
       },
       edit: {
-        featureGroup: segmentLayer
-      }
+        featureGroup: segmentLayer,
+      },
     })
   } else if (type === 'only-draw') {
     drawControl = new L.Control.Draw({
@@ -124,9 +124,9 @@ function addDrawControlToMap(type) {
         polygon: false,
         rectangle: false,
         circle: false,
-        circlemarker: false
+        circlemarker: false,
       },
-      edit: false
+      edit: false,
     })
   }
   drawControl.addTo(map)
