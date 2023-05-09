@@ -18,16 +18,17 @@ require('dotenv').config()
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
+// const dev_db_url = 'mongodb+srv://your_user_name:your_password@cluster0.lz91hw2.mongodb.net/local_library?retryWrites=true&w=majority'
+const dev_db_url = 'mongodb+srv://admin:abdelillaH96%2a%24@atlascluster.ykygojz.mongodb.net/test?authSource=admin&replicaSet=atlas-w604hz-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true'
 const mongoDB = process.env.MONGODB_URI || dev_db_url
-const port = process.env.PORT || 4000
+const dbURI = 'mongodb://127.0.0.1/navigator'
 mongoose
-  .connect(mongoDB, {
+  .connect(dbURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(port, '0.0.0.0')
-    app.listen(port, '0.0.0.0')
+    app.listen(4000)
     console.log('Running on 4000')
   })
 //---------------------------------------------------------------------//
