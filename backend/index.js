@@ -1,3 +1,5 @@
+process.stdout.write('\x1Bc')
+
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
@@ -16,6 +18,7 @@ require('dotenv').config()
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
+app.use(express.static(__dirname + '/frontend'))
 const mongoDB = process.env.MONGO_URL
 const port = process.env.PORT || 4000
 mongoose
