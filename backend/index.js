@@ -18,7 +18,7 @@ require('dotenv').config()
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
-const mongoDB = process.env.MONGODB_URI || dev_db_url
+const mongoDB = process.env.MONGODB_URI
 const port = process.env.PORT || 4000
 mongoose
   .connect(mongoDB, {
@@ -27,7 +27,7 @@ mongoose
   })
   .then(() => {
     app.listen(port, '0.0.0.0')
-    console.log('Running on 4000')
+    console.log('Running on port ' + port)
   })
 //---------------------------------------------------------------------//
 async function stationAlreadyExistsLine(line, name) {
