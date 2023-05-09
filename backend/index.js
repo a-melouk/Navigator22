@@ -21,7 +21,7 @@ app.use(cors())
 const path = require('path')
 app.use('/static', express.static(path.join(__dirname, 'frontend')))
 app.use(express.static('/frontend'))
-const mongoDB = process.env.MONGO_URL + '/navigator'
+const mongoDB = process.env.MONGO_URL
 const PORT = process.env.PORT || 4000
 mongoose
   .connect(mongoDB, {
