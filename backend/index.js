@@ -16,7 +16,7 @@ require('dotenv').config()
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
-const mongoDB = process.env.MONGODB_URL
+const mongoDB = process.env.MONGO_URL
 const port = process.env.PORT || 4000
 mongoose
   .connect(mongoDB, {
