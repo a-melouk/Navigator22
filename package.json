@@ -1,6 +1,9 @@
 {
   "name": "navigator22",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=v16.12.0"
+  },
   "description": "Routing app for the city of Sidi Bel-Abbès",
   "main": "backend/index.js",
   "scripts": {
@@ -19,17 +22,18 @@
   "author": "MELOUK Abdel-Ilah",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.26.1",
-    "body-parser": "^1.19.2",
+    "axios": "^0.27.2",
+    "body-parser": "^1.20.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3",
-    "mongodb": "^4.4.1",
-    "mongoose": "^6.2.7"
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "mongodb": "^4.10.0",
+    "mongoose": "^6.6.2",
+    "nodemon": "^2.0.20"
   },
   "devDependencies": {
-    "graphhopper-js-api-client": "^0.13.0",
-    "leaflet": "^1.7.1",
+    "graphhopper-js-api-client": "^5.0.2",
+    "leaflet": "^1.9.1",
     "leaflet-draw": "^1.0.4"
   }
 }

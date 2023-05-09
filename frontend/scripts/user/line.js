@@ -54,7 +54,7 @@ function searchFrom() {
           fromInput.value = station.children[0].innerHTML
           fromID = station.children[2].innerHTML
           populateWithAllStations()
-          stations.style.display = ''
+          stations.style.display = 'none'
         },
         { once: true }
       )
@@ -78,7 +78,7 @@ function searchTo() {
           toInput.value = station.children[0].innerHTML
           toID = station.children[2].innerHTML
           populateWithAllStations()
-          stations.style.display = ''
+          stations.style.display = 'none'
         },
         { once: true }
       )

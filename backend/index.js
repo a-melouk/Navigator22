@@ -18,6 +18,9 @@ require('dotenv').config()
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
+// const dev_db_url = 'mongodb+srv://your_user_name:your_password@cluster0.lz91hw2.mongodb.net/local_library?retryWrites=true&w=majority'
+const dev_db_url = 'mongodb+srv://admin:abdelillaH96%2a%24@atlascluster.ykygojz.mongodb.net/test?authSource=admin&replicaSet=atlas-w604hz-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true'
+const mongoDB = process.env.MONGODB_URI || dev_db_url
 const dbURI = 'mongodb://127.0.0.1/navigator'
 mongoose
   .connect(dbURI, {
@@ -188,6 +191,7 @@ app.get('/lines', (request, response) => {
       response.json({
         stations: stations,
         route: route,
+        line: name,
       })
     })
     .catch(err => response.json(err))
