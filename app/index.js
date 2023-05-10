@@ -19,8 +19,7 @@ const app = express()
 app.use(bodyParser.json())
 app.use(cors())
 const path = require('path')
-app.use('/static', express.static(path.join(__dirname, 'frontend')))
-app.use(express.static('/frontend'))
+app.use(express.static(path.join(__dirname, '/frontend')))
 const mongoDB = process.env.MONGO_URL
 const PORT = process.env.PORT || 4000
 mongoose
@@ -32,6 +31,7 @@ mongoose
     app.listen(PORT, '0.0.0.0')
     console.log(`Running on port ${PORT}`)
   })
+
 //---------------------------------------------------------------------//
 async function stationAlreadyExistsLine(line, name) {
   const request = await Station.find({ line: line, name: name })
@@ -945,3 +945,18 @@ function fillTransport(graph, mean) {
     }
   })
 }
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '/frontend/index.html'))
+})
+
+// All the general routes of your
+// web app are defined above the
+// default route
+
+// Default route
+app.get('*', (req, res) => {
+  // Here user can also design an
+  // error page and render it
+  res.send('PAGE NOT FOUND')
+})
