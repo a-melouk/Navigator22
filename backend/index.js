@@ -34,7 +34,7 @@ mongoose
   })
 
 app.get('/', (req, res) => {
-  res.send('Hello Geeks')
+  res.send('./frontend/index.html')
 })
 
 // All the general routes of your
