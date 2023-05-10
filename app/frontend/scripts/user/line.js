@@ -1,5 +1,5 @@
 async function populateWithAllStations() {
-  let response = await fetch('http://localhost:4000/stations')
+  let response = await fetch('https://navigator22-production.up.railway.appstations')
   let result = await response.json()
   let stations = document.getElementById('stations')
   stations.replaceChildren()
