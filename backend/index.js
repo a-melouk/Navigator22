@@ -34,7 +34,7 @@ mongoose
   })
 
 app.get('/', (req, res) => {
-  res.send('./frontend/index.html')
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'))
 })
 
 // All the general routes of your
