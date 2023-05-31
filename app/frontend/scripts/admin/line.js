@@ -39,7 +39,7 @@ function populateListsToAddNewSegment(line) {
 }
 
 function populateWithAllStations() {
-  fetch('https://navigator22-production.up.railway.app/stations').then(data =>
+  fetch('https://navigator-22-production.up.railway.app/stations').then(data =>
     data.json().then(result => {
       populateList(result, 'from')
       populateList(result, 'to')
@@ -57,7 +57,7 @@ function addLineToMap(number) {
     linelayer.addTo(map)
     map.fitBounds(linelayer.getBounds())
   })
-  console.log('https://navigator22-production.up.railway.app/lines/' + encodeURIComponent(number.trim()) + '/stations')
+  console.log('https://navigator-22-production.up.railway.app/lines/' + encodeURIComponent(number.trim()) + '/stations')
 }
 
 let originalSegment = {}
