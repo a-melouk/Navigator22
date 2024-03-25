@@ -816,6 +816,7 @@ app.get('/route', async (request, response) => {
         let target = JSON.parse(solution.path[solution.path.length - 1]).label.to
         let duration = solution.cost
         let path = []
+        let means = []
         solution.path.forEach(edge => {
           let parsed = JSON.parse(edge).label
           path.push({
@@ -826,13 +827,15 @@ app.get('/route', async (request, response) => {
             mean: parsed.mean,
             segment: parsed.path,
           })
+          if (means.indexOf(parsed.mean) === -1) means.push(parsed.mean)
         })
         response.json({
           from: source,
           to: target,
-          length: path.length,
-          duration: duration,
           mean: mean,
+          duration: duration,
+          length: path.length,
+          means: means,
           path: path,
         })
       })
