@@ -2,42 +2,26 @@ const { ObjectId } = require('mongodb')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const coordinates = {
-  latitude: Number,
-  longitude: Number,
-  _id: false,
-}
+const coordinatesSchema = new Schema({
+  latitude: { type: Number, required: true },
+  longitude: { type: Number, required: true },
+})
 
-const station = {
-  name: '',
-  coordinates: coordinates,
-  id: String,
-}
+const stationSchema = new Schema({
+  name: { type: String, required: true },
+  coordinates: { type: coordinatesSchema, required: true },
+  line: { type: String, required: true },
+})
 
-const segment = {
-  from: station,
-  to: station,
-  path: [coordinates],
-  order: Number,
-  length: Number,
-  duration: Number,
-  distance: Number,
-}
-
-const stationSchema = {
-  name: {
-    type: String,
-    required: true,
-  },
-  coordinates: {
-    type: coordinates,
-    required: true,
-  },
-  line: {
-    type: String,
-    required: true,
-  },
-}
+const segmentSchema = new Schema({
+  from: { type: stationSchema, required: true },
+  to: { type: stationSchema, required: true },
+  path: [{ type: coordinatesSchema, required: true }],
+  order: { type: Number, required: true },
+  length: { type: Number, required: true },
+  duration: { type: Number, required: true },
+  distance: { type: Number, required: true },
+})
 
 const lineSchema = new Schema({
   name: {
@@ -48,56 +32,56 @@ const lineSchema = new Schema({
     type: String,
     required: true,
   },
-  route: [segment],
+  route: [segmentSchema],
 })
 
-const segmentMatrix = {
-  from: station,
-  to: station,
-  transport: {
-    order: Number,
-    duration: Number,
-    distance: Number,
-    path: [coordinates],
-  },
-  walk: {
-    duration: Number,
-    distance: Number,
-    path: [coordinates],
-  },
-}
+const transportSchema = new Schema({
+  order: { type: Number, required: true },
+  duration: { type: Number, required: true },
+  distance: { type: Number, required: true },
+  path: [{ type: coordinatesSchema, required: true }],
+})
+
+const walkSchema = new mongoose.Schema({
+  duration: { type: Number, required: true },
+  distance: { type: Number, required: true },
+  path: [{ type: coordinatesSchema, required: true }],
+})
+
+const segmentMatrixSchema = new Schema({
+  from: { type: stationSchema, required: true },
+  to: { type: stationSchema, required: true },
+  transport: { type: transportSchema, required: true },
+  walk: { type: walkSchema, required: true },
+})
 
 const lineMatrixSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    route: [segmentMatrix],
+    name: { type: String, required: true },
+    route: [segmentMatrixSchema],
     line_id: ObjectId,
     type: String,
   },
   { timestamps: true }
 )
 
-const stationRoutes = {
-  name: String,
-  coordinates: coordinates,
-  line: String,
-  station_id: ObjectId,
-  distance: Number,
-  duration: Number,
-  // path: [coordinates],
-  path: String,
-}
+const stationRoutesSchema = new Schema({
+  name: { type: String, required: true },
+  coordinates: { type: coordinatesSchema, required: true },
+  line: { type: String, required: true },
+  station_id: { type: ObjectId, required: true },
+  distance: { type: Number, required: true },
+  duration: { type: Number, required: true },
+  path: { type: String, required: true },
+})
 
-const lineMatrix = new Schema(
+const matrix = new Schema(
   {
-    name: String,
-    coordinates: coordinates,
-    line: String,
-    station_id: ObjectId,
-    route: [stationRoutes],
+    name: { type: String, required: true },
+    coordinates: { type: coordinatesSchema, required: true },
+    line: { type: String, required: true },
+    station_id: { type: ObjectId, required: true },
+    route: [{ type: stationRoutesSchema, required: true }],
   },
   { timestamps: true }
 )
@@ -105,5 +89,5 @@ const lineMatrix = new Schema(
 const Line = mongoose.model('Line', lineSchema)
 const Station = mongoose.model('Station', stationSchema)
 const LineMatrix = mongoose.model('Matrix', lineMatrixSchema)
-const Route = mongoose.model('routes', lineMatrix)
+const Route = mongoose.model('routes', matrix)
 module.exports = { Line, Station, LineMatrix, Route }

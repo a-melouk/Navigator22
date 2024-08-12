@@ -3,7 +3,7 @@ process.stdout.write('\x1Bc')
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const axios = require('axios')
+// const axios = require('axios')
 const cors = require('cors')
 const Models = require('./Models/line')
 const { ObjectId } = require('mongodb')
@@ -20,8 +20,15 @@ app.use(bodyParser.json())
 app.use(cors())
 const path = require('path')
 app.use(express.static(path.join(__dirname, '/frontend')))
+
 const mongoDB = process.env.MONGO_URL
 const PORT = process.env.PORT || 4000
+
+if (!mongoDB) {
+  console.error('MONGO_URL is not defined in the environment variables')
+  process.exit(1)
+}
+
 mongoose
   .connect(mongoDB, {
     useNewUrlParser: true,
@@ -171,7 +178,9 @@ app.get('/stations/:line', (request, response) => {
 //Get all the stations
 app.get('/stations', (request, response) => {
   Station.find({})
-    .then(data => response.json(data))
+    .then(data => {
+      response.json(data)
+    })
     .catch(err => response.json(err))
 })
 
@@ -700,7 +709,7 @@ async function routesWalk(line) {
         promises.push(
           new Promise(async (resolve, reject) => {
             const to = stations[j]
-            axios.default.get('https://graphhopper.com/api/1/route?profile=foot&point=' + from.coordinates.latitude + ',' + from.coordinates.longitude + '&point=' + to.coordinates.latitude + ',' + to.coordinates.longitude + '&locale=fr&calc_points=true&instructions=false&points_encoded=true&key=' + process.env.GRAPHHOPPER_KEY).then(res => {
+            fetch(`https://graphhopper.com/api/1/route?profile=foot&point=${from.coordinates.latitude},${from.coordinates.longitude}&point=${to.coordinates.latitude},${to.coordinates.longitude}&locale=fr&calc_points=true&instructions=false&points_encoded=true&key=${process.env.GRAPHHOPPER_KEY}`).then(res => {
               let response = res.data
               let route = {
                 name: to.name,
@@ -797,7 +806,7 @@ async function shortest() {
 let matrixWithWalk
 shortest().then(graph => {
   matrixWithWalk = graph
-  console.log('Done initialising walk matrix')
+  console.log('Done initializing walk matrix')
 })
 
 app.get('/route', async (request, response) => {
@@ -842,11 +851,11 @@ app.get('/route', async (request, response) => {
   } else if (mean === 'taxi') {
     const source = await Station.findById(from)
     const target = await Station.findById(to)
-    let baseURL = 'https://graphhopper.com/api/1/route?profile=car'
-    baseURL += '&point=' + source.coordinates.latitude + ',' + source.coordinates.longitude
-    baseURL += '&point=' + target.coordinates.latitude + ',' + target.coordinates.longitude
-    baseURL += '&locale=fr&calc_points=true&instructions=false&points_encoded=true&key=' + process.env.GRAPHHOPPER_KEY
-    axios.default.get(baseURL).then(res => {
+
+    const baseURL = `https://graphhopper.com/api/1/route?profile=car&point=${source.coordinates.latitude},${source.coordinates.longitude}&point=${target.coordinates.latitude},${target.coordinates.longitude}&locale=fr&calc_points=true&instructions=false&points_encoded=true&key=${process.env.GRAPHHOPPER_KEY}`
+
+    // axios.default.get(baseURL).then(res => {
+    fetch(baseURL).then(res => {
       let GHresponse = res.data
       response.json({
         from: source.name,
