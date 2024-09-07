@@ -3,7 +3,6 @@ process.stdout.write('\x1Bc')
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-// const axios = require('axios')
 const cors = require('cors')
 const Models = require('./Models/line')
 const { ObjectId } = require('mongodb')
@@ -26,6 +25,7 @@ const PORT = process.env.PORT || 4000
 
 if (!mongoDB) {
   console.error('MONGO_URL is not defined in the environment variables')
+
   process.exit(1)
 }
 
@@ -215,8 +215,16 @@ app.get('/lines/:line/stations', (request, response) => {
       let fromStations = []
       let toStations = []
       data[0].route.forEach(item => {
-        let from = { coordinates: item.from.coordinates, name: item.from.name, id: item.from.id }
-        let to = { coordinates: item.to.coordinates, name: item.to.name, id: item.to.id }
+        let from = {
+          name: item.from.name,
+          coordinates: item.from.coordinates,
+          id: item.from.id,
+        }
+        let to = {
+          name: item.to.name,
+          coordinates: item.to.coordinates,
+          id: item.to.id,
+        }
         fromStations.push(from)
         toStations.push(to)
         let segment = {
@@ -280,66 +288,97 @@ app.get('/lines/all', (request, response) => {
 })
 
 //Get segment by ID
+// app.get('/segment', (request, response) => {
+//   let id = request.query.id
+//   Line.find({ 'route._id': id }, { route: { $elemMatch: { _id: id } } })
+//     .then(data => response.json(data))
+//     .catch(err => response.json(err))
+// })
+
 app.get('/segment', (request, response) => {
   let id = request.query.id
-  Line.find({ 'route._id': id }, { route: { $elemMatch: { _id: id } } })
-    .then(data => response.json(data))
-    .catch(err => response.json(err))
+
+  Line.findOne({ 'route.from.id': id }, { route: { $elemMatch: { 'from.id': id } }, _id: 0 })
+    .then(data => {
+      if (data && data.route && data.route.length > 0) {
+        response.json(data.route[0])
+      } else {
+        response.status(404).json({ error: 'Segment not found' })
+      }
+    })
+    .catch(err => response.status(500).json({ error: err.message }))
 })
 
 //Get segment by FROM station ID
-app.get('/segment/from', (request, response) => {
-  let id = request.query.id
-  Line.findOne({ 'route.from.id': id }, { route: { $elemMatch: { 'from.id': id } }, _id: 0 })
-    .then(data => response.json(data.route[0]))
-    .catch(err => response.json(err))
+app.get('/segment/from', async (request, response) => {
+  let stationId = request.query.id
+  try {
+    const line = await Line.aggregate([{ $match: { 'route.from.id': stationId } }, { $unwind: '$route' }, { $match: { 'route.from.id': stationId } }, { $limit: 1 }, { $project: { _id: 0, segment: '$route' } }])
+
+    if (line && line.length > 0) {
+      response.json(line[0].segment)
+    } else {
+      response.status(404).json({ error: 'Segment not found' })
+    }
+  } catch (err) {
+    response.status(500).json({ error: err.message })
+  }
 })
 
 //Get segment by TO station ID
-app.get('/segment/to', (request, response) => {
+app.get('/segment/to', async (request, response) => {
   let id = request.query.id
-  Line.findOne({ 'route.to.id': id }, { route: { $elemMatch: { 'to.id': id } }, _id: 0 })
-    .then(data => response.json(data.route[0]))
-    .catch(err => response.json(err))
+  try {
+    const line = await Line.aggregate([{ $match: { 'route.to.id': id } }, { $unwind: '$route' }, { $match: { 'route.to.id': id } }, { $limit: 1 }, { $project: { _id: 0, segment: '$route' } }])
+
+    if (line && line.length > 0) {
+      response.json(line[0].segment)
+    } else {
+      response.status(404).json({ error: 'Segment not found' })
+    }
+  } catch (err) {
+    response.status(500).json({ error: err.message })
+  }
 })
 
 //Get a segment that includes FROM & TO stations
-app.get('/lines/:line', (request, response) => {
+app.get('/lines/:line', async (request, response) => {
   let line = request.params.line
   let fromID = request.query.from
   let toID = request.query.to
-  Line.find(
-    {
-      name: line,
-      'route.from.id': fromID,
-      'route.to.id': toID,
-    },
-    {
-      route: {
-        $elemMatch: {
-          'from.id': fromID,
-          'to.id': toID,
+
+  try {
+    const segment = await Line.aggregate([
+      { $match: { name: line } },
+      { $unwind: '$route' },
+      {
+        $match: {
+          $or: [
+            { 'route.from.id': fromID, 'route.to.id': toID },
+            { 'route.from.id': toID, 'route.to.id': fromID },
+          ],
         },
       },
+      { $limit: 1 },
+      { $project: { _id: 0, segment: '$route' } },
+    ])
+
+    if (segment && segment.length > 0) {
+      const matchedSegment = segment[0].segment
+      response.json({
+        from: matchedSegment.from,
+        to: matchedSegment.to,
+        path: matchedSegment.path,
+        order: matchedSegment.order,
+        id: matchedSegment._id,
+        line: line,
+      })
+    } else {
+      response.status(404).json({ message: 'Inexistant segment' })
     }
-  )
-    .then(data => {
-      if (data.length > 0)
-        response.json({
-          from: data[0].route[0].from,
-          to: data[0].route[0].to,
-          path: data[0].route[0].path,
-          order: data[0].route[0].order,
-          id: data[0].route[0]._id,
-          line: line,
-        })
-      else
-        response.json({
-          status: 404,
-          message: 'Inexistant segment',
-        })
-    })
-    .catch(err => response.json(err))
+  } catch (err) {
+    response.status(500).json({ error: err.message })
+  }
 })
 
 //Update station by id
