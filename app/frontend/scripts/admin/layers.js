@@ -131,3 +131,13 @@ function addDrawControlToMap(type) {
   }
   drawControl.addTo(map)
 }
+
+map.on('draw:editstart', function (e) {
+  var icons = document.getElementsByClassName('leaflet-touch-icon')
+  for (var i = 0; i < icons.length; i++) {
+    icons[i].style.width = '2px'
+    icons[i].style.height = '2px'
+    console.log(icons[i].style)
+  }
+  console.log(icons)
+})

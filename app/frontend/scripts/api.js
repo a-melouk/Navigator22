@@ -1,4 +1,5 @@
 const baseURI = 'https://navigator-22-production.up.railway.app/'
+// const baseURI = 'http://localhost:4000/'
 
 //-------------------------------GET METHODS-------------------------------//
 async function getRelatedSegmentDb(want, id) {
@@ -51,7 +52,7 @@ async function getAllSegmentLineDb(line) {
 }
 
 async function getRoute(from, to, mean) {
-  const response = await fetch('https://navigator-22-production.up.railway.app/route?from=' + from + '&to=' + to + '&mean=' + mean)
+  const response = await fetch(baseURI + 'route?from=' + from + '&to=' + to + '&mean=' + mean)
   const data = await response.json()
   return data
 }
@@ -177,6 +178,7 @@ async function patchStationDb(id, body) {
 
 async function patchSegmentDb(id, body) {
   try {
+    // /lines/:line/segment/:segmentId
     const response = await fetch(baseURI + 'segment?id=' + id, {
       method: 'PATCH',
       headers: {

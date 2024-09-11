@@ -82,7 +82,7 @@ getsegment.addEventListener('click', () => {
       //Adding middle station
       map.on('draw:created', function (e) {
         let tempLayers = segmentLayer.getLayers()
-        let choosenLine = lineElement.value
+        let chosenLine = lineElement.value
         let path = []
         tempLayers[2]._latlngs.forEach(item => {
           let point = {
@@ -95,7 +95,7 @@ getsegment.addEventListener('click', () => {
         newStationPrompt.style.opacity = 1
         newStationPrompt.style.zIndex = 5000
         let middle = middlePolyline(e.layer, path)
-        newStation(e.layer, JSON.parse(choosenLine).name)
+        newStation(e.layer, JSON.parse(chosenLine).name)
           .then(donnee => {
             if (donnee.status !== 409) {
               newStationPrompt.style.opacity = 0
@@ -120,15 +120,15 @@ getsegment.addEventListener('click', () => {
                 path: middle.secondHalf,
                 order: data.order + 1,
               }
-              deleteSegmentById(JSON.parse(choosenLine)._id, data.id).then(() => {
-                patchLineDb(JSON.parse(choosenLine)._id, firstSegment)
+              deleteSegmentById(JSON.parse(chosenLine)._id, data.id).then(() => {
+                patchLineDb(JSON.parse(chosenLine)._id, firstSegment)
                   .then(response => {
                     if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
                   })
                   .then(() => {
-                    patchLineDb(JSON.parse(choosenLine)._id, secondSegment).then(response => {
+                    patchLineDb(JSON.parse(chosenLine)._id, secondSegment).then(response => {
                       if (response.status === 409) displayNotification('Patch segment of a line', 'Segment already exists')
-                      else getStationsByLine(JSON.parse(choosenLine).name)
+                      else getStationsByLine(JSON.parse(chosenLine).name)
                     })
                   })
               })

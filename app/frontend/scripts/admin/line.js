@@ -39,7 +39,7 @@ function populateListsToAddNewSegment(line) {
 }
 
 function populateWithAllStations() {
-  fetch('https://navigator-22-production.up.railway.app/stations').then(data =>
+  fetch(baseURI + 'stations').then(data =>
     data.json().then(result => {
       populateList(result, 'from')
       populateList(result, 'to')
@@ -57,7 +57,7 @@ function addLineToMap(number) {
     linelayer.addTo(map)
     map.fitBounds(linelayer.getBounds())
   })
-  console.log('https://navigator-22-production.up.railway.app/lines/' + encodeURIComponent(number.trim()) + '/stations')
+  console.log(baseURI + 'lines/' + encodeURIComponent(number.trim()) + '/stations')
 }
 
 let originalSegment = {}
@@ -76,7 +76,7 @@ function addSegmentToMap(segment, color, layer) {
 
 map.on('draw:edited', function () {
   map.removeControl(drawControl)
-  let choosenLine = lineElement.value
+  let chosenLine = lineElement.value
 
   if (segmentLayer.getLayers().length > 0) {
     let tempLayers = segmentLayer.getLayers()
@@ -214,7 +214,7 @@ map.on('draw:edited', function () {
             } else resolve('to')
           })
           Promise.all([promiseFrom, promiseTo]).then(() => {
-            getStationsByLine(JSON.parse(choosenLine).name)
+            getStationsByLine(JSON.parse(chosenLine).name)
             clearMap(true)
           })
         })

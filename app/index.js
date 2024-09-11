@@ -132,23 +132,34 @@ app.post('/stations', (request, response) => {
   })
 })
 
-//Add new line to db
-app.post('/lines', (request, response) => {
-  let body = request.body
-  let order = 1
-  body.route.forEach(segment => {
-    segment.order = order
-    segment.path = removeClosePointsBack(segment.path)
-    order++
-  })
-  const line = new Line(body)
-  line
-    .save()
-    .then(data => {
-      response.json(data)
-      console.log('Line added successfully')
+app.post('/lines', async (request, response) => {
+  try {
+    const lineData = request.body
+    let order = 1
+    lineData.route.forEach(segment => {
+      segment.order = order
+      segment.path = removeClosePointsBack(segment.path)
+      order++
     })
-    .catch(err => response.json(err))
+
+    lineData.route = lineData.route.map((segment, index) => ({
+      ...segment,
+      from: { ...segment.from },
+      to: { ...segment.to },
+      order: index + 1,
+      path: removeClosePointsBack(segment.path),
+      length: 0,
+      duration: 0,
+      distance: calculateDistanceSegment(removeClosePointsBack(segment.path)),
+    }))
+
+    const newLine = new Line(lineData)
+    await newLine.save()
+
+    response.status(201).json(newLine)
+  } catch (err) {
+    response.status(400).json({ error: err.message })
+  }
 })
 
 //Get station by ID
@@ -287,18 +298,10 @@ app.get('/lines/all', (request, response) => {
     .catch(err => response.json(err))
 })
 
-//Get segment by ID
-// app.get('/segment', (request, response) => {
-//   let id = request.query.id
-//   Line.find({ 'route._id': id }, { route: { $elemMatch: { _id: id } } })
-//     .then(data => response.json(data))
-//     .catch(err => response.json(err))
-// })
-
 app.get('/segment', (request, response) => {
   let id = request.query.id
 
-  Line.findOne({ 'route.from.id': id }, { route: { $elemMatch: { 'from.id': id } }, _id: 0 })
+  Line.findOne({ 'route._id': id }, { route: { $elemMatch: { _id: id } }, _id: 0 })
     .then(data => {
       if (data && data.route && data.route.length > 0) {
         response.json(data.route[0])
@@ -366,8 +369,14 @@ app.get('/lines/:line', async (request, response) => {
     if (segment && segment.length > 0) {
       const matchedSegment = segment[0].segment
       response.json({
-        from: matchedSegment.from,
-        to: matchedSegment.to,
+        from: {
+          ...matchedSegment.from,
+          id: matchedSegment.from.id,
+        },
+        to: {
+          ...matchedSegment.to,
+          id: matchedSegment.to.id,
+        },
         path: matchedSegment.path,
         order: matchedSegment.order,
         id: matchedSegment._id,
@@ -402,13 +411,14 @@ app.patch('/station', (request, response) => {
     .catch(err => response.json(err))
 })
 
-//Update segment's path by id
 app.patch('/segment', (request, response) => {
   let id = request.query.id
   let body = request.body
   body.path = removeClosePointsBack(body.path)
+  body._id = ObjectId(id)
   Line.updateOne({ 'route._id': id }, { $set: { 'route.$': body } })
     .then(data => {
+      console.log(data)
       if (data.matchedCount === 0)
         response.status(404).json({
           status: 404,
@@ -670,16 +680,6 @@ function transform(array) {
   return result
 }
 
-// const GraphHopperRouting = require('graphhopper-js-api-client/src/GraphHopperRouting')
-// const GHInput = require('graphhopper-js-api-client/src/GHInput')
-// const profile = 'foot'
-// const ghRouting = new GraphHopperRouting({
-//   key: process.env.GRAPHHOPPER_KEY,
-//   vehicle: profile,
-//   locale: 'fr',
-//   elevation: false,
-// })
-
 async function addMatrix(nameOfTheLine) {
   return new Promise((resolve, reject) => {
     let route = []
@@ -798,6 +798,7 @@ let Edge = util.Edge
 let Graph = util.Graph
 let Dijkstra = util.dijikstra
 const GHUtil = require('graphhopper-js-api-client/src/GHUtil')
+const { stringify } = require('querystring')
 let Ghutil = new GHUtil()
 
 async function shortest() {
@@ -1001,9 +1002,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/frontend/index.html'))
 })
 
-// All the general routes of your
-// web app are defined above the
-// default route
+// All the general routes of web app are defined above the default route
 
 // Default route
 app.get('*', (req, res) => {
