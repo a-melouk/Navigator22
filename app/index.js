@@ -369,14 +369,8 @@ app.get('/lines/:line', async (request, response) => {
     if (segment && segment.length > 0) {
       const matchedSegment = segment[0].segment
       response.json({
-        from: {
-          ...matchedSegment.from,
-          id: matchedSegment.from.id,
-        },
-        to: {
-          ...matchedSegment.to,
-          id: matchedSegment.to.id,
-        },
+        from: matchedSegment.from,
+        to: matchedSegment.to,
         path: matchedSegment.path,
         order: matchedSegment.order,
         id: matchedSegment._id,
@@ -850,8 +844,8 @@ shortest().then(graph => {
 })
 
 app.get('/route', async (request, response) => {
-  const from = request.query.from
-  const to = request.query.to
+  const fromID = request.query.from
+  const toID = request.query.to
   const mean = request.query.mean
   let matrixCopy = new Graph(true)
   matrixCopy.edges = [...matrixWithWalk.edges]
@@ -860,7 +854,7 @@ app.get('/route', async (request, response) => {
     fillTransport(matrixCopy, mean)
       .then(finalMatrix => (matrixCopy = finalMatrix))
       .then(() => {
-        let solution = removeSuccessiveWalk(Dijkstra(matrixCopy, from, to).find(item => item.to === to))
+        let solution = removeSuccessiveWalk(Dijkstra(matrixCopy, fromID, toID).find(item => item.to === toID))
         let source = JSON.parse(solution.path[0]).label.from
         let target = JSON.parse(solution.path[solution.path.length - 1]).label.to
         let duration = solution.cost
@@ -889,14 +883,14 @@ app.get('/route', async (request, response) => {
         })
       })
   } else if (mean === 'taxi') {
-    const source = await Station.findById(from)
-    const target = await Station.findById(to)
+    const source = await Station.findById(fromID)
+    const target = await Station.findById(toID)
 
     const baseURL = `https://graphhopper.com/api/1/route?profile=car&point=${source.coordinates.latitude},${source.coordinates.longitude}&point=${target.coordinates.latitude},${target.coordinates.longitude}&locale=fr&calc_points=true&instructions=false&points_encoded=true&key=${process.env.GRAPHHOPPER_KEY}`
 
     // axios.default.get(baseURL).then(res => {
-    fetch(baseURL).then(res => {
-      let GHresponse = res.data
+    fetch(baseURL).then(async res => {
+      let GHresponse = await res.json()
       response.json({
         from: source.name,
         to: target.name,

@@ -1,5 +1,5 @@
-const baseURI = 'https://navigator-22-production.up.railway.app/'
-// const baseURI = 'http://localhost:4000/'
+// const baseURI = 'https://navigator-22-production.up.railway.app/'
+const baseURI = 'http://localhost:4000/'
 
 //-------------------------------GET METHODS-------------------------------//
 async function getRelatedSegmentDb(want, id) {
