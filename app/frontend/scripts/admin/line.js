@@ -57,7 +57,6 @@ function addLineToMap(number) {
     linelayer.addTo(map)
     map.fitBounds(linelayer.getBounds())
   })
-  console.log(baseURI + 'lines/' + encodeURIComponent(number.trim()) + '/stations')
 }
 
 let originalSegment = {}

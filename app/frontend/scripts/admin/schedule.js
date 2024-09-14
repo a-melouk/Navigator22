@@ -107,7 +107,6 @@ line_schedule.addEventListener('change', event => {
         else if (Number(e.target.value) !== searchPatched[0].duration) newDurations[searchPatched[0].index].duration = Number(e.target.value)
 
         let difference = differenceNewOriginal(originalDurations, newDurations)
-        // console.log(difference)
         if (difference.length > 0) {
           confirm_all.disabled = false
           document.getElementById('confirm_all').addEventListener('click', clickConfirm, true)

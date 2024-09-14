@@ -91,7 +91,6 @@ function displayNotification(identifier, text) {
       notificationIdentifier.classList.remove('focus-in-expand')
       notificationText.classList.remove('focus-in-expand')
       notification.classList.add('fadeOut')
-      // notification.hidden = true
     }, 5000)
   })
 }

@@ -47,8 +47,6 @@ fromElement.addEventListener('change', event => {
   } else if (manipulationsElement.value === 'add-line') {
     addStationToMap(JSON.parse(from), 'markers', nameOfTheLine)
     markersLayer.addTo(map)
-  } else if (manipulationsElement.value === 'getroute') {
-    //
   }
 })
 

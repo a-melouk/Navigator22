@@ -1,7 +1,7 @@
 let linelayer = L.featureGroup() //Contains markers and polyline of a line
 let segmentLayer = L.featureGroup() //Contains markers and polyline of a segment
-let markersLayer = L.featureGroup() //Contains markers of stations that are goind to be added to a line
-let drawsLayer = L.featureGroup() //Contains markers of stations that are goind to be added to a line
+let markersLayer = L.featureGroup() //Contains markers of stations that are going to be added to a line
+let drawsLayer = L.featureGroup() //Contains markers of stations that are going to be added to a line
 
 let map = L.map('map', {
   center: [35.20118653849822, -0.6343081902114373],
@@ -35,7 +35,6 @@ function clearMap(draw) {
   segmentLayer.clearLayers()
   markersLayer.clearLayers()
   drawsLayer.clearLayers()
-  // populate()
 }
 
 function centerMap() {
@@ -137,7 +136,5 @@ map.on('draw:editstart', function (e) {
   for (var i = 0; i < icons.length; i++) {
     icons[i].style.width = '2px'
     icons[i].style.height = '2px'
-    console.log(icons[i].style)
   }
-  console.log(icons)
 })

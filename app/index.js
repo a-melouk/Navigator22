@@ -7,6 +7,12 @@ const cors = require('cors')
 const Models = require('./Models/line')
 const { ObjectId } = require('mongodb')
 
+const util = require('./utils/dijkstra')
+let Graph = util.Graph
+const GHUtil = require('graphhopper-js-api-client/src/GHUtil')
+const { stationAlreadyExistsLine, From_or_ToExists, findLengthOfLine, segmentWithSameOrder, updateOrder, stationExists, orderOfSegment } = require('./utils/mongo')
+const { removeClosePointsBack, calculateDistanceSegment, transform } = require('./utils/utils')
+
 const Line = Models.Line
 const Station = Models.Station
 const LineMatrix = Models.LineMatrix
@@ -38,78 +44,6 @@ mongoose
     app.listen(PORT, '0.0.0.0')
     console.log(`Running on port ${PORT}`)
   })
-//
-//---------------------------------------------------------------------//
-async function stationAlreadyExistsLine(line, name) {
-  const request = await Station.find({ line: line, name: name })
-  if (request.length > 0) return true
-  else return false
-}
-
-async function stationExists(id) {
-  const request = await Station.findById(id)
-  if (!!request) return true
-  else return false
-}
-
-async function From_or_ToExists(lineID, fromID, toID) {
-  const request = await Line.aggregate([{ $match: { _id: ObjectId(lineID), $or: [{ 'route.from.id': fromID }, { 'route.to.id': toID }] } }, { $unwind: '$route' }, { $match: { $or: [{ 'route.from.id': fromID }, { 'route.to.id': toID }] } }, { $group: { _id: '$_id', route: { $push: '$route' } } }])
-  if (request.length > 0) return true
-  return false
-}
-
-async function findLengthOfLine(lineID) {
-  const response = await Line.find({ _id: lineID })
-  const data = response[0].route.length
-  return data
-}
-
-async function segmentWithSameOrder(lineID, order) {
-  const response = await Line.find({ _id: lineID, 'route.order': order })
-  if (response.length > 0) return true
-  return false
-}
-
-async function orderOfSegment(lineID, segmentID) {
-  const response = await Line.find({ _id: ObjectId(lineID), 'route._id': ObjectId(segmentID) }, { route: { $elemMatch: { _id: ObjectId(segmentID) } } })
-  if (response.length > 0) return response[0].route[0].order
-  return false
-}
-
-async function updateOrder(lineID, order, value) {
-  const request = await Line.updateOne(
-    { _id: ObjectId(lineID) },
-    { $inc: { 'route.$[elem].order': value } },
-    {
-      multi: true,
-      arrayFilters: [{ 'elem.order': { $gt: order } }],
-    }
-  )
-  console.log(request)
-  return request
-}
-
-function distance(latitude1, longitude1, latitude2, longitude2) {
-  const R = 6371000
-  let rad = Math.PI / 180,
-    lat1 = latitude1 * rad,
-    lat2 = latitude2 * rad,
-    sinDLat = Math.sin(((latitude2 - latitude1) * rad) / 2),
-    sinDLon = Math.sin(((longitude2 - longitude1) * rad) / 2),
-    a = sinDLat * sinDLat + Math.cos(lat1) * Math.cos(lat2) * sinDLon * sinDLon,
-    c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-  return R * c
-}
-
-function removeClosePointsBack(path) {
-  let initLength = path.length
-  for (let i = 0; i < path.length - 2; i++) if (distance(path[i].latitude, path[i].longitude, path[i + 1].latitude, path[i + 1].longitude) < 4.5) path.splice(i + 1, 1)
-
-  if (distance(path[path.length - 2].latitude, path[path.length - 2].longitude, path[path.length - 1].latitude, path[path.length - 1].longitude) < 4.5) path.splice(path.length - 2, 1)
-
-  if (initLength > path.length) console.log('Removed close points')
-  return path
-}
 
 //Add new station to db
 app.post('/stations', (request, response) => {
@@ -134,15 +68,15 @@ app.post('/stations', (request, response) => {
 
 app.post('/lines', async (request, response) => {
   try {
-    const lineData = request.body
+    const body = request.body
     let order = 1
-    lineData.route.forEach(segment => {
+    body.route.forEach(segment => {
       segment.order = order
       segment.path = removeClosePointsBack(segment.path)
       order++
     })
 
-    lineData.route = lineData.route.map((segment, index) => ({
+    body.route = body.route.map((segment, index) => ({
       ...segment,
       from: { ...segment.from },
       to: { ...segment.to },
@@ -153,7 +87,7 @@ app.post('/lines', async (request, response) => {
       distance: calculateDistanceSegment(removeClosePointsBack(segment.path)),
     }))
 
-    const newLine = new Line(lineData)
+    const newLine = new Line(body)
     await newLine.save()
 
     response.status(201).json(newLine)
@@ -170,7 +104,7 @@ app.get('/station', (request, response) => {
     .catch(err => response.json(err))
 })
 
-//Get station by ID
+//Get station by name
 app.get('/station/:name', (request, response) => {
   let name = request.params.name
   Station.find({ name: name })
@@ -412,7 +346,6 @@ app.patch('/segment', (request, response) => {
   body._id = ObjectId(id)
   Line.updateOne({ 'route._id': id }, { $set: { 'route.$': body } })
     .then(data => {
-      console.log(data)
       if (data.matchedCount === 0)
         response.status(404).json({
           status: 404,
@@ -646,190 +579,7 @@ app.delete('/line/:name', async (request, response) => {
   })
 })
 
-function calculateDistanceSegment(path) {
-  let result = 0
-  for (let i = 0; i < path.length - 1; i++) result += distance(path[i].latitude, path[i].longitude, path[i + 1].latitude, path[i + 1].longitude)
-  return result
-}
-
-function updateTransportDurations(line) {
-  const speed = (1000 / 3600) * 14
-  LineMatrix.findOne({ name: line }).then(data => {
-    data.route.forEach(segment => {
-      let distance = Math.ceil(calculateDistanceSegment(segment.transport.path))
-      LineMatrix.updateOne({ name: line, 'route._id': segment._id }, { $set: { 'route.$.transport.duration': Math.ceil(distance / speed) } }).then(data => console.log(data))
-    })
-  })
-}
-
-function transform(array) {
-  let result = []
-  array.forEach(item => {
-    let point = {
-      latitude: precise(item[1]),
-      longitude: precise(item[0]),
-    }
-    result.push(point)
-  })
-  return result
-}
-
-async function addMatrix(nameOfTheLine) {
-  return new Promise((resolve, reject) => {
-    let route = []
-    Line.find({ name: nameOfTheLine })
-      .then(async lineData => {
-        for (let i = 0; i < lineData[0].route.length; i++) {
-          let item = lineData[0].route[i]
-          ghRouting.clearPoints()
-          let from = item.from
-          let to = item.to
-          ghRouting.addPoint(new GHInput(from.coordinates.latitude, from.coordinates.longitude))
-          ghRouting.addPoint(new GHInput(to.coordinates.latitude, to.coordinates.longitude))
-          let data = await ghRouting.doRequest()
-          let segment = {
-            from: item.from,
-            to: item.to,
-            _id: item._id,
-            transport: {
-              order: item.order,
-              distance: item.distance,
-              duration: item.duration,
-              path: item.path,
-            },
-            walk: {
-              distance: Math.ceil(data.paths[0].distance),
-              duration: Math.ceil(data.paths[0].time / 1000),
-              path: transform(data.paths[0].points.coordinates),
-            },
-          }
-          route.push(segment)
-          if (i + 1 === lineData[0].route.length) {
-            let body = {
-              name: nameOfTheLine,
-              route: route,
-            }
-            const lineMatrix = new LineMatrix(body)
-            lineMatrix
-              .save()
-              .then(() => resolve('Inserted ' + nameOfTheLine))
-              .catch(err => console.log(err))
-          }
-        }
-      })
-      .catch(err => console.log('Error fetching lines ' + err))
-  })
-}
-
-/*Station.find({}).then(data => {
-  console.log('STARTED')
-  console.log(data)
-})*/
-
-function precise(number) {
-  return Number(Number.parseFloat(number).toFixed(5))
-}
-
-async function routesWalk(line) {
-  let count = 1
-  const station = await Station.find({ line: { $nin: ['tramway retour'] } })
-  for (let i = 0; i < station.length; i++) {
-    const from = station[i]
-    const promiseFrom = new Promise(async (resolve, reject) => {
-      const stations = await Station.find({ line: { $nin: ['tramway retour'] } })
-      const promises = []
-      for (let j = 0; j < stations.length; j++) {
-        promises.push(
-          new Promise(async (resolve, reject) => {
-            const to = stations[j]
-            fetch(`https://graphhopper.com/api/1/route?profile=foot&point=${from.coordinates.latitude},${from.coordinates.longitude}&point=${to.coordinates.latitude},${to.coordinates.longitude}&locale=fr&calc_points=true&instructions=false&points_encoded=true&key=${process.env.GRAPHHOPPER_KEY}`).then(res => {
-              let response = res.data
-              let route = {
-                name: to.name,
-                coordinates: {
-                  latitude: to.coordinates.latitude,
-                  longitude: to.coordinates.longitude,
-                },
-                line: to.line,
-                station_id: to._id,
-                distance: Math.ceil(response.paths[0].distance),
-                duration: Math.ceil(response.paths[0].time / 1000),
-                path: response.paths[0].points,
-              }
-              resolve(route)
-            })
-          })
-        )
-      }
-      Promise.all(promises).then(data => {
-        setTimeout(() => {
-          let body = {
-            name: from.name,
-            coordinates: from.coordinates,
-            line: from.line,
-            station_id: from._id,
-            route: data,
-          }
-          resolve(body)
-        }, 10000)
-      })
-    })
-    const data = await promiseFrom
-    const stationToMatrix = new Route(data)
-    stationToMatrix
-      .save()
-      .then(() => {
-        count++
-        console.log(count, 'Inserted matrix of ' + data.name + ' of ' + data.line)
-      })
-      .catch(err => console.log(err))
-  }
-}
-// routesWalk('Ligne 03')
-
-const util = require('./Dijkstra')
-let Edge = util.Edge
-let Graph = util.Graph
-let Dijkstra = util.dijikstra
-const GHUtil = require('graphhopper-js-api-client/src/GHUtil')
-const { stringify } = require('querystring')
 let Ghutil = new GHUtil()
-
-async function shortest() {
-  return new Promise((resolve, reject) => {
-    const graph = new Graph(true)
-    const promiseWalk = new Promise(async resolve => {
-      const routesWalk = await Route.find({})
-      for (let i = 0; i < routesWalk.length; i++) {
-        let stationA = String(routesWalk[i].station_id)
-        for (let j = 0; j < routesWalk[i].route.length; j++) {
-          let stationB = String(routesWalk[i].route[j].station_id)
-          graph.setEdge(
-            Edge(stationA, stationB, routesWalk[i].route[j].duration, {
-              from: {
-                line: routesWalk[i].line,
-                name: routesWalk[i].name,
-                coordinates: routesWalk[i].coordinates,
-              },
-              to: {
-                line: routesWalk[i].route[j].line,
-                name: routesWalk[i].route[j].name,
-                coordinates: routesWalk[i].route[j].coordinates,
-              },
-              path: transform(Ghutil.decodePath(routesWalk[i].route[j].path, false)),
-              // path: routesWalk[i].route[j].path,
-              mean: 'walk',
-              distance: routesWalk[i].route[j].distance,
-            })
-          )
-          if (i + 1 === routesWalk.length && j + 1 === routesWalk[i].route.length) resolve('Walk matrix done')
-        }
-      }
-    })
-
-    Promise.all([promiseWalk]).then(() => resolve(graph))
-  })
-}
 
 /*
 61eb2de817e57cb86cb3f8f9 Les cascades
@@ -837,58 +587,45 @@ async function shortest() {
 61eb2de817e57cb86cb3f90c 4 Horloges
 */
 
-let matrixWithWalk
-shortest().then(graph => {
-  matrixWithWalk = graph
-  console.log('Done initializing walk matrix')
-})
-
-app.get('/route', async (request, response) => {
+app.get('/shortest-path', async (request, response) => {
   const fromID = request.query.from
   const toID = request.query.to
   const mean = request.query.mean
-  let matrixCopy = new Graph(true)
-  matrixCopy.edges = [...matrixWithWalk.edges]
-  matrixCopy.nodes = [...matrixWithWalk.nodes]
+
   if (mean === 'bus' || mean === 'tramway' || mean === 'fastest' || mean === 'walk') {
-    fillTransport(matrixCopy, mean)
-      .then(finalMatrix => (matrixCopy = finalMatrix))
-      .then(() => {
-        let solution = removeSuccessiveWalk(Dijkstra(matrixCopy, fromID, toID).find(item => item.to === toID))
-        let source = JSON.parse(solution.path[0]).label.from
-        let target = JSON.parse(solution.path[solution.path.length - 1]).label.to
-        let duration = solution.cost
-        let path = []
-        let means = []
-        solution.path.forEach(edge => {
-          let parsed = JSON.parse(edge).label
-          path.push({
-            from: parsed.from,
-            to: parsed.to,
-            duration: JSON.parse(edge).weight,
-            distance: parsed.distance,
-            mean: parsed.mean,
-            segment: parsed.path,
-          })
-          if (means.indexOf(parsed.mean) === -1) means.push(parsed.mean)
-        })
-        response.json({
-          from: source,
-          to: target,
-          mean: mean,
-          duration: duration,
-          length: path.length,
-          means: means,
-          path: path,
-        })
+    const solution = await findShortestPath(fromID, toID)
+    let source = solution.path[0].label.from
+    let target = solution.path[solution.path.length - 1].label.to
+    let duration = solution.cost
+    let path = []
+    let means = []
+    solution.path.forEach(edge => {
+      let parsed = edge.label
+      path.push({
+        from: parsed.from,
+        to: parsed.to,
+        duration: edge.weight,
+        distance: parsed.distance,
+        mean: parsed.mean,
+        segment: parsed.mean === 'walk' ? transform(Ghutil.decodePath(parsed.path, false)) : parsed.path,
       })
+      if (means.indexOf(parsed.mean) === -1) means.push(parsed.mean)
+    })
+    response.json({
+      from: source,
+      to: target,
+      mean: mean,
+      duration: duration,
+      length: path.length,
+      means: means,
+      path: path,
+    })
   } else if (mean === 'taxi') {
     const source = await Station.findById(fromID)
     const target = await Station.findById(toID)
 
     const baseURL = `https://graphhopper.com/api/1/route?profile=car&point=${source.coordinates.latitude},${source.coordinates.longitude}&point=${target.coordinates.latitude},${target.coordinates.longitude}&locale=fr&calc_points=true&instructions=false&points_encoded=true&key=${process.env.GRAPHHOPPER_KEY}`
 
-    // axios.default.get(baseURL).then(res => {
     fetch(baseURL).then(async res => {
       let GHresponse = await res.json()
       response.json({
@@ -903,104 +640,92 @@ app.get('/route', async (request, response) => {
   }
 })
 
-function checkDoubleWalk(solution) {
-  for (let i = 0; i < solution.path.length - 1; i++) {
-    let a = JSON.parse(solution.path[i])
-    let b = JSON.parse(solution.path[i + 1])
-    if (a.label.mean === 'walk' && b.label.mean === 'walk') return true
-  }
-  return false
-}
-
-function removeSuccessiveWalk(solution) {
-  while (checkDoubleWalk(solution)) {
-    console.log('again')
-    let result = []
-    for (let i = 0; i < solution.path.length - 1; i++) {
-      let a = JSON.parse(solution.path[i])
-      let b = JSON.parse(solution.path[i + 1])
-      if (a.label.mean === 'walk' && b.label.mean === 'walk') {
-        a.label.path.pop()
-        let newSegment = {
-          from: a.from,
-          to: b.to,
-          weight: a.weight + b.weight,
-          label: {
-            from: a.label.from,
-            to: b.label.to,
-            path: [...a.label.path, ...b.label.path],
-            mean: 'walk',
-            distance: a.label.distance + b.label.distance,
-          },
-        }
-        result.push(JSON.stringify(newSegment), ...solution.path.slice(i + 2))
-      }
-      solution.path = result
-    }
-  }
-  return solution
-}
-
-function fillTransport(graph, mean) {
-  return new Promise(async resolve => {
-    let matrixTransport
-    if (mean === 'walk') resolve(graph)
-    else {
-      if (mean === 'fastest') matrixTransport = await LineMatrix.find({})
-      else if (mean === 'bus' || mean === 'tramway') matrixTransport = await LineMatrix.find({ type: mean })
-      for (let i = 0; i < matrixTransport.length; i++) {
-        let route = matrixTransport[i].route
-        for (let j = 0; j < route.length; j++) {
-          let stationA = String(route[j].from.id)
-          let stationB = String(route[j].to.id)
-          graph.setEdge(
-            Edge(stationA, stationB, route[j].transport.duration, {
-              from: {
-                line: matrixTransport[i].name,
-                name: route[j].from.name,
-                coordinates: route[j].from.coordinates,
-              },
-              to: {
-                line: matrixTransport[i].name,
-                name: route[j].to.name,
-                coordinates: route[j].to.coordinates,
-              },
-              path: route[j].transport.path,
-              mean: matrixTransport[i].name,
-            })
-          )
-          graph.setEdge(
-            Edge(stationB, stationA, route[j].transport.duration, {
-              from: {
-                line: matrixTransport[i].name,
-                name: route[j].to.name,
-                coordinates: route[j].to.coordinates,
-              },
-              to: {
-                line: matrixTransport[i].name,
-                name: route[j].from.name,
-                coordinates: route[j].from.coordinates,
-              },
-              path: route[j].transport.path,
-              mean: matrixTransport[i].name,
-            })
-          )
-          if (i + 1 === matrixTransport.length && j + 1 === route.length) resolve(graph)
-        }
-      }
-    }
-  })
-}
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/frontend/index.html'))
 })
 
-// All the general routes of web app are defined above the default route
-
 // Default route
 app.get('*', (req, res) => {
-  // Here user can also design an
-  // error page and render it
   res.send('PAGE NOT FOUND')
 })
+
+async function createMatrix() {
+  const graph = new Graph()
+
+  // Add transport routes
+  const transportLines = await Line.find().lean()
+
+  transportLines.forEach(line => {
+    line.route.forEach(segment => {
+      const fromId = segment.from.id
+      const toId = segment.to.id
+      graph.addNode(fromId)
+      graph.addNode(toId)
+      graph.addEdge(fromId, toId, segment.duration, {
+        from: { line: line.name, name: segment.from.name, coordinates: segment.from.coordinates },
+        to: { line: line.name, name: segment.to.name, coordinates: segment.to.coordinates },
+        path: segment.path,
+        mean: line.name,
+        distance: segment.distance,
+      })
+
+      graph.addEdge(toId, fromId, segment.duration, {
+        from: { line: line.name, name: segment.to.name, coordinates: segment.to.coordinates },
+        to: { line: line.name, name: segment.from.name, coordinates: segment.from.coordinates },
+        path: segment.path,
+        mean: line.name,
+        distance: segment.distance,
+      })
+    })
+  })
+
+  // Add walking routes
+  const walkingRoutes = await Route.find().lean()
+  walkingRoutes.forEach(station => {
+    const stationId = station.station_id.toString()
+    graph.addNode(stationId)
+
+    station.route.forEach(route => {
+      const routeStationId = route.station_id.toString()
+      graph.addNode(routeStationId)
+      graph.addEdge(stationId, routeStationId, route.duration, {
+        from: { line: 'walk', name: station.name, coordinates: station.coordinates },
+        to: { line: 'walk', name: route.name, coordinates: route.coordinates },
+        path: route.path,
+        mean: 'walk',
+        distance: route.distance,
+      })
+    })
+  })
+
+  return graph
+}
+
+async function findShortestPath(fromId, toId) {
+  try {
+    const graph = await createMatrix()
+    const result = util.dijkstra(graph, fromId, toId)
+
+    const formattedResult = {
+      from: fromId,
+      to: toId,
+      cost: result.cost,
+      path: result.path.map(edge => ({
+        from: edge.from,
+        to: edge.to,
+        weight: edge.weight,
+        label: {
+          from: edge.label.from,
+          to: edge.label.to,
+          path: edge.label.path,
+          mean: edge.label.mean,
+          distance: edge.label.distance,
+        },
+      })),
+    }
+
+    return formattedResult
+  } catch (error) {
+    console.error('Error finding shortest path:', error)
+  }
+}

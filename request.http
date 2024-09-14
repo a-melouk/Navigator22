@@ -89,10 +89,10 @@ Content-Type: application/json
 [ { "segment_id": "620e5be60f237023c99bdf7c", "duration": 41 } ]
 ###
 
-GET {{baseUrl}}/route?from=61eb2de817e57cb86cb3f944&to=61eb2de817e57cb86cb3f948&mean=bus
+GET {{baseUrl}}/shortest-path?from=61eb2de817e57cb86cb3f944&to=61eb2de817e57cb86cb3f948&mean=bus
 ### Problem
 
-GET {{baseUrl}}/route?from=61eb2de817e57cb86cb3f8fa&to=61eb2de817e57cb86cb3f935&mean=bus
+GET {{baseUrl}}/shortest-path?from=61eb2de817e57cb86cb3f8fa&to=61eb2de817e57cb86cb3f935&mean=bus
 ### No Problem
 
 

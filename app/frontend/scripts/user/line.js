@@ -1,7 +1,7 @@
 async function populateWithAllStations() {
-  // let response = await fetch('https://navigator-22-production.up.railway.app/stations')
+  let response = await fetch('https://navigator-22-production.up.railway.app/stations')
 
-  let response = await fetch('http://localhost:4000/stations')
+  // let response = await fetch('http://localhost:4000/stations')
 
   let result = await response.json()
   let stations = document.getElementById('stations')
@@ -219,7 +219,6 @@ function separateSegments(route) {
         if (mean === path[path.length - 2].mean) {
           last = path[path.length - 1].to.name
           distance = path[path.length - 1].distance
-          console.log(distance)
           steps.appendChild(createStep({ first: first, last: last, mean: mean, duration: duration, stops: stops, distance: distance }))
         } else {
           first = path[path.length - 1].from.name

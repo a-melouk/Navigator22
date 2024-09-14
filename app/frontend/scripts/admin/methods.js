@@ -163,13 +163,11 @@ function newLine() {
       let layer = e.layer
       if (layer instanceof L.Marker) {
         layer.addTo(map)
-        console.log('salam1')
         newStationPrompt.style.opacity = 1
         newStationPrompt.style.zIndex = 5000
         newStationPrompt.classList.add('tilt-in-top-1')
         newStation(layer, nameOfTheLine)
           .then(() => {
-            console.log('salam2')
             populateListsToAddNewSegment(nameOfTheLine)
             newStationPrompt.style.opacity = 0
             newStationPrompt.style.zIndex = 0
@@ -177,7 +175,6 @@ function newLine() {
             map.removeLayer(layer)
           })
           .catch(err => {
-            console.log('salam3')
             console.log(err)
             map.removeLayer(layer)
           })
