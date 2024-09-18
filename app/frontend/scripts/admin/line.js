@@ -8,6 +8,7 @@ let populate = () => {
     data.forEach(item => {
       let line = document.createElement('button')
       line.innerText = toTitleCase(item.name)
+      console.log(item.name)
       if (item.name === 'tramway') line.classList.add('lines', 'tramway')
       else line.classList.add('lines', 'bus')
       line.onclick = function () {

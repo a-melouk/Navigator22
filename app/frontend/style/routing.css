@@ -97,7 +97,9 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  align-content: space-around;
+  padding-inline: 7px;
 }
 
 .routing {

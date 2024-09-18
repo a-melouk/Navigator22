@@ -226,9 +226,21 @@ app.get('/schedule/:line', (request, response) => {
     .catch(err => response.json(err))
 })
 
+// app.get('/lines/all', (request, response) => {
+//   Line.find({}, { _id: 1, name: 1 })
+//     .then(data => response.json(data))
+//     .catch(err => response.json(err))
+// })
+
 app.get('/lines/all', (request, response) => {
   Line.find({}, { _id: 1, name: 1 })
-    .then(data => response.json(data))
+    .then(data => {
+      data.sort((a, b) => {
+        const order = ['tramway', 'Ligne 03', 'Ligne 03 bis', 'Ligne 11', 'Ligne 16', 'Ligne 17', 'Ligne 22', 'Ligne 25', 'Ligne 27']
+        return order.indexOf(a.name) - order.indexOf(b.name)
+      })
+      response.json(data)
+    })
     .catch(err => response.json(err))
 })
 
