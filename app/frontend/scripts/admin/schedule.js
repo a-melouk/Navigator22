@@ -42,9 +42,41 @@ const differenceNewOriginal = (original, patched) => {
 let line_schedule = document.getElementById('line_schedule')
 line_schedule.addEventListener('change', event => {
   getAllSegmentLineDb(JSON.parse(event.target.value).name).then(data => {
-    document.getElementsByClassName('rows')[0].replaceChildren()
+    const rows = document.getElementsByClassName('rows')[0]
+    rows.replaceChildren()
     const originalDurations = []
     let newDurations = []
+
+    const fromHeader = document.createElement('div')
+    const toHeader = document.createElement('div')
+    const distanceHeader = document.createElement('div')
+    const durationHeader = document.createElement('div')
+    const segmentIDHeader = document.createElement('div')
+    fromHeader.innerHTML = 'From'
+    toHeader.innerHTML = 'To'
+    distanceHeader.innerHTML = 'Distance'
+    durationHeader.innerHTML = 'Duration'
+    segmentIDHeader.innerHTML = 'Segment ID'
+    fromHeader.classList.add('cell', 'station')
+    toHeader.classList.add('cell', 'station')
+    distanceHeader.classList.add('cell', 'distance')
+    durationHeader.classList.add('duration')
+    segmentIDHeader.classList.add('segment_id')
+    segmentIDHeader.hidden = true
+    const header = document.createElement('div')
+    header.classList.add('row')
+    header.append(fromHeader, toHeader, distanceHeader, durationHeader, segmentIDHeader)
+    rows.appendChild(header)
+
+    // if (!rows) {
+    //   const newRows = document.createElement('div')
+    //   newRows.classList.add('rows')
+    //   newRows.appendChild(header)
+    //   document.getElementsByClassName('table')[0].appendChild(newRows)
+    // }
+
+    // document.getElementsByClassName('rows')[0].appendChild(header)
+
     data.line.forEach(item => {
       const fromStation = document.createElement('div')
       const toStation = document.createElement('div')
@@ -72,8 +104,14 @@ line_schedule.addEventListener('change', event => {
       segmentID.hidden = true
       duration_div.appendChild(duration_input)
       const row = document.createElement('div')
-      row.classList.add('row')
       row.append(fromStation, toStation, distance, duration_div, segmentID)
+      row.classList.add('row')
+      // if (!rows) {
+      //   const newRows = document.createElement('div')
+      //   newRows.classList.add('rows')
+      //   newRows.appendChild(row)
+      // }
+      // rows.appendChild(row)
       document.getElementsByClassName('rows')[0].appendChild(row)
     })
     if (document.getElementsByClassName('table')[0].children.length === 2) {
@@ -89,7 +127,8 @@ line_schedule.addEventListener('change', event => {
       patchSegmentDurationDb(JSON.parse(document.getElementById('line_schedule').value)._id, dif)
       document.getElementById('confirm_all').removeEventListener('click', clickConfirm, true)
       line_schedule.value = ''
-      document.getElementsByClassName('rows')[0].replaceChildren()
+      rows.replaceChildren()
+      // document.getElementsByClassName('rows')[0].replaceChildren()
       confirm_all.disabled = true
     }
 
@@ -99,7 +138,7 @@ line_schedule.addEventListener('change', event => {
       value.addEventListener('focusout', e => {
         let searchOriginal = searchById(originalDurations, value.parentNode.children[0].getAttribute('id'))
         if (searchOriginal.length !== 1) throw new Error('More than one segment have that id')
-        else if (Number(e.target.value) !== searchOriginal[0].duration) value.style.backgroundColor = '#27f89a'
+        else if (Number(e.target.value) !== searchOriginal[0].duration) value.style.backgroundColor = 'aliceblue'
         else value.style.backgroundColor = 'white'
 
         let searchPatched = searchById(newDurations, value.parentNode.children[0].getAttribute('id'))

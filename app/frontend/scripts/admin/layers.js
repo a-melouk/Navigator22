@@ -10,7 +10,7 @@ let map = L.map('map', {
   minZoom: 13,
 })
 
-const tile = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+const tile = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   subdomains: ['a', 'b', 'c'],
 })
 
