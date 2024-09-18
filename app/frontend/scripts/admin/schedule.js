@@ -44,6 +44,8 @@ line_schedule.addEventListener('change', event => {
   getAllSegmentLineDb(JSON.parse(event.target.value).name).then(data => {
     const rows = document.getElementsByClassName('rows')[0]
     rows.replaceChildren()
+    rows.classList.add('full')
+
     const originalDurations = []
     let newDurations = []
 

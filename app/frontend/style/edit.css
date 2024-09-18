@@ -136,8 +136,11 @@ button {
   margin-bottom: 10px;
   max-height: 90%;
   overflow-y: auto;
+  border: 0;
+}
+
+.rows.full {
   border: 4px solid black;
-  /* border-top: 0; */
 }
 
 ::-webkit-scrollbar {
